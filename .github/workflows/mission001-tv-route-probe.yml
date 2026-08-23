@@ -1,0 +1,91 @@
+name: M001 TV Native Route Probe
+
+on:
+  push:
+    paths:
+      - '.github/workflows/mission001-tv-route-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Playwright core
+        run: npm install playwright-core@1.55.0
+
+      - name: Execute TradingView browser route probe
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const { chromium } = require('playwright-core');
+          (async () => {
+            const result = {
+              timestamp_utc: new Date().toISOString(),
+              target: 'https://www.tradingview.com/chart/',
+              browser: 'GitHub hosted runner / Google Chrome / Playwright',
+              page_loaded: false,
+              pine_editor_visible: false,
+              pine_editor_click_attempted: false,
+              pine_editor_click_succeeded: false,
+              add_to_chart_visible_after_click: false,
+              login_gate_visible: false,
+              final_url: null,
+              title: null,
+              error: null
+            };
+            let browser;
+            try {
+              browser = await chromium.launch({ channel: 'chrome', headless: true });
+              const context = await browser.newContext({ locale: 'en-US', viewport: { width: 1440, height: 1000 } });
+              const page = await context.newPage();
+              const response = await page.goto(result.target, { waitUntil: 'domcontentloaded', timeout: 60000 });
+              result.page_loaded = !!response && response.status() < 500;
+              result.http_status = response ? response.status() : null;
+              result.final_url = page.url();
+              result.title = await page.title();
+              await page.waitForTimeout(8000);
+              const bodyText = await page.locator('body').innerText().catch(() => '');
+              result.pine_editor_visible = /Pine Editor/i.test(bodyText);
+              result.login_gate_visible = /Sign in|Log in/i.test(bodyText);
+              const pine = page.getByText('Pine Editor', { exact: true }).first();
+              if (await pine.count()) {
+                result.pine_editor_click_attempted = true;
+                try {
+                  await pine.click({ timeout: 10000 });
+                  result.pine_editor_click_succeeded = true;
+                  await page.waitForTimeout(5000);
+                  const after = await page.locator('body').innerText().catch(() => '');
+                  result.add_to_chart_visible_after_click = /Add to chart/i.test(after);
+                  result.login_gate_visible = result.login_gate_visible || /Sign in|Log in/i.test(after);
+                } catch (e) {
+                  result.click_error = String(e);
+                }
+              }
+              await page.screenshot({ path: 'tradingview-route-probe.png', fullPage: false });
+            } catch (e) {
+              result.error = String(e);
+            } finally {
+              if (browser) await browser.close();
+              fs.writeFileSync('route_probe.json', JSON.stringify(result, null, 2));
+              console.log(JSON.stringify(result));
+            }
+          })();
+          NODE
+
+      - name: Upload route evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: mission001-tv-route-probe
+          path: |
+            route_probe.json
+            tradingview-route-probe.png
+          if-no-files-found: error
