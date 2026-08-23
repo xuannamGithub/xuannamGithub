@@ -1,18 +1,40 @@
 {
   "mission": "MISSION-001",
+  "route": "GH2_CURRENT_PINE_SIDE_TOOLBAR",
   "gate": "P1_NATIVE_TRADINGVIEW_SURFACE",
-  "timestamp_utc": "2026-08-23T22:54:49.913Z",
+  "timestamp_utc": "2026-08-23T23:33:02.756Z",
   "target": "https://www.tradingview.com/chart/?symbol=OANDA%3AXAUUSD",
   "browser": "GitHub-hosted Ubuntu / Google Chrome / Playwright",
   "page_loaded": true,
-  "pine_editor_visible": false,
-  "pine_editor_click_attempted": false,
-  "pine_editor_click_succeeded": false,
-  "add_to_chart_visible_after_click": false,
+  "pine_candidates": [
+    {
+      "selector": "[aria-label*=\"Pine\" i]",
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Pine",
+      "title": null,
+      "data_name": "pine-dialog-button",
+      "visible": true
+    },
+    {
+      "selector": "[data-name*=\"pine\" i]",
+      "tag": "BUTTON",
+      "text": "",
+      "aria": "Pine",
+      "title": null,
+      "data_name": "pine-dialog-button",
+      "visible": true
+    }
+  ],
+  "pine_control_found": true,
+  "pine_click_attempted": true,
+  "pine_click_succeeded": true,
+  "editor_surface_detected": true,
+  "add_to_chart_visible": true,
   "login_gate_visible": false,
   "final_url": "https://www.tradingview.com/chart/?symbol=OANDA%3AXAUUSD",
-  "title": "XAUUSD",
-  "route_verdict": "ROUTE_FAIL",
+  "title": "Live stock, index, futures, Forex and Bitcoin charts on TradingView",
+  "route_verdict": "NATIVE_SURFACE_EXECUTABLE",
   "error": null,
   "http_status": 200
 }
