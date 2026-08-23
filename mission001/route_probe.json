@@ -1,0 +1,18 @@
+{
+  "mission": "MISSION-001",
+  "gate": "P1_NATIVE_TRADINGVIEW_SURFACE",
+  "timestamp_utc": "2026-08-23T22:54:49.913Z",
+  "target": "https://www.tradingview.com/chart/?symbol=OANDA%3AXAUUSD",
+  "browser": "GitHub-hosted Ubuntu / Google Chrome / Playwright",
+  "page_loaded": true,
+  "pine_editor_visible": false,
+  "pine_editor_click_attempted": false,
+  "pine_editor_click_succeeded": false,
+  "add_to_chart_visible_after_click": false,
+  "login_gate_visible": false,
+  "final_url": "https://www.tradingview.com/chart/?symbol=OANDA%3AXAUUSD",
+  "title": "XAUUSD",
+  "route_verdict": "ROUTE_FAIL",
+  "error": null,
+  "http_status": 200
+}
