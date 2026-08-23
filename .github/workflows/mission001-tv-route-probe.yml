@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Checkout evidence branch target
+      - name: Checkout evidence target
         uses: actions/checkout@v4
 
       - name: Set up Node
@@ -25,7 +25,7 @@ jobs:
       - name: Install Playwright core
         run: npm install playwright-core@1.55.0
 
-      - name: Execute TradingView browser route probe
+      - name: Execute TradingView current Pine-toolbar route
         run: |
           node <<'NODE'
           const fs = require('fs');
@@ -33,15 +33,18 @@ jobs:
           (async () => {
             const result = {
               mission: 'MISSION-001',
+              route: 'GH2_CURRENT_PINE_SIDE_TOOLBAR',
               gate: 'P1_NATIVE_TRADINGVIEW_SURFACE',
               timestamp_utc: new Date().toISOString(),
               target: 'https://www.tradingview.com/chart/?symbol=OANDA%3AXAUUSD',
               browser: 'GitHub-hosted Ubuntu / Google Chrome / Playwright',
               page_loaded: false,
-              pine_editor_visible: false,
-              pine_editor_click_attempted: false,
-              pine_editor_click_succeeded: false,
-              add_to_chart_visible_after_click: false,
+              pine_candidates: [],
+              pine_control_found: false,
+              pine_click_attempted: false,
+              pine_click_succeeded: false,
+              editor_surface_detected: false,
+              add_to_chart_visible: false,
               login_gate_visible: false,
               final_url: null,
               title: null,
@@ -51,35 +54,75 @@ jobs:
             let browser;
             try {
               browser = await chromium.launch({ channel: 'chrome', headless: true });
-              const context = await browser.newContext({ locale: 'en-US', viewport: { width: 1440, height: 1000 } });
+              const context = await browser.newContext({ locale: 'en-US', viewport: { width: 1600, height: 1100 } });
               const page = await context.newPage();
               const response = await page.goto(result.target, { waitUntil: 'domcontentloaded', timeout: 60000 });
               result.page_loaded = !!response && response.status() < 500;
               result.http_status = response ? response.status() : null;
               result.final_url = page.url();
               result.title = await page.title();
-              await page.waitForTimeout(10000);
-              let bodyText = await page.locator('body').innerText().catch(() => '');
-              result.pine_editor_visible = /Pine Editor/i.test(bodyText);
-              result.login_gate_visible = /Sign in|Log in/i.test(bodyText);
-              const pine = page.getByText('Pine Editor', { exact: true }).first();
-              if (await pine.count()) {
-                result.pine_editor_click_attempted = true;
-                try {
-                  await pine.click({ timeout: 10000 });
-                  result.pine_editor_click_succeeded = true;
-                  await page.waitForTimeout(5000);
-                  bodyText = await page.locator('body').innerText().catch(() => '');
-                  result.add_to_chart_visible_after_click = /Add to chart/i.test(bodyText);
-                  result.login_gate_visible = result.login_gate_visible || /Sign in|Log in/i.test(bodyText);
-                } catch (e) {
-                  result.click_error = String(e);
+              await page.waitForTimeout(12000);
+
+              const selectors = [
+                '[aria-label*="Pine" i]',
+                '[title*="Pine" i]',
+                'button:has-text("Pine")',
+                '[role="button"]:has-text("Pine")',
+                '[data-name*="pine" i]'
+              ];
+              const seen = new Set();
+              for (const sel of selectors) {
+                const loc = page.locator(sel);
+                const n = Math.min(await loc.count(), 20);
+                for (let i = 0; i < n; i++) {
+                  const el = loc.nth(i);
+                  const item = {
+                    selector: sel,
+                    tag: await el.evaluate(e => e.tagName).catch(() => null),
+                    text: (await el.innerText().catch(() => '')).slice(0,120),
+                    aria: await el.getAttribute('aria-label').catch(() => null),
+                    title: await el.getAttribute('title').catch(() => null),
+                    data_name: await el.getAttribute('data-name').catch(() => null),
+                    visible: await el.isVisible().catch(() => false)
+                  };
+                  const key = JSON.stringify(item);
+                  if (!seen.has(key)) { seen.add(key); result.pine_candidates.push(item); }
                 }
               }
-              if (result.page_loaded && result.pine_editor_click_succeeded) result.route_verdict = 'NATIVE_SURFACE_EXECUTABLE';
+
+              let control = null;
+              for (const sel of selectors) {
+                const loc = page.locator(sel);
+                const n = await loc.count();
+                for (let i = 0; i < n; i++) {
+                  const el = loc.nth(i);
+                  if (await el.isVisible().catch(() => false)) { control = el; break; }
+                }
+                if (control) break;
+              }
+
+              result.pine_control_found = !!control;
+              if (control) {
+                result.pine_click_attempted = true;
+                try {
+                  await control.click({ timeout: 10000 });
+                  result.pine_click_succeeded = true;
+                  await page.waitForTimeout(7000);
+                } catch (e) { result.click_error = String(e); }
+              }
+
+              const bodyText = await page.locator('body').innerText().catch(() => '');
+              result.login_gate_visible = /Sign in|Log in/i.test(bodyText);
+              result.add_to_chart_visible = /Add to chart|Update on chart/i.test(bodyText);
+              result.editor_surface_detected = /Pine Editor|Add to chart|Update on chart|Create new/i.test(bodyText) ||
+                (await page.locator('[class*="monaco-editor"], .monaco-editor').count().catch(() => 0)) > 0;
+
+              if (result.page_loaded && result.pine_click_succeeded && result.editor_surface_detected) result.route_verdict = 'NATIVE_SURFACE_EXECUTABLE';
               else if (result.page_loaded && result.login_gate_visible) result.route_verdict = 'AUTH_REQUIRED';
               else result.route_verdict = 'ROUTE_FAIL';
-              await page.screenshot({ path: 'mission001/tradingview-route-probe.png', fullPage: false });
+
+              fs.mkdirSync('mission001', { recursive: true });
+              await page.screenshot({ path: 'mission001/tradingview-route-probe-gh2.png', fullPage: false });
             } catch (e) {
               result.error = String(e);
               result.route_verdict = 'ROUTE_FAIL';
@@ -97,14 +140,14 @@ jobs:
           git config user.name 'mission001-bot'
           git config user.email 'mission001-bot@users.noreply.github.com'
           git add mission001/route_probe.json
-          git commit -m 'MISSION001: persist TradingView route execution evidence' || exit 0
+          git commit -m 'MISSION001: persist GH2 TradingView route evidence' || exit 0
           git push
 
       - name: Upload screenshot evidence
         uses: actions/upload-artifact@v4
         with:
-          name: mission001-tv-route-probe
+          name: mission001-tv-route-probe-gh2
           path: |
             mission001/route_probe.json
-            mission001/tradingview-route-probe.png
+            mission001/tradingview-route-probe-gh2.png
           if-no-files-found: error
