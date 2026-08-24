@@ -1,24 +1,1290 @@
 {
   "mission": "MISSION-001",
-  "route": "GH6_CROSSHAIR_TIMESTAMP_VERIFY",
+  "route": "GH7_AX_TIMESTAMP_TOOLTIP_VERIFY",
   "golden_id": "GR-001",
   "requested_display_time": "2026-08-20 01:30",
-  "timestamp_utc": "2026-08-24T08:09:31.630Z",
+  "timestamp_utc": "2026-08-24T08:43:01.520Z",
   "target_time_verified": false,
-  "crosshair_timestamp_text": null,
+  "accessibility_timestamp_text": null,
   "extracted_ohlc": {
     "open": "4,500.485",
     "high": "4,501.140",
     "low": "4,495.375",
     "close": "4,501.040"
   },
-  "verdict": "CROSSHAIR_TIMESTAMP_UNVERIFIED_OHLC_PRESENT",
+  "verdict": "AX_TIMESTAMP_UNVERIFIED_OHLC_PRESENT",
   "error": null,
   "page_loaded": true,
   "http_status": 200,
   "date_value": "2026-08-20",
   "time_value": "01:30",
   "go_to_clicked": true,
-  "modal_still_open": false,
-  "body_after_crosshair": "XAUUSD\n1m\nIndicators\nAlert\nReplay\nSave\nSave\nTrade\nPublish\nX\nGold Spot / U.S. Dollar\n1\nOANDA\nO\n4,500.485\nH\n4,501.140\nL\n4,495.375\nC\n4,501.040\n+0.565 (+0.01%)\n4,638.120\nSELL\n76.0\n4,638.880\nBUY\nVol · Ticks\n1.61 K\n1D\n5D\n1M\n3M\n6M\nYTD\n1Y\n5Y\nAll\n08:10:02 UTC\nWatchlist\nSymbol\nLast\nChg\nChg%\nINDICES\nS\nSPX\nD\n7,674.37\n33.21\n0.43%\nN\nNDQ\n29,308.86\n95.69\n0.33%\nD\nDJI\n53,282.32\n518.05\n0.98%\nV\nVIX\nD\n15.94\n0.81\n5.35%\nD\nDXY\n98.976\n0.137\n0.14%\nSTOCKS\nA\nAAPL\n309.35\n−1.95\n−0.63%\nT\nTSLA\n362.86\n17.73\n5.14%\nN\nNFLX\n79.59\n−0.55\n−0.69%\nFUTURES\nU\nUSOIL\n85.66\n−0.97\n−1.12%\nG\nGOLD\n4,638.180\n35.520\n0.77%\nS\nSILVER\n68.8932\n−0.0568\n−0.08%\nFOREX\nE\nEURUSD\n1.16651\n−0.00110\n−0.09%\nG\nGBPUSD\n1.36354\n−0.00057\n−0.04%\nU\nUSDJPY\n159.202\n0.230\n0.14%\nCRYPTO\nB\nBTCUSD\n77,332\n−385\n−0.50%\nB\nBTCUSDT\n77,345.02\n−388.98\n−0.50%\nE\nETHUSD\n2,454.6\n−8.1\n−0.33%\nX\nXAUUSD\nGold Spot / U.S. Dollar\nOANDA\nCommodity\nCfd\n4,638.545\nUSD\n+35.555\n+0.77%\nMarket open\nSign in to read exclusive news\nPerformance\n6.06%\n1W\n14.54%\n1M\n1.45%\n3M\n−9.69%\n6M\n7.19%\nYTD\n38.85%\n1Y\nSeasonals\n\t\n\t\n\t\n\t\n2026\n2025\n2024\nMore seasonals\nTechnicals\nNeutral\nSell\nBuy\nStrong sell\nStrong buy\nStrong sell\nSell\nNeutral\nBuy\nStrong buy\nMore technicals\nBrowse community posts"
+  "accessibility_candidates": [
+    {
+      "txt": "",
+      "aria": "Compare symbols",
+      "name": "",
+      "cls": "button-P4LQzYFS button-vxmgjera withoutText-vxmgjera button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "1m",
+      "aria": "1 minute",
+      "name": "",
+      "cls": "menuBtn-HNxWMF1j button-waoVoTI0 apply-common-tooltip accessible-waoVoTI0"
+    },
+    {
+      "txt": "",
+      "aria": "Candles",
+      "name": "",
+      "cls": "menu-tBSqohxx button-waoVoTI0 apply-common-tooltip accessible-waoVoTI0"
+    },
+    {
+      "txt": "Indicators",
+      "aria": "Indicators, metrics, and strategies",
+      "name": "open-indicators-dialog",
+      "cls": "button-P4LQzYFS button-vxmgjera withText-vxmgjera button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Indicator templates",
+      "name": "",
+      "cls": "button-waoVoTI0 apply-common-tooltip accessible-waoVoTI0"
+    },
+    {
+      "txt": "Alert",
+      "aria": "Create alert",
+      "name": "",
+      "cls": "button-P4LQzYFS button-vxmgjera withText-vxmgjera button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "Replay",
+      "aria": "Bar replay",
+      "name": "",
+      "cls": "button-P4LQzYFS button-vxmgjera withText-vxmgjera button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Layout setup",
+      "name": "",
+      "cls": "button-j6Tj5pnD button-waoVoTI0 apply-common-tooltip accessible-waoVoTI0"
+    },
+    {
+      "txt": "SaveSave",
+      "aria": "Save all charts for all symbols and intervals on your layout",
+      "name": "",
+      "cls": "button-OjWQ1m5F buttonSmallPadding-OjWQ1m5F button-vxmgjera withText-vxmgjera button-_yKxzjvM button-qeqsnzwC apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Manage layouts",
+      "name": "",
+      "cls": "button-waoVoTI0 apply-common-tooltip accessible-waoVoTI0"
+    },
+    {
+      "txt": "",
+      "aria": "Quick search",
+      "name": "",
+      "cls": "iconButton-P4LQzYFS button-fmZRxceI button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Settings",
+      "name": "",
+      "cls": "iconButton-P4LQzYFS button-fmZRxceI button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Fullscreen mode",
+      "name": "",
+      "cls": "button-fmZRxceI button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Take a snapshot",
+      "name": "",
+      "cls": "button-waoVoTI0 apply-common-tooltip accessible-waoVoTI0"
+    },
+    {
+      "txt": "Publish",
+      "aria": "Share your idea with the trade community",
+      "name": "",
+      "cls": "menuWrap-Ii3Sgsld accessible-Ii3Sgsld button-waoVoTI0 apply-common-tooltip accessible-waoVoTI0"
+    },
+    {
+      "txt": "",
+      "aria": "Compare symbols",
+      "name": "",
+      "cls": "button-P4LQzYFS button-vxmgjera withoutText-vxmgjera button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "1m",
+      "aria": "1 minute",
+      "name": "",
+      "cls": "menuBtn-HNxWMF1j button-waoVoTI0 apply-common-tooltip accessible-waoVoTI0"
+    },
+    {
+      "txt": "",
+      "aria": "Candles",
+      "name": "",
+      "cls": "menu-tBSqohxx button-waoVoTI0 apply-common-tooltip accessible-waoVoTI0"
+    },
+    {
+      "txt": "",
+      "aria": "Indicators, metrics, and strategies",
+      "name": "open-indicators-dialog",
+      "cls": "button-P4LQzYFS button-vxmgjera withoutText-vxmgjera button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Indicator templates",
+      "name": "",
+      "cls": "button-waoVoTI0 apply-common-tooltip accessible-waoVoTI0"
+    },
+    {
+      "txt": "",
+      "aria": "Create alert",
+      "name": "",
+      "cls": "button-P4LQzYFS button-vxmgjera withoutText-vxmgjera button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Bar replay",
+      "name": "",
+      "cls": "button-P4LQzYFS button-vxmgjera withoutText-vxmgjera button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Layout setup",
+      "name": "",
+      "cls": "button-j6Tj5pnD button-waoVoTI0 apply-common-tooltip accessible-waoVoTI0"
+    },
+    {
+      "txt": "SaveSave",
+      "aria": "Save all charts for all symbols and intervals on your layout",
+      "name": "",
+      "cls": "button-OjWQ1m5F buttonSmallPadding-OjWQ1m5F button-vxmgjera withText-vxmgjera button-_yKxzjvM button-qeqsnzwC apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Manage layouts",
+      "name": "",
+      "cls": "button-waoVoTI0 apply-common-tooltip accessible-waoVoTI0"
+    },
+    {
+      "txt": "",
+      "aria": "Quick search",
+      "name": "",
+      "cls": "iconButton-P4LQzYFS button-fmZRxceI button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Settings",
+      "name": "",
+      "cls": "iconButton-P4LQzYFS button-fmZRxceI button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Fullscreen mode",
+      "name": "",
+      "cls": "button-fmZRxceI button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Take a snapshot",
+      "name": "",
+      "cls": "button-waoVoTI0 apply-common-tooltip accessible-waoVoTI0"
+    },
+    {
+      "txt": "Publish",
+      "aria": "Share your idea with the trade community",
+      "name": "",
+      "cls": "menuWrap-Ii3Sgsld accessible-Ii3Sgsld button-waoVoTI0 apply-common-tooltip accessible-waoVoTI0"
+    },
+    {
+      "txt": "",
+      "aria": "Compare symbols",
+      "name": "",
+      "cls": "button-P4LQzYFS button-vxmgjera withoutText-vxmgjera button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "1m",
+      "aria": "1 minute",
+      "name": "",
+      "cls": "menuBtn-HNxWMF1j button-waoVoTI0 apply-common-tooltip accessible-waoVoTI0"
+    },
+    {
+      "txt": "",
+      "aria": "Candles",
+      "name": "",
+      "cls": "menu-tBSqohxx button-waoVoTI0 apply-common-tooltip accessible-waoVoTI0"
+    },
+    {
+      "txt": "Indicators",
+      "aria": "Indicators, metrics, and strategies",
+      "name": "open-indicators-dialog",
+      "cls": "button-P4LQzYFS button-vxmgjera withText-vxmgjera button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Indicator templates",
+      "name": "",
+      "cls": "button-waoVoTI0 apply-common-tooltip accessible-waoVoTI0"
+    },
+    {
+      "txt": "Alert",
+      "aria": "Create alert",
+      "name": "",
+      "cls": "button-P4LQzYFS button-vxmgjera withText-vxmgjera button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "Replay",
+      "aria": "Bar replay",
+      "name": "",
+      "cls": "button-P4LQzYFS button-vxmgjera withText-vxmgjera button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Layout setup",
+      "name": "",
+      "cls": "button-j6Tj5pnD button-waoVoTI0 apply-common-tooltip accessible-waoVoTI0"
+    },
+    {
+      "txt": "Save\nSave",
+      "aria": "Save all charts for all symbols and intervals on your layout",
+      "name": "",
+      "cls": "button-OjWQ1m5F buttonSmallPadding-OjWQ1m5F button-vxmgjera withText-vxmgjera button-_yKxzjvM button-qeqsnzwC apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Manage layouts",
+      "name": "save-load-menu",
+      "cls": "button-waoVoTI0 apply-common-tooltip accessible-waoVoTI0"
+    },
+    {
+      "txt": "",
+      "aria": "Quick search",
+      "name": "header-toolbar-quick-search",
+      "cls": "iconButton-P4LQzYFS button-fmZRxceI button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Settings",
+      "name": "header-toolbar-properties",
+      "cls": "iconButton-P4LQzYFS button-fmZRxceI button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Fullscreen mode",
+      "name": "header-toolbar-fullscreen",
+      "cls": "button-fmZRxceI button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Take a snapshot",
+      "name": "",
+      "cls": "button-waoVoTI0 apply-common-tooltip accessible-waoVoTI0"
+    },
+    {
+      "txt": "Publish",
+      "aria": "Share your idea with the trade community",
+      "name": "",
+      "cls": "menuWrap-Ii3Sgsld accessible-Ii3Sgsld button-waoVoTI0 apply-common-tooltip accessible-waoVoTI0"
+    },
+    {
+      "txt": "Publish",
+      "aria": "Share your idea with the trade community",
+      "name": "",
+      "cls": "menuWrap-Ii3Sgsld accessible-Ii3Sgsld button-waoVoTI0 apply-common-tooltip accessible-waoVoTI0"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "linetool-group-cursors",
+      "cls": "dropdown-FuKse5bD undefined"
+    },
+    {
+      "txt": "",
+      "aria": "Cross",
+      "name": "",
+      "cls": "button-Pa6R9wGK button-_yKxzjvM apply-common-tooltip common-tooltip-vertical isActive-_yKxzjvM isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Cursors",
+      "name": "",
+      "cls": "arrow-FuKse5bD apply-common-tooltip common-tooltip-vertical accessible-FuKse5bD"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "linetool-group-trend-line",
+      "cls": "dropdown-FuKse5bD"
+    },
+    {
+      "txt": "",
+      "aria": "Trendline",
+      "name": "",
+      "cls": "button-Pa6R9wGK button-_yKxzjvM apply-common-tooltip common-tooltip-vertical isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Trend tools",
+      "name": "",
+      "cls": "arrow-FuKse5bD apply-common-tooltip common-tooltip-vertical accessible-FuKse5bD"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "linetool-group-gann-and-fibonacci",
+      "cls": "dropdown-FuKse5bD"
+    },
+    {
+      "txt": "",
+      "aria": "Fib retracement",
+      "name": "",
+      "cls": "button-Pa6R9wGK button-_yKxzjvM apply-common-tooltip common-tooltip-vertical isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Gann and Fibonacci tools",
+      "name": "",
+      "cls": "arrow-FuKse5bD apply-common-tooltip common-tooltip-vertical accessible-FuKse5bD"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "linetool-group-patterns",
+      "cls": "dropdown-FuKse5bD"
+    },
+    {
+      "txt": "",
+      "aria": "XABCD pattern",
+      "name": "",
+      "cls": "button-Pa6R9wGK button-_yKxzjvM apply-common-tooltip common-tooltip-vertical isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Patterns",
+      "name": "",
+      "cls": "arrow-FuKse5bD apply-common-tooltip common-tooltip-vertical accessible-FuKse5bD"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "linetool-group-prediction-and-measurement",
+      "cls": "dropdown-FuKse5bD"
+    },
+    {
+      "txt": "",
+      "aria": "Long position",
+      "name": "",
+      "cls": "button-Pa6R9wGK button-_yKxzjvM apply-common-tooltip common-tooltip-vertical isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Forecasting and measurement tools",
+      "name": "",
+      "cls": "arrow-FuKse5bD apply-common-tooltip common-tooltip-vertical accessible-FuKse5bD"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "linetool-group-geometric-shapes",
+      "cls": "dropdown-FuKse5bD"
+    },
+    {
+      "txt": "",
+      "aria": "Brush",
+      "name": "",
+      "cls": "button-Pa6R9wGK button-_yKxzjvM apply-common-tooltip common-tooltip-vertical isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Geometric shapes",
+      "name": "",
+      "cls": "arrow-FuKse5bD apply-common-tooltip common-tooltip-vertical accessible-FuKse5bD"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "linetool-group-annotation",
+      "cls": "dropdown-FuKse5bD"
+    },
+    {
+      "txt": "",
+      "aria": "Text",
+      "name": "",
+      "cls": "button-Pa6R9wGK button-_yKxzjvM apply-common-tooltip common-tooltip-vertical isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Annotation tools",
+      "name": "",
+      "cls": "arrow-FuKse5bD apply-common-tooltip common-tooltip-vertical accessible-FuKse5bD"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "linetool-group-font-icons",
+      "cls": "dropdown-FuKse5bD"
+    },
+    {
+      "txt": "",
+      "aria": "Icon",
+      "name": "",
+      "cls": "button-Pa6R9wGK button-_yKxzjvM apply-common-tooltip common-tooltip-vertical isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Icons",
+      "name": "",
+      "cls": "arrow-FuKse5bD apply-common-tooltip common-tooltip-vertical accessible-FuKse5bD"
+    },
+    {
+      "txt": "",
+      "aria": "Measure",
+      "name": "measure",
+      "cls": "button-Pa6R9wGK button-_yKxzjvM apply-common-tooltip common-tooltip-vertical isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Zoom in",
+      "name": "zoom",
+      "cls": "button-Pa6R9wGK button-_yKxzjvM apply-common-tooltip common-tooltip-vertical isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "magnet-button",
+      "cls": "dropdown-FuKse5bD"
+    },
+    {
+      "txt": "",
+      "aria": "Magnet mode snaps drawings placed near price bars to the closest OHLC value",
+      "name": "",
+      "cls": "button-Pa6R9wGK button-_yKxzjvM apply-common-tooltip common-tooltip-vertical isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Magnets",
+      "name": "",
+      "cls": "arrow-FuKse5bD apply-common-tooltip common-tooltip-vertical accessible-FuKse5bD"
+    },
+    {
+      "txt": "",
+      "aria": "Keep drawing",
+      "name": "drawginmode",
+      "cls": "button-Pa6R9wGK button-_yKxzjvM apply-common-tooltip common-tooltip-vertical isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "lock-all",
+      "cls": "dropdown-FuKse5bD"
+    },
+    {
+      "txt": "",
+      "aria": "Lock drawings and indicators",
+      "name": "",
+      "cls": "button-Pa6R9wGK button-_yKxzjvM apply-common-tooltip common-tooltip-vertical isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Lock options",
+      "name": "",
+      "cls": "arrow-FuKse5bD apply-common-tooltip common-tooltip-vertical accessible-FuKse5bD"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "hide-all",
+      "cls": "dropdown-FuKse5bD"
+    },
+    {
+      "txt": "",
+      "aria": "Hide all drawings",
+      "name": "",
+      "cls": "button-Pa6R9wGK button-_yKxzjvM apply-common-tooltip common-tooltip-vertical isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Hide options",
+      "name": "",
+      "cls": "arrow-FuKse5bD apply-common-tooltip common-tooltip-vertical accessible-FuKse5bD"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "removeAllDrawingTools",
+      "cls": "dropdown-FuKse5bD"
+    },
+    {
+      "txt": "",
+      "aria": "Remove objects",
+      "name": "",
+      "cls": "button-Pa6R9wGK button-_yKxzjvM apply-common-tooltip common-tooltip-vertical isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Remove options",
+      "name": "",
+      "cls": "arrow-FuKse5bD apply-common-tooltip common-tooltip-vertical accessible-FuKse5bD"
+    },
+    {
+      "txt": "X\nGold Spot / U.S. Dollar\n1\nOANDA\nO\n4,500.485\nH\n4,501.140\nL\n4,495.375\nC\n4,501.040\n+0.565 (+0.01%)\n4,644.410\nSELL\n81.0\n4,645.220\nBUY\nVol · Ticks\n1.61 K",
+      "aria": "Chart #1",
+      "name": "",
+      "cls": "chart-widget chart-widget--themed-light chart-widget__top--themed-light chart-widget__bottom--themed-light"
+    },
+    {
+      "txt": "Gold Spot / U.S. Dollar",
+      "aria": "Change symbol",
+      "name": "",
+      "cls": "title-quatTGAC accessible-quatTGAC"
+    },
+    {
+      "txt": "1",
+      "aria": "Change interval",
+      "name": "",
+      "cls": "title-quatTGAC accessible-quatTGAC"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "actions",
+      "cls": "buttonsWrapper-quatTGAC"
+    },
+    {
+      "txt": "",
+      "aria": "Flag symbol",
+      "name": "",
+      "cls": "button-quatTGAC flag-quatTGAC apply-common-tooltip accessible-quatTGAC"
+    },
+    {
+      "txt": "",
+      "aria": "Symbol/interval chart syncing",
+      "name": "",
+      "cls": "button-quatTGAC blockHidden-wVrpb0RA linking-quatTGAC apply-common-tooltip accessible-quatTGAC"
+    },
+    {
+      "txt": "",
+      "aria": "Hide",
+      "name": "",
+      "cls": "button-quatTGAC blockHidden-wVrpb0RA eye-quatTGAC apply-common-tooltip accessible-quatTGAC"
+    },
+    {
+      "txt": "",
+      "aria": "More",
+      "name": "",
+      "cls": "button-quatTGAC apply-common-tooltip accessible-quatTGAC"
+    },
+    {
+      "txt": "4,644.410\nSELL\n81.0\n4,645.220\nBUY",
+      "aria": "",
+      "name": "buy-sell-buttons",
+      "cls": "buttonsWrapper-OH8c8Nc3 notAvailableOnMobile-OH8c8Nc3 withoutBg-OH8c8Nc3"
+    },
+    {
+      "txt": "4,644.410\nSELL",
+      "aria": "",
+      "name": "sell-order-button",
+      "cls": "apply-common-tooltip button-OH8c8Nc3 sellButton-OH8c8Nc3"
+    },
+    {
+      "txt": "1",
+      "aria": "",
+      "name": "qtyEl",
+      "cls": "apply-common-tooltip button-OH8c8Nc3 qty-OH8c8Nc3 blockHidden-wVrpb0RA"
+    },
+    {
+      "txt": "4,645.220\nBUY",
+      "aria": "",
+      "name": "buy-order-button",
+      "cls": "apply-common-tooltip button-OH8c8Nc3 buyButton-OH8c8Nc3"
+    },
+    {
+      "txt": "1",
+      "aria": "Hide indicator legend",
+      "name": "",
+      "cls": "toggler-quatTGAC pane-button-wVrpb0RA apply-common-tooltip accessible-quatTGAC objectsTreeCanBeShown-quatTGAC"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "actions",
+      "cls": "buttonsWrapper-quatTGAC"
+    },
+    {
+      "txt": "",
+      "aria": "Hide",
+      "name": "",
+      "cls": "button-quatTGAC eye-quatTGAC apply-common-tooltip accessible-quatTGAC"
+    },
+    {
+      "txt": "",
+      "aria": "Show interval settings",
+      "name": "",
+      "cls": "button-quatTGAC blockHidden-wVrpb0RA intervalEye-quatTGAC apply-common-tooltip accessible-quatTGAC"
+    },
+    {
+      "txt": "",
+      "aria": "Settings",
+      "name": "",
+      "cls": "button-quatTGAC apply-common-tooltip accessible-quatTGAC"
+    },
+    {
+      "txt": "",
+      "aria": "Remove",
+      "name": "",
+      "cls": "button-quatTGAC apply-common-tooltip accessible-quatTGAC"
+    },
+    {
+      "txt": "",
+      "aria": "More",
+      "name": "",
+      "cls": "button-quatTGAC apply-common-tooltip accessible-quatTGAC"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "pane-canvas",
+      "cls": ""
+    },
+    {
+      "txt": "",
+      "aria": "Chart for OANDA:XAUUSD, 1 minute",
+      "name": "",
+      "cls": ""
+    },
+    {
+      "txt": "USDAL",
+      "aria": "",
+      "name": "",
+      "cls": "chart-markup-table price-axis-container"
+    },
+    {
+      "txt": "USDAL",
+      "aria": "",
+      "name": "price-axis-A",
+      "cls": "price-axis"
+    },
+    {
+      "txt": "USD",
+      "aria": "",
+      "name": "currency-unit-label-wrapper",
+      "cls": "price-axis-currency-label-wrapper-lOV7ozYu hidden-lOV7ozYu"
+    },
+    {
+      "txt": "USD",
+      "aria": "",
+      "name": "",
+      "cls": "price-axis-currency-label-lOV7ozYu"
+    },
+    {
+      "txt": "USD",
+      "aria": "",
+      "name": "currency-label-selector",
+      "cls": "row-lOV7ozYu apply-common-tooltip"
+    },
+    {
+      "txt": "USD",
+      "aria": "",
+      "name": "",
+      "cls": "price-axis-currency-label-text-lOV7ozYu"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "unit-label-selector",
+      "cls": "row-lOV7ozYu apply-common-tooltip js-hidden"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "metric-label-selector",
+      "cls": "row-lOV7ozYu apply-common-tooltip js-hidden"
+    },
+    {
+      "txt": "AL",
+      "aria": "",
+      "name": "",
+      "cls": "price-axis__modeButtons price-axis__modeButtons_hidden"
+    },
+    {
+      "txt": "A",
+      "aria": "Toggle auto scale",
+      "name": "",
+      "cls": "priceScaleModeButton-tzk2lJM6 priceScaleModeButton_activated-tzk2lJM6 priceScaleModeButtons__button-_mS3UChv apply-common-tooltip"
+    },
+    {
+      "txt": "L",
+      "aria": "Toggle log scale",
+      "name": "",
+      "cls": "priceScaleModeButton-tzk2lJM6 priceScaleModeButtons__button-_mS3UChv apply-common-tooltip"
+    },
+    {
+      "txt": "Date Range",
+      "aria": "",
+      "name": "date-ranges-menu",
+      "cls": "button-fl4u3BRF dateRange-RaFdWJxD button-waoVoTI0 apply-common-tooltip accessible-waoVoTI0"
+    },
+    {
+      "txt": "1D\n5D\n1M\n3M\n6M\nYTD\n1Y\n5Y\nAll",
+      "aria": "",
+      "name": "date-ranges-tabs",
+      "cls": "wrap-I2jS9UTX dateRange-RaFdWJxD"
+    },
+    {
+      "txt": "1D",
+      "aria": "1 day in 1 minute intervals",
+      "name": "date-range-tab-1D",
+      "cls": "item-I2jS9UTX button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "5D",
+      "aria": "5 days in 5 minutes intervals",
+      "name": "date-range-tab-5D",
+      "cls": "item-I2jS9UTX button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "1M",
+      "aria": "1 month in 30 minutes intervals",
+      "name": "date-range-tab-1M",
+      "cls": "item-I2jS9UTX button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "3M",
+      "aria": "3 months in 1 hour intervals",
+      "name": "date-range-tab-3M",
+      "cls": "item-I2jS9UTX button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "6M",
+      "aria": "6 months in 2 hours intervals",
+      "name": "date-range-tab-6M",
+      "cls": "item-I2jS9UTX button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "YTD",
+      "aria": "Year to day in 1 day intervals",
+      "name": "date-range-tab-YTD",
+      "cls": "item-I2jS9UTX button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "1Y",
+      "aria": "1 year in 1 day intervals",
+      "name": "date-range-tab-12M",
+      "cls": "item-I2jS9UTX button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "5Y",
+      "aria": "5 years in 1 week intervals",
+      "name": "date-range-tab-60M",
+      "cls": "item-I2jS9UTX button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "All",
+      "aria": "All data in 1 month intervals",
+      "name": "date-range-tab-ALL",
+      "cls": "item-I2jS9UTX button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Go to",
+      "name": "go-to-date",
+      "cls": "button-q07qTelu button-fmZRxceI button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "08:43:31 UTC",
+      "aria": "Timezone",
+      "name": "time-zone-menu",
+      "cls": "item-RaFdWJxD button-_yKxzjvM button-EzpeYLKj apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "Watchlist\nSymbol\nLast\nChg\nChg%\nINDICES\nS\nSPX\nD\n7,674.37\n33.21\n0.43%\nN\nNDQ\n29,308.86\n95.69\n0.33%\nD\nDJI\n53,282.32\n518.05\n0.98%\nV\nVIX\nD\n15.92\n0.79\n5.22%\nD\nDXY\n98.981\n0.142\n0.14%\nSTOCKS\nA\nAAPL\n309.35\n−1.95\n−0.63%\nT\nTSLA\n362.86\n17.73\n5.14%\nN\nNFLX\n79.59\n−0.55\n−0.69%\nFUTURES\nU\nUSOIL\n85.15\n−1.48\n−1.71%\nG\nGOLD\n4,644.090\n41.430\n0.90%\nS\nSILVER\n68.9316\n−0.0184\n−0.03%\nFOREX\nE\nEURUSD\n1.16658\n−0.00103\n−0.09%\nG\nGBPUSD\n1.36315\n−0.00096\n−0.07%\nU\nUSDJPY\n159.229\n0.257\n0.16%\nCRYPTO\nB\nBTCUSD\n77,058\n−658\n−0.85%\nB\nBTCUSDT\n77,056.79\n−677.21\n−0.87%\nE\nETHUSD\n2,449.8\n−13.0\n−0.53%\nX\nXAUUSD\nGold Spot / U.S. Dollar\nOANDA\nCommodity\nCfd\n4,644.795\nUSD\n+41.805\n+0.91%\nMarket open\nSign in to read exclusive news\nPerformance\n6.15%\n1W\n14.63%\n1M\n1.53%\n3M\n−9.62%\n6M\n7.28%\nYTD\n38.96%\n1Y\nSeasonals\n\t\n\t\n\t\n\t\n2026\n2025\n2024\nMore seasonals\nTechnicals\nNeutral\nSell\nBuy\nStrong sell\nStrong buy\nStrong sell\nSell\nNeutral\nBuy\nStrong buy\nMore technicals\nBrowse community posts",
+      "aria": "",
+      "name": "widgetbar-wrap",
+      "cls": "widgetbar-wrap unselectable"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "right-toolbar",
+      "cls": "toolbar-gDF2b0Za"
+    },
+    {
+      "txt": "",
+      "aria": "Watchlist, details, and news",
+      "name": "base",
+      "cls": "button-bzoSYBVb button-_yKxzjvM apply-common-tooltip common-tooltip-vertical isActive-_yKxzjvM isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Alerts",
+      "name": "alerts",
+      "cls": "button-bzoSYBVb button-_yKxzjvM apply-common-tooltip common-tooltip-vertical isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Object tree and data window",
+      "name": "object_tree",
+      "cls": "button-bzoSYBVb button-_yKxzjvM apply-common-tooltip common-tooltip-vertical isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Screeners",
+      "name": "screener-dialog-button",
+      "cls": "button-bzoSYBVb button-_yKxzjvM apply-common-tooltip common-tooltip-vertical isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Pine",
+      "name": "pine-dialog-button",
+      "cls": "button-bzoSYBVb button-_yKxzjvM apply-common-tooltip common-tooltip-vertical isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Calendars",
+      "name": "calendar-dialog-button",
+      "cls": "button-bzoSYBVb button-_yKxzjvM apply-common-tooltip common-tooltip-vertical isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Community",
+      "name": "community-hub-button",
+      "cls": "button-bzoSYBVb button-_yKxzjvM apply-common-tooltip common-tooltip-vertical isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Notifications",
+      "name": "notifications-button",
+      "cls": "button-bzoSYBVb button-_yKxzjvM apply-common-tooltip common-tooltip-vertical isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Products",
+      "name": "",
+      "cls": "button-_302krV8 common-tooltip-vertical button-waoVoTI0 apply-common-tooltip accessible-waoVoTI0"
+    },
+    {
+      "txt": "",
+      "aria": "Help Center",
+      "name": "help-button",
+      "cls": "button-bzoSYBVb button-_yKxzjvM apply-common-tooltip common-tooltip-vertical isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "Watchlist\nSymbol\nLast\nChg\nChg%\nINDICES\nS\nSPX\nD\n7,674.37\n33.21\n0.43%\nN\nNDQ\n29,308.86\n95.69\n0.33%\nD\nDJI\n53,282.32\n518.05\n0.98%\nV\nVIX\nD\n15.92\n0.79\n5.22%\nD\nDXY\n98.981\n0.142\n0.14%\nSTOCKS\nA\nAAPL\n309.35\n−1.95\n−0.63%\nT\nTSLA\n362.86\n17.73\n5.14%\nN\nNFLX\n79.59\n−0.55\n−0.69%\nFUTURES\nU\nUSOIL\n85.15\n−1.48\n−1.71%\nG\nGOLD\n4,644.090\n41.430\n0.90%\nS\nSILVER\n68.9316\n−0.0184\n−0.03%\nFOREX\nE\nEURUSD\n1.16658\n−0.00103\n−0.09%\nG\nGBPUSD\n1.36315\n−0.00096\n−0.07%\nU\nUSDJPY\n159.229\n0.257\n0.16%\nCRYPTO\nB\nBTCUSD\n77,058\n−658\n−0.85%\nB\nBTCUSDT\n77,056.79\n−677.21\n−0.87%\nE\nETHUSD\n2,449.8\n−13.0\n−0.53%\nX\nXAUUSD\nGold Spot / U.S. Dollar\nOANDA\nCommodity\nCfd\n4,644.795\nUSD\n+41.805\n+0.91%\nMarket open\nSign in to read exclusive news\nPerformance\n6.15%\n1W\n14.63%\n1M\n1.53%\n3M\n−9.62%\n6M\n7.28%\nYTD\n38.96%\n1Y\nSeasonals\n\t\n\t\n\t\n\t\n2026\n2025\n2024\nMore seasonals\nTechnicals\nNeutral\nSell\nBuy\nStrong sell\nStrong buy\nStrong sell\nSell\nNeutral\nBuy\nStrong buy\nMore technicals\nBrowse community posts",
+      "aria": "",
+      "name": "widgetbar-pages-with-tabs",
+      "cls": "widgetbar-pages"
+    },
+    {
+      "txt": "Watchlist",
+      "aria": "",
+      "name": "watchlists-button",
+      "cls": "button-waoVoTI0 button-CBjOwjj0 apply-common-tooltip accessible-waoVoTI0"
+    },
+    {
+      "txt": "",
+      "aria": "Add symbol",
+      "name": "add-symbol-button",
+      "cls": "headerButton-zDcxZk2G button-fmZRxceI button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Advanced view",
+      "name": "advanced-view-button",
+      "cls": "headerButton-zDcxZk2G button-fmZRxceI button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Settings",
+      "name": "settings-button",
+      "cls": "headerButton-zDcxZk2G button-waoVoTI0 apply-common-tooltip accessible-waoVoTI0"
+    },
+    {
+      "txt": "INDICES\nS\nSPX\nD\n7,674.37\n33.21\n0.43%\nN\nNDQ\n29,308.86\n95.69\n0.33%\nD\nDJI\n53,282.32\n518.05\n0.98%\nV\nVIX\nD\n15.92\n0.79\n5.22%\nD\nDXY\n98.981\n0.142\n0.14%\nSTOCKS\nA\nAAPL\n309.35\n−1.95\n−0.63%\nT\nTSLA\n362.86\n17.73\n5.14%\nN\nNFLX\n79.59\n−0.55\n−0.69%\nFUTURES\nU\nUSOIL\n85.15\n−1.48\n−1.71%\nG\nGOLD\n4,644.090\n41.430\n0.90%\nS\nSILVER\n68.9316\n−0.0184\n−0.03%\nFOREX\nE\nEURUSD\n1.16658\n−0.00103\n−0.09%\nG\nGBPUSD\n1.36315\n−0.00096\n−0.07%\nU\nUSDJPY\n159.229\n0.257\n0.16%\nCRYPTO\nB\nBTCUSD\n77,058\n−658\n−0.85%\nB\nBTCUSDT\n77,056.79\n−677.21\n−0.87%\nE\nETHUSD\n2,449.8\n−13.0\n−0.53%",
+      "aria": "",
+      "name": "symbol-list-wrap",
+      "cls": "scrollable-oiK3GoRG"
+    },
+    {
+      "txt": "INDICES\nS\nSPX\nD\n7,674.37\n33.21\n0.43%\nN\nNDQ\n29,308.86\n95.69\n0.33%\nD\nDJI\n53,282.32\n518.05\n0.98%\nV\nVIX\nD\n15.92\n0.79\n5.22%\nD\nDXY\n98.981\n0.142\n0.14%\nSTOCKS\nA\nAAPL\n309.35\n−1.95\n−0.63%\nT\nTSLA\n362.86\n17.73\n5.14%\nN\nNFLX\n79.59\n−0.55\n−0.69%\nFUTURES\nU\nUSOIL\n85.15\n−1.48\n−1.71%\nG\nGOLD\n4,644.090\n41.430\n0.90%\nS\nSILVER\n68.9316\n−0.0184\n−0.03%\nFOREX\nE\nEURUSD\n1.16658\n−0.00103\n−0.09%\nG\nGBPUSD\n1.36315\n−0.00096\n−0.07%\nU\nUSDJPY\n159.229\n0.257\n0.16%\nCRYPTO\nB\nBTCUSD\n77,058\n−658\n−0.85%\nB\nBTCUSDT\n77,056.79\n−677.21\n−0.87%\nE\nETHUSD\n2,449.8\n−13.0\n−0.53%",
+      "aria": "",
+      "name": "tree",
+      "cls": "tree-LVUu4GCH"
+    },
+    {
+      "txt": "R",
+      "aria": "",
+      "name": "",
+      "cls": "tv-data-mode tv-data-mode--for-symbol-list apply-common-tooltip tv-data-mode--realtime tv-data-mode--realtime--for-symbol-list"
+    },
+    {
+      "txt": "R",
+      "aria": "",
+      "name": "",
+      "cls": "tv-data-mode tv-data-mode--for-symbol-list apply-common-tooltip tv-data-mode--realtime tv-data-mode--realtime--for-symbol-list"
+    },
+    {
+      "txt": "R",
+      "aria": "",
+      "name": "",
+      "cls": "tv-data-mode tv-data-mode--for-symbol-list apply-common-tooltip tv-data-mode--realtime tv-data-mode--realtime--for-symbol-list"
+    },
+    {
+      "txt": "R",
+      "aria": "",
+      "name": "",
+      "cls": "tv-data-mode tv-data-mode--for-symbol-list apply-common-tooltip tv-data-mode--realtime tv-data-mode--realtime--for-symbol-list"
+    },
+    {
+      "txt": "R",
+      "aria": "",
+      "name": "",
+      "cls": "tv-data-mode tv-data-mode--for-symbol-list apply-common-tooltip tv-data-mode--realtime tv-data-mode--realtime--for-symbol-list"
+    },
+    {
+      "txt": "R",
+      "aria": "",
+      "name": "",
+      "cls": "tv-data-mode tv-data-mode--for-symbol-list apply-common-tooltip tv-data-mode--realtime tv-data-mode--realtime--for-symbol-list"
+    },
+    {
+      "txt": "R",
+      "aria": "",
+      "name": "",
+      "cls": "tv-data-mode tv-data-mode--for-symbol-list apply-common-tooltip tv-data-mode--realtime tv-data-mode--realtime--for-symbol-list"
+    },
+    {
+      "txt": "R",
+      "aria": "",
+      "name": "",
+      "cls": "tv-data-mode tv-data-mode--for-symbol-list apply-common-tooltip tv-data-mode--realtime tv-data-mode--realtime--for-symbol-list"
+    },
+    {
+      "txt": "R",
+      "aria": "",
+      "name": "",
+      "cls": "tv-data-mode tv-data-mode--for-symbol-list apply-common-tooltip tv-data-mode--realtime tv-data-mode--realtime--for-symbol-list"
+    },
+    {
+      "txt": "R",
+      "aria": "",
+      "name": "",
+      "cls": "tv-data-mode tv-data-mode--for-symbol-list apply-common-tooltip tv-data-mode--realtime tv-data-mode--realtime--for-symbol-list"
+    },
+    {
+      "txt": "R",
+      "aria": "",
+      "name": "",
+      "cls": "tv-data-mode tv-data-mode--for-symbol-list apply-common-tooltip tv-data-mode--realtime tv-data-mode--realtime--for-symbol-list"
+    },
+    {
+      "txt": "R",
+      "aria": "",
+      "name": "",
+      "cls": "tv-data-mode tv-data-mode--for-symbol-list apply-common-tooltip tv-data-mode--realtime tv-data-mode--realtime--for-symbol-list"
+    },
+    {
+      "txt": "R",
+      "aria": "",
+      "name": "",
+      "cls": "tv-data-mode tv-data-mode--for-symbol-list apply-common-tooltip tv-data-mode--realtime tv-data-mode--realtime--for-symbol-list"
+    },
+    {
+      "txt": "R",
+      "aria": "",
+      "name": "",
+      "cls": "tv-data-mode tv-data-mode--for-symbol-list apply-common-tooltip tv-data-mode--realtime tv-data-mode--realtime--for-symbol-list"
+    },
+    {
+      "txt": "R",
+      "aria": "",
+      "name": "",
+      "cls": "tv-data-mode tv-data-mode--for-symbol-list apply-common-tooltip tv-data-mode--realtime tv-data-mode--realtime--for-symbol-list"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "details-add-note-button",
+      "cls": "notesBtn-K_3jgTkg button-fmZRxceI button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "details-settings-button",
+      "cls": "wrap-yXQwyl8n button-waoVoTI0 apply-common-tooltip"
+    },
+    {
+      "txt": "R",
+      "aria": "",
+      "name": "",
+      "cls": "tv-data-mode tv-data-mode--for-details apply-common-tooltip tv-data-mode--realtime tv-data-mode--realtime--for-details"
+    },
+    {
+      "txt": "More technicals",
+      "aria": "",
+      "name": "details-more-technicals-button",
+      "cls": "buttonContainer-JGj449vt"
+    },
+    {
+      "txt": "",
+      "aria": "Open panel",
+      "name": "toggle-visibility-button",
+      "cls": "button-tQ8Kilpy firstButton-tQ8Kilpy button-fmZRxceI button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Maximize panel",
+      "name": "toggle-maximize-button",
+      "cls": "button-tQ8Kilpy button-fmZRxceI button-_yKxzjvM apply-common-tooltip isInteractive-_yKxzjvM accessible-_yKxzjvM"
+    },
+    {
+      "txt": "",
+      "aria": "Trading panel",
+      "name": "",
+      "cls": "layout__area--tradingpanel rootContainer-AVbA9qZC rootContainer-wspftEtf hidden-wspftEtf"
+    },
+    {
+      "txt": "Show more",
+      "aria": "",
+      "name": "toast-group-expand-button-orders",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z withEndSlot-LEXhwY2Z"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "toast-group-close-button-orders",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z iconOnly-LEXhwY2Z withEndSlot-LEXhwY2Z apply-common-tooltip"
+    },
+    {
+      "txt": "Show more",
+      "aria": "",
+      "name": "toast-group-expand-button-alerts",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z withEndSlot-LEXhwY2Z"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "toast-group-close-button-alerts",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z iconOnly-LEXhwY2Z withEndSlot-LEXhwY2Z apply-common-tooltip"
+    },
+    {
+      "txt": "Show more",
+      "aria": "",
+      "name": "toast-group-expand-button-alertsFireControl",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z withEndSlot-LEXhwY2Z"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "toast-group-close-button-alertsFireControl",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z iconOnly-LEXhwY2Z withEndSlot-LEXhwY2Z apply-common-tooltip"
+    },
+    {
+      "txt": "Show more",
+      "aria": "",
+      "name": "toast-group-expand-button-alertsWatchlistFireControl",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z withEndSlot-LEXhwY2Z"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "toast-group-close-button-alertsWatchlistFireControl",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z iconOnly-LEXhwY2Z withEndSlot-LEXhwY2Z apply-common-tooltip"
+    },
+    {
+      "txt": "Show more",
+      "aria": "",
+      "name": "toast-group-expand-button-trading-notifications",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z withEndSlot-LEXhwY2Z"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "toast-group-close-button-trading-notifications",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z iconOnly-LEXhwY2Z withEndSlot-LEXhwY2Z apply-common-tooltip"
+    },
+    {
+      "txt": "Show more",
+      "aria": "",
+      "name": "toast-group-expand-button-gift",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z withEndSlot-LEXhwY2Z"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "toast-group-close-button-gift",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z iconOnly-LEXhwY2Z withEndSlot-LEXhwY2Z apply-common-tooltip"
+    },
+    {
+      "txt": "Show more",
+      "aria": "",
+      "name": "toast-group-expand-button-force-password-change",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z withEndSlot-LEXhwY2Z"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "toast-group-close-button-force-password-change",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z iconOnly-LEXhwY2Z withEndSlot-LEXhwY2Z apply-common-tooltip"
+    },
+    {
+      "txt": "Show more",
+      "aria": "",
+      "name": "toast-group-expand-button-chat-message",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z withEndSlot-LEXhwY2Z"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "toast-group-close-button-chat-message",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z iconOnly-LEXhwY2Z withEndSlot-LEXhwY2Z apply-common-tooltip"
+    },
+    {
+      "txt": "Show more",
+      "aria": "",
+      "name": "toast-group-expand-button-three-month-offer",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z withEndSlot-LEXhwY2Z"
+    },
+    {
+      "txt": "Show more",
+      "aria": "",
+      "name": "toast-group-expand-button-account-deletion-initiated",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z withEndSlot-LEXhwY2Z"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "toast-group-close-button-account-deletion-initiated",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z iconOnly-LEXhwY2Z withEndSlot-LEXhwY2Z apply-common-tooltip"
+    },
+    {
+      "txt": "Show more",
+      "aria": "",
+      "name": "toast-group-expand-button-account-deletion-cancelled",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z withEndSlot-LEXhwY2Z"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "toast-group-close-button-account-deletion-cancelled",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z iconOnly-LEXhwY2Z withEndSlot-LEXhwY2Z apply-common-tooltip"
+    },
+    {
+      "txt": "Show more",
+      "aria": "",
+      "name": "toast-group-expand-button-support-portal",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z withEndSlot-LEXhwY2Z"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "toast-group-close-button-support-portal",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z iconOnly-LEXhwY2Z withEndSlot-LEXhwY2Z apply-common-tooltip"
+    },
+    {
+      "txt": "Show more",
+      "aria": "",
+      "name": "toast-group-expand-button-global-notification",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z withEndSlot-LEXhwY2Z"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "toast-group-close-button-global-notification",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z iconOnly-LEXhwY2Z withEndSlot-LEXhwY2Z apply-common-tooltip"
+    },
+    {
+      "txt": "Show more",
+      "aria": "",
+      "name": "toast-group-expand-button-news-notification",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z withEndSlot-LEXhwY2Z"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "toast-group-close-button-news-notification",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z iconOnly-LEXhwY2Z withEndSlot-LEXhwY2Z apply-common-tooltip"
+    },
+    {
+      "txt": "Show more",
+      "aria": "",
+      "name": "toast-group-expand-button-chart_warning",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z withEndSlot-LEXhwY2Z"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "toast-group-close-button-chart_warning",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z iconOnly-LEXhwY2Z withEndSlot-LEXhwY2Z apply-common-tooltip"
+    },
+    {
+      "txt": "Show more",
+      "aria": "",
+      "name": "toast-group-expand-button-chart_info",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z withEndSlot-LEXhwY2Z"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "toast-group-close-button-chart_info",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z iconOnly-LEXhwY2Z withEndSlot-LEXhwY2Z apply-common-tooltip"
+    },
+    {
+      "txt": "Show more",
+      "aria": "",
+      "name": "toast-group-expand-button-x-share-group",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z withEndSlot-LEXhwY2Z"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "toast-group-close-button-x-share-group",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z iconOnly-LEXhwY2Z withEndSlot-LEXhwY2Z apply-common-tooltip"
+    },
+    {
+      "txt": "Show more",
+      "aria": "",
+      "name": "toast-group-expand-button-bf-notification",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z withEndSlot-LEXhwY2Z"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "toast-group-close-button-bf-notification",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z iconOnly-LEXhwY2Z withEndSlot-LEXhwY2Z apply-common-tooltip"
+    },
+    {
+      "txt": "Show more",
+      "aria": "",
+      "name": "toast-group-expand-button-coupon-notification",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z withEndSlot-LEXhwY2Z"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "toast-group-close-button-coupon-notification",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z iconOnly-LEXhwY2Z withEndSlot-LEXhwY2Z apply-common-tooltip"
+    },
+    {
+      "txt": "Show more",
+      "aria": "",
+      "name": "toast-group-expand-button-cookies",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z withEndSlot-LEXhwY2Z"
+    },
+    {
+      "txt": "Show more",
+      "aria": "",
+      "name": "toast-group-expand-button-charting-ad",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z withEndSlot-LEXhwY2Z"
+    },
+    {
+      "txt": "",
+      "aria": "",
+      "name": "toast-group-close-button-charting-ad",
+      "cls": "roundButton-LEXhwY2Z roundButtonColor-bRjlnCjX gray-bRjlnCjX quiet-primary-bRjlnCjX xsmall-LEXhwY2Z iconOnly-LEXhwY2Z withEndSlot-LEXhwY2Z apply-common-tooltip"
+    }
+  ]
 }
