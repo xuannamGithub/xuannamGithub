@@ -1,8 +1,8 @@
 {
-  "schema_version": "2.0.3",
+  "schema_version": "2.0.4",
   "mission_id": "MISSION-001",
   "canonical_thread": true,
-  "updated_at_local": "2026-08-24T18:47:00+07:00",
+  "updated_at_local": "2026-08-24T19:06:56+07:00",
   "owner_operating_mandate": {
     "version": "2.0",
     "authority": "OWNER",
@@ -16,15 +16,14 @@
   "reporting_incidents": [
     {
       "code": "REPORTING_CONTRACT_FAIL — MISSED_HOURLY_CHECKPOINT_#3",
-      "root_cause": "Existing Mission scheduler was observed DISABLED after its last run at 2026-08-24T08:59:27.322019Z. This was not caused by the later GitHub interactive approval gate.",
-      "remediation": "Restored same existing scheduler 6a86a181691081919afe42eac2a18161 to ENABLED. No duplicate scheduler created. Reporting contract updated so execution authorization cannot suppress checkpoint delivery.",
+      "root_cause": "Existing Mission scheduler was observed DISABLED after its last historical run; this was not caused by the later GitHub interactive approval gate.",
+      "remediation": "Restored same existing scheduler 6a86a181691081919afe42eac2a18161 to ENABLED. No duplicate scheduler created.",
       "scheduler_state_after_remediation": "ENABLED"
     },
     {
       "code": "INTERACTIVE_APPROVAL_GATE / REPORTING_PATH_MUST_REMAIN_INDEPENDENT",
-      "scope": "A prior pending GitHub write for GH10 workflow modification displayed an interactive approval prompt.",
       "reconciled_result": "NOT_EXECUTED",
-      "evidence": "Current repository workflow .github/workflows/mission001-gr001-native-capture.yml still contains GH9 native websocket route with blob SHA 9f3f402c87ffb515c29f02c96a55c4f68bed180c; GH10 content is absent.",
+      "evidence": "Repository workflow remained GH9; GH10 content did not persist.",
       "owner_action_required": false
     }
   ],
@@ -67,25 +66,46 @@
       "verified_sha256": "9b8eca4c8cf2e151083020f4b3c2812b0ba3f04502c33fb6af892f0371712137",
       "a1_identity_gate": "PASS"
     },
+    "exact_source_alignment_audit": {
+      "status": "MATERIAL_DELTA_EXACT_P0_CORE_BEHAVIOR_VERIFIED",
+      "execution_arbitration": "CORE_VERIFIED: P0 explicitly labels and implements priority/exclusion CT Long -> W2 Long -> W2 Short while flat. W2 Long excludes CT readiness; W2 Short excludes both CT and W2 Long readiness. This is arbitration among independent ready setups, not a mandatory sequential trade lifecycle.",
+      "w2_touch_ea_window": "CORE_VERIFIED: exact P0 input ew_w2PullEAWindow default = 5 bars; BUY and SELL require touch memory within that window plus trend/context, Donchian confluence, EA, layers/room and barstate.isconfirmed.",
+      "structural_sl_tp": "CORE_VERIFIED: CT stop = sequence low - ATR buffer; CT target = nearest W2 above. W2 Long stop = W2 support - invalidation ATR and target = nearest W2 above. W2 Short stop = W2 resistance + invalidation ATR and target = nearest W2 below.",
+      "risk_overlay": "CORE_VERIFIED_ENGINEERING: Bot V1 derivative has risk-based sizing using strategy.equity * risk% * scale divided by stop distance * syminfo.pointvalue; daily-loss latch, max-DD kill latch, trade cap, GO/SCALE/STOP state, force close_all on STOP while positioned.",
+      "default_risk_values_are_product_parameters_not_economic_validation": true,
+      "native_compile_required_before_A3": true
+    },
     "a2_execution_evidence": {
       "local_container_native_browser_attempt": "FAIL_EXECUTION_SURFACE",
       "error": "TradingView navigation blocked by environment administrator: net::ERR_BLOCKED_BY_ADMINISTRATOR",
-      "meaning": "Not a Pine compile failure. Exact source remains unchanged. This local execution surface cannot perform native TradingView A2.",
-      "existing_github_native_surface": "GH2 route-probe workflow exists and historically demonstrated NATIVE_SURFACE_EXECUTABLE, but exact P0 bytes are not currently available inside the repository runner and no byte-preserving ingress bridge from ChatGPT File Library to GitHub Actions is exposed by the current tools.",
+      "meaning": "Not a Pine compile failure. Exact source remains unchanged.",
+      "github_surface": "Existing GH2 route historically demonstrated NATIVE_SURFACE_EXECUTABLE, but current GH2 workflow is a surface probe only and does not ingest the exact recovered P0 bytes.",
+      "current_blocker": "BYTE-PRESERVING SOURCE INGRESS INTO NATIVE TRADINGVIEW EXECUTION SURFACE",
       "patch_authorized": false
     },
-    "next_executable_action": "Use the minimum byte-preserving source ingress/native TradingView route that does not modify P0. Do not retype/normalize exact source. If no such bridge is executable, keep A2 blocked on execution-surface ingress rather than misclassifying as compiler failure."
+    "anti_deadlock_action": "PARALLELIZE: while A2 ingress remains blocked, exact-source alignment audit proceeds; no P0 modification and no repeated workflow-permission request without demonstrated necessity.",
+    "next_executable_action": "Use minimum byte-preserving native compile ingress. If a workflow-scope write is demonstrably required, treat it as a separate security gate; do not retype/normalize source."
   },
   "strategy_architecture_audit": {
-    "hypothesis": "CT Long > W2 Long > W2 Short may be execution arbitration among independent ready setups while flat rather than mandatory sequential trade lifecycle",
-    "status": "CHALLENGER_SUPPORTS_HYPOTHESIS__EXACT_P0_SOURCE_NOW_RECOVERED__MODULE_ALIGNMENT_NEXT_AFTER_A2_PRIORITY",
+    "status": "EXACT_P0_CORE_VERIFIED",
+    "execution_arbitration": "CT > W2L > W2S independent readiness priority while flat",
+    "mandatory_sequential_trade_lifecycle": false,
     "rewrite_authorized": false
   },
   "challenger": {
     "classification": "CHALLENGER_RESEARCH_BRANCH_NOT_SOT_NOT_AUTHORIZED_FOR_MERGE",
     "exact_uploaded_sha256": "8a3f3fd02d50d7f475bb686f01774ba227f83455c55b5e3d76eb8405f3d4bf08",
     "promotion_map_file": "mission001/CLAUDE_CHALLENGER_PROMOTION_MAP_v1.md",
-    "audit_status": "AUDIT_V1_COMPLETE__NO_IMPLEMENTATION_AUTHORIZED"
+    "audit_status": "AUDIT_V1_COMPLETE__EXACT_P0_ALIGNMENT_PARTIALLY_RESOLVED",
+    "promotion_map_delta": {
+      "CT_W2L_W2S_arbitration": "CORE_VERIFIED",
+      "structural_SL_TP": "CORE_VERIFIED",
+      "W2_touch_EA_window_and_final_signal_structure": "CORE_VERIFIED",
+      "risk_overlay_architecture": "CORE_VERIFIED_ENGINEERING",
+      "repaint_no_lookahead_claim": "NOT_YET_VERIFIED",
+      "LuxAlgo_Elliott_module": "REJECT_DIRECT_PRODUCT_PROMOTION"
+    },
+    "implementation_authorized": false
   },
   "fast_lane_d": {
     "version": "v0.5-D1",
@@ -115,31 +135,22 @@
         "target_epoch_sec": 1787189400,
         "websocket_matching_frame_count": 2,
         "target_time_verified": false,
-        "ui_ohlc": {"open":"4,495.825","high":"4,496.630","low":"4,495.825","close":"4,496.265"},
         "verdict": "TARGET_FRAME_SEEN_BUT_OHLC_PARSE_UNVERIFIED",
         "canonical_promotion": false
       },
       "GH10_WS_PROTOCOL_DECODE": {
         "status": "NOT_EXECUTED",
-        "authorization_reconciliation": "Prior interactive write did not persist. Current workflow remains GH9.",
-        "duplicate_workflow_created": false,
-        "next_policy": "Do not repeat permission request unless a demonstrably necessary write path is selected after Track A priority and no lower-permission route exists."
+        "authorization_reconciliation": "Prior interactive workflow write did not persist.",
+        "duplicate_workflow_created": false
       }
     },
-    "next_executable_action": "Continue Track B with minimum valid non-duplicative route after Track A A2 priority; no canonical promotion until timestamp/bar provenance + OHLC + full parity pass."
-  },
-  "anti_deadlock": {
-    "track_a_action": "SWITCH succeeded: File Library route materialized exact P0 and A1 passed; current blocker moved to native compile execution surface, not artifact identity.",
-    "track_b_action": "GH9 killed; GH10 not executed; avoid repeated permission prompts and choose minimum valid next route.",
-    "rule": "Two consecutive NO MATERIAL DELTA checkpoints require SWITCH/PARALLELIZE/KILL unless a non-bypassable dependency is evidenced."
+    "material_delta": "NO MATERIAL DELTA",
+    "next_executable_action": "Keep canonical_events at 0. Do not retry permission-gated GH10 unless it becomes the minimum demonstrated route after Track A priority; otherwise switch to a materially different provenance route."
   },
   "scheduler": {
     "task_id": "6a86a181691081919afe42eac2a18161",
     "title": "Mission 001 Progress",
-    "status": "ENABLED",
-    "cadence": "hourly",
-    "timezone": "Asia/Ho_Chi_Minh",
-    "last_run_time_utc": "2026-08-24T08:59:27.322019Z",
+    "status": "ENABLED_VERIFIED_THIS_CHECKPOINT",
     "duplicate_scheduler_prohibited": true,
     "reporting_path_independent_from_execution_gate": true
   },
