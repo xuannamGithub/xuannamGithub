@@ -1,8 +1,8 @@
 {
-  "schema_version": "1.2.1",
+  "schema_version": "1.2.2",
   "mission_id": "MISSION-001",
   "canonical_thread": true,
-  "updated_at_local": "2026-08-24T09:21:00+07:00",
+  "updated_at_local": "2026-08-24T10:06:00+07:00",
   "state_rule": "Verified newer execution evidence overrides stale state/report. Cycle: restore -> verify -> reconcile -> recover -> persist -> resume.",
   "owner_role": "Capital / Risk / Go-Live / Cost / Security / Doctrine / Champion approval only",
   "ai_role": "Execution / Research / Verification / Continuity",
@@ -73,14 +73,17 @@
     "required_fields": ["exact event-bar OHLC","Donchian state","W2 lifecycle/state","EA state","required filter vector","exact event identity"],
     "archive_exact_bar_route": "KILLED",
     "active_route": {
-      "name": "GH3_GR001_NATIVE_CHART_CAPTURE",
+      "name": "GH3_GR001_NATIVE_CHART_CAPTURE_V2",
       "workflow": "github://xuannamGithub/xuannamGithub/.github/workflows/mission001-gr001-native-capture.yml",
-      "workflow_commit": "2e13738741bbb647bd9da0737233a1a2b6134b05",
-      "status": "PROVISIONED; FIRST_EXECUTION_EVIDENCE_NOT_YET_PERSISTED",
+      "workflow_commit": "43f2572d94e6e14797240e881fcdaa3054203f0b",
+      "status": "PERSISTENCE_PATCHED; EXECUTION_RESULT_NOT_YET_PERSISTED",
       "target": "TradingView OANDA:XAUUSD M1 GR-001 2026-08-20 01:30 BUY",
+      "latest_execution_check": "mission001/gr001_native_capture.json returned Not Found after v2 workflow commit",
+      "material_delta": "Workflow persistence path hardened against stale-head failure; canonical evidence delta remains 0",
       "pass_gate": "Exact native event-bound fields sufficient for full parity; first complete record increments canonical_events to >0",
-      "kill_condition": "ROUTE_FAIL or two checkpoints without material canonical evidence",
-      "next_executable_action": "Fetch GH3 persisted evidence when produced; if partial, extend only required evidence extraction; if fail, kill/switch/parallelize."
+      "fail_gate": "ROUTE_FAIL or evidence file remains absent after this patched execution route",
+      "kill_condition": "If next execution still fails to persist evidence, KILL GH3 and SWITCH/PARALLELIZE to another native capture route",
+      "next_executable_action": "Fetch mission001/gr001_native_capture.json after GH3 v2 execution. If exact/partial canonical evidence exists, retain only source-traceable fields and continue to full parity. If still absent/ROUTE_FAIL, kill GH3 immediately and switch route."
     }
   },
   "active_authorizations": [
