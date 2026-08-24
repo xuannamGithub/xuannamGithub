@@ -1,27 +1,90 @@
 {
   "mission": "MISSION-001",
-  "route": "GH9_NATIVE_WEBSOCKET_BAR_VERIFY",
+  "route": "GH10_WS_PROTOCOL_DECODE",
   "golden_id": "GR-001",
   "requested_display_time": "2026-08-20 01:30",
   "target_iso_utc": "2026-08-20T01:30:00Z",
   "target_epoch_sec": 1787189400,
-  "timestamp_utc": "2026-08-24T09:04:18.884Z",
-  "target_time_verified": false,
-  "websocket_target_frame_seen": false,
-  "websocket_candidate": null,
-  "ui_ohlc": {
-    "open": "4,495.825",
-    "high": "4,496.630",
-    "low": "4,495.825",
-    "close": "4,496.265"
+  "requested_symbol": "OANDA:XAUUSD",
+  "interval": "1",
+  "timestamp_utc": "2026-08-24T15:29:00.873Z",
+  "endpoint": "wss://data.tradingview.com/socket.io/websocket?from=chart%2F&date=2026_08_24-00_00",
+  "auth_mode": "UNAUTHORIZED_GUEST_MARKET_DATA_ONLY",
+  "target_time_verified": true,
+  "symbol_identity_verified": true,
+  "resolved_symbol": {
+    "pro_name": "OANDA:XAUUSD",
+    "ticker": null,
+    "short_name": null,
+    "exchange": "OANDA",
+    "listed_exchange": "OANDA",
+    "timezone": "America/New_York",
+    "session": "1700-1700",
+    "pricescale": 1000,
+    "currency_code": "USD"
   },
-  "verdict": "TARGET_FRAME_SEEN_BUT_OHLC_PARSE_UNVERIFIED",
-  "error": null,
-  "page_loaded": true,
-  "http_status": 200,
-  "websocket_url": "wss://pushstream.tradingview.com/message-pipe-ws/public",
-  "date_value": "2026-08-20",
-  "time_value": "01:30",
-  "go_to_clicked": true,
-  "websocket_matching_frame_count": 2
+  "exact_bar": {
+    "timestamp": 1787189400,
+    "iso_utc": "2026-08-20T01:30:00.000Z",
+    "open": 4500.485,
+    "high": 4501.14,
+    "low": 4495.375,
+    "close": 4501.04,
+    "volume": 1615
+  },
+  "adjacent_bars": [
+    {
+      "timestamp": 1787189280,
+      "iso_utc": "2026-08-20T01:28:00.000Z",
+      "open": 4499.88,
+      "high": 4503.265,
+      "low": 4499.245,
+      "close": 4500.76,
+      "volume": 1029
+    },
+    {
+      "timestamp": 1787189340,
+      "iso_utc": "2026-08-20T01:29:00.000Z",
+      "open": 4500.845,
+      "high": 4501.88,
+      "low": 4499.745,
+      "close": 4500.475,
+      "volume": 599
+    },
+    {
+      "timestamp": 1787189400,
+      "iso_utc": "2026-08-20T01:30:00.000Z",
+      "open": 4500.485,
+      "high": 4501.14,
+      "low": 4495.375,
+      "close": 4501.04,
+      "volume": 1615
+    },
+    {
+      "timestamp": 1787189460,
+      "iso_utc": "2026-08-20T01:31:00.000Z",
+      "open": 4501.03,
+      "high": 4501.33,
+      "low": 4497.235,
+      "close": 4498.35,
+      "volume": 1114
+    },
+    {
+      "timestamp": 1787189520,
+      "iso_utc": "2026-08-20T01:32:00.000Z",
+      "open": 4498.385,
+      "high": 4499.255,
+      "low": 4496.36,
+      "close": 4499.035,
+      "volume": 962
+    }
+  ],
+  "matching_message_type": "timescale_update",
+  "matching_series_key": "sds_1",
+  "protocol_frame_excerpt": "},{\"i\":1404,\"v\":[1787189160.0,4499.135,4499.865,4497.65,4498.32,839.0]},{\"i\":1405,\"v\":[1787189220.0,4498.315,4500.275,4497.94,4499.885,756.0]},{\"i\":1406,\"v\":[1787189280.0,4499.88,4503.265,4499.245,4500.76,1029.0]},{\"i\":1407,\"v\":[1787189340.0,4500.845,4501.88,4499.745,4500.475,599.0]},{\"i\":1408,\"v\":[1787189400.0,4500.485,4501.14,4495.375,4501.04,1615.0]},{\"i\":1409,\"v\":[1787189460.0,4501.03,4501.33,4497.235,4498.35,1114.0]},{\"i\":1410,\"v\":[1787189520.0,4498.385,4499.255,4496.36,4499.035,962.0]},{\"i\":1411,\"v\":[1787189580.0,4498.945,4499.865,4497.075,4499.865,1036.0]},{\"i\":1412,\"v\":[1787189640.0,4499.86,4501.225,4497.395,4498.46,1292.0]},{\"i\":1413,\"v\":[1787189700.0,4498.535,4499.77,4497.91,4498.41,1036.0]},{\"i\":1414,\"v\":[1787189760.0,4498.39,4498.935,4496.0,4497.365,1055.0]},{\"i\":1415,\"v\":[1787189820.0,4497.35,4498.03,4496.09,4496.815,916.0]},{\"i\":1416,\"v\":[1787189880.0,4496.81,4498.315,4495.965,4497.985,957.0]},{\"i\":1417,\"v\":[1787189940.0,4497.925,4497.925,4493.7,4495.64,948.0]},{\"i\":1418,\"v\":[1787190000.0,4495.645,4498.45,4495.185,4498.405,1090.0]},{\"i\":1419,\"v\":[1787190060.0,4498.31,4499.435,4495.11,4496.11,1394.0]},{\"i\":1420,\"v\":[1787190120.0,4496.125,4496.125,4493.385,4494.515,688.",
+  "decoded_bar_count": 5000,
+  "request_more_data_count": 0,
+  "canonical_eligible": true,
+  "verdict": "CANONICAL_TIMESTAMP_OHLC_VERIFIED",
+  "error": null
 }
