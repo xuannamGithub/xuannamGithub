@@ -1,8 +1,8 @@
 {
-  "schema_version": "2.0.4",
+  "schema_version": "2.0.5",
   "mission_id": "MISSION-001",
   "canonical_thread": true,
-  "updated_at_local": "2026-08-24T19:06:56+07:00",
+  "updated_at_local": "2026-08-24T20:06:00+07:00",
   "owner_operating_mandate": {
     "version": "2.0",
     "authority": "OWNER",
@@ -12,6 +12,51 @@
     "execution_standard": "Preserve -> Understand -> Instrument -> Verify -> Improve -> Validate",
     "owner_role": "Capital / Risk / Go-Live / Cost / Security / Doctrine / Champion",
     "ai_role": "authorized technical execution, source tracing, audit, workflow execution, route selection, debugging, evidence collection, research, kill/switch decisions"
+  },
+  "reporting_architecture": {
+    "contract_version": "1.0",
+    "principle": "REPORT_FIRST_PERSIST_SECOND",
+    "planes": {
+      "owner_reporting_plane": {
+        "status": "INDEPENDENT",
+        "success_condition": "Owner-facing checkpoint or Material Event Report actually delivered",
+        "must_deliver_when_persistence_state_is": [
+          "PENDING",
+          "BLOCKED",
+          "FAILED",
+          "REQUIRES_OWNER_AUTHORIZATION"
+        ]
+      },
+      "execution_state_persistence_plane": {
+        "status": "SEPARATE_FROM_REPORTING",
+        "backend": "GitHub mission state persistence",
+        "failure_must_not_suppress_owner_report": true
+      }
+    },
+    "permission_gate_event_contract": {
+      "event_code": "EXECUTION_BLOCKED_PENDING_OWNER_AUTHORIZATION",
+      "immediate_report_required": true,
+      "required_fields": [
+        "exact_file_or_action",
+        "permission_scope",
+        "consequence_of_allow",
+        "consequence_of_reject"
+      ],
+      "silent_wait_prohibited": true
+    },
+    "routine_owner_approval_dependency_prohibited": true
+  },
+  "system_defects": {
+    "REPORTING_PERSISTENCE_COUPLING_DEFECT": {
+      "status": "OPEN_REMEDIATION_IN_PROGRESS",
+      "classification": "ARCHITECTURE_DEFECT_NON_MISSION_TECHNICAL",
+      "description": "Owner reporting had become operationally coupled to interactive GitHub write authorization. GitHub persistence must never be a prerequisite for checkpoint delivery.",
+      "containment_applied": "Owner reporting plane separated from execution/state-persistence plane; report-first contract active immediately.",
+      "root_remediation_goal": "Routine already-authorized Mission state persistence without repeated interactive Owner approval, using minimum safe permission scope.",
+      "permission_policy": "Do not broaden GitHub permissions automatically.",
+      "security_decision_gate": "If eliminating repeated approval requires a persistent permission/security change, present one clearly scoped OWNER SECURITY DECISION GATE before implementation.",
+      "mission_priority_impact": "NONE"
+    }
   },
   "reporting_incidents": [
     {
@@ -151,7 +196,11 @@
     "task_id": "6a86a181691081919afe42eac2a18161",
     "title": "Mission 001 Progress",
     "status": "ENABLED_VERIFIED_THIS_CHECKPOINT",
+    "cadence": "hourly",
+    "timezone": "Asia/Ho_Chi_Minh",
     "duplicate_scheduler_prohibited": true,
+    "unchanged_by_architecture_correction": true,
+    "reporting_success_definition": "Owner-facing checkpoint actually delivered",
     "reporting_path_independent_from_execution_gate": true
   },
   "owner_decision_required": "NONE"
