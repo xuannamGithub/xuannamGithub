@@ -1,0 +1,27 @@
+{
+  "mission": "MISSION-001",
+  "route": "GH3_GR001_NATIVE_CHART_CAPTURE_V2",
+  "golden_id": "GR-001",
+  "requested_local_time": "2026-08-20 01:30",
+  "side": "BUY",
+  "target": "https://www.tradingview.com/chart/?symbol=OANDA%3AXAUUSD&interval=1",
+  "timestamp_utc": "2026-08-24T03:06:46.019Z",
+  "page_loaded": true,
+  "go_to_opened": true,
+  "go_to_submitted": true,
+  "chart_text_after_go_to": "XAUUSD\n1m\nIndicators\nAlert\nReplay\nSave\nSave\nTrade\nPublish\nX\nGold Spot / U.S. Dollar\n1\nOANDA\nO\n4,605.080\nH\n4,606.730\nL\n4,603.215\nC\n4,604.840\n−0.265 (−0.01%)\n4,634.990\nSELL\n70.0\n4,635.690\nBUY\nVol · Ticks\n1.45 K\n1D\n5D\n1M\n3M\n6M\nYTD\n1Y\n5Y\nAll\n03:07:19 UTC\nWatchlist\nSymbol\nLast\nChg\nChg%\nINDICES\nS\nSPX\nD\n7,674.37\n33.21\n0.43%\nN\nNDQ\n29,308.86\n95.69\n0.33%\nD\nDJI\n53,282.32\n518.05\n0.98%\nV\nVIX\nD\n15.13\n−0.88\n−5.50%\nD\nDXY\n98.824\n−0.015\n−0.02%\nSTOCKS\nA\nAAPL\n309.35\n−1.95\n−0.63%\nT\nTSLA\n362.86\n17.73\n5.14%\nN\nNFLX\n79.59\n−0.55\n−0.69%\nFUTURES\nU\nUSOIL\n85.72\n−0.91\n−1.05%\nG\nGOLD\n4,635.380\n32.720\n0.71%\nS\nSILVER\n68.7980\n−0.1520\n−0.22%\nFOREX\nE\nEURUSD\n1.16810\n0.00049\n0.04%\nG\nGBPUSD\n1.36482\n0.00071\n0.05%\nU\nUSDJPY\n158.915\n−0.057\n−0.04%\nCRYPTO\nB\nBTCUSD\n77,313\n−404\n−0.52%\nB\nBTCUSDT\n77,301.00\n−433.00\n−0.56%\nE\nETHUSD\n2,438.0\n−24.8\n−1.01%\nX\nXAUUSD\nGold Spot / U.S. Dollar\nOANDA\nCommodity\nCfd\n4,635.315\nUSD\n+32.325\n+0.70%\nMarket open\nNews\nGold hits over 3-month high ahead of US inflation data, Fed chair speech\nMore events\nPerformance\n6.03%\n1W\n14.51%\n1M\n1.42%\n3M\n−9.72%\n6M\n7.16%\nYTD\n38.81%\n1Y\nSeasonals\n\t\n\t\n\t\n\t\n2026\n2025\n2024\nMore seasonals\nTechnicals\nNeutral\nSell\nBuy\nStrong sell\nStrong buy\nStrong sell\nSell\nNeutral\nBuy\nStrong buy\nMore technicals\nBrowse community posts",
+  "ohlc_tokens": [
+    "O\n4",
+    "H\n4",
+    "L\n4",
+    "C\n4",
+    "L\n70.0",
+    "l\n03",
+    "L\n309.35",
+    "L\n85.72"
+  ],
+  "screenshot_created": true,
+  "verdict": "PARTIAL_CANONICAL_OHLC_EVIDENCE",
+  "error": null,
+  "http_status": 200
+}
