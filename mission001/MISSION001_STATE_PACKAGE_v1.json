@@ -1,0 +1,95 @@
+{
+  "schema_version": "1.1",
+  "mission_id": "MISSION-001",
+  "title": "CHON LOC HE NAM / Dual-Track Bot V1 + Champion Research",
+  "state_package_role": "Source of Truth for session/runtime continuity; conversation memory is non-authoritative.",
+  "updated_at_local": "2026-08-24T08:01:51+07:00",
+  "owner_objective": {
+    "north_star": "Track A: P0 SHIPPED/FROZEN -> P1 native TradingView Compile PASS + XAUUSD M1 Shadow Fidelity PASS -> P2 Runtime Position/Risk Verification PASS -> Owner Risk/Capital/Go-Live Gate. Track B: Canonical Evidence -> Events -> Trades -> Metrics -> Candidate Testing/Elimination -> OOS/Robustness -> Champion or ROBUST EDGE NOT FOUND.",
+    "owner_role": "Decision / Authorization / Approval only",
+    "ai_role": "Execution / Verification / Evidence",
+    "owner_technical_operation": "PROHIBITED",
+    "standing_mandate": "AI owns technical execution autonomously. PASS->next gate; FAIL->minimum patch/retest; BLOCKED->parallel recovery; route FAIL->KILL/switch; two zero-material checkpoints->mandatory SWITCH/PARALLELIZE/KILL."
+  },
+  "global_constraints": {
+    "baseline": "BASELINE-001 — Nam Zone06 EA Strategy v0.4 CT-W2 Rebound 20.8",
+    "baseline_status": "FROZEN_READ_ONLY",
+    "reference_source_of_truth": "TradingView / OANDA:XAUUSD / M1 / BASELINE-001",
+    "no_strategy_invention": true,
+    "no_baseline_modification": true,
+    "no_overfit_to_wr": true,
+    "historical_wr_not_probability": true,
+    "golden_cases_are_parity_oracles_not_optimization_samples": true,
+    "live_capital_before_P2": false
+  },
+  "deadline": {
+    "track_a_initial_deadline": "24-48 hours from Owner dual-track directive; deadline does not reset",
+    "success_near_term": "SHIP P0 Runnable Bot first; then prove P1; only P2 may reach Owner Go-Live Gate"
+  },
+  "track_a": {
+    "objective": "Bot V1 / immediate need",
+    "product_levels": {
+      "P0": "Runnable Bot artifact + source + deterministic replay/test harness + risk engine + logging + STOP/GO/SCALE + config + run instructions + manifest/checksums + known limitations + reproducible test evidence",
+      "P1": "P0 + native TradingView compile PASS + XAUUSD M1 Shadow Fidelity PASS",
+      "P2": "P1 + runtime position/risk sizing PASS; micro-live eligible only after Owner Risk/Capital/Go-Live approval"
+    },
+    "current_level": "P0_SHIPPED_FROZEN__P1_IN_PROGRESS",
+    "frozen_derivative": "MISSION001_TrackA_BotV1_FullDerivative_v0.3.pine",
+    "derivative_status": "FROZEN unless a concrete compiler/runtime FAIL requires minimum patch",
+    "material_engineering_evidence": {
+      "tests": "27/27 deterministic/static tests PASS",
+      "risk_controls": ["position sizing using stop distance and syminfo.pointvalue","risk/trade cap","max daily loss latch","max drawdown/kill-switch","STOP/GO/SCALE","force-flat kill","logging"],
+      "claim_limit": "Engineering evidence only; not Deployment Evidence, not Edge proof, not native compile proof"
+    },
+    "gates": {
+      "gate_1_native_compile": "SURFACE_EXECUTABLE; COMPILE_NOT_YET_EVIDENCED. GH2 opened native TradingView Pine control/editor surface and Add-to-chart on OANDA:XAUUSD; exact frozen v0.3 source ingress remains unresolved.",
+      "gate_2_shadow_fidelity": "NOT_OPEN until exact frozen v0.3 native compile PASS; on PASS execute immediately.",
+      "gate_3_runtime_risk_sizing": "NOT_OPEN until Shadow Fidelity PASS."
+    },
+    "current_active_route": {
+      "name": "GH2_CURRENT_PINE_SIDE_TOOLBAR — GitHub Actions / Google Chrome / Playwright -> TradingView native Pine surface",
+      "authorization": "AI-executed recovery route; no Owner technical operation required",
+      "scope": "Exact frozen v0.3 ingress -> native compile -> diagnostics/minimum patch only if compiler FAIL -> XAUUSD M1 Shadow Fidelity",
+      "status": "NATIVE_SURFACE_EXECUTABLE; END_TO_END_BLOCKED_BY_EXACT_SOURCE_INGRESS",
+      "execution_evidence": {
+        "repository": "xuannamGithub/xuannamGithub",
+        "path": "mission001/route_probe.json",
+        "route": "GH2_CURRENT_PINE_SIDE_TOOLBAR",
+        "timestamp_utc": "2026-08-23T23:33:02.756Z",
+        "http_status": 200,
+        "pine_control_found": true,
+        "pine_click_succeeded": true,
+        "editor_surface_detected": true,
+        "add_to_chart_visible": true,
+        "login_gate_visible": false,
+        "route_verdict": "NATIVE_SURFACE_EXECUTABLE"
+      },
+      "blocker": {
+        "dependency": "Exact frozen derivative bytes (SHA256 9b8eca4c8cf2e151083020f4b3c2812b0ba3f04502c33fb6af892f0371712137) must be transferred from File Library into the GH2 runner/Pine editor without mutation.",
+        "verified_checks": ["File Library contains derivative and manifest/hash","active container does not contain derivative bytes","GitHub repository search found no derivative","Google Drive exact derivative search found no derivative","Google Drive baseline-title search found no baseline/source copy","current automation runtime exposes File Library read/search but no exact-byte materialization/write connector"],
+        "pass_fail_gate": "PASS only when runner receives exact bytes and SHA256 matches frozen derivative before paste/compile. FAIL if an ingress route cannot supply byte-identical source.",
+        "kill_condition": "Do not repeat already-failed Drive/GitHub/local-path searches. If no AI-operable exact-byte ingress exists in current runtime, kill GH2 as end-to-end compile route (retain surface evidence) and switch to a route that co-locates source bytes + native TradingView; escalate only after all executable routes are evidenced exhausted or a mandatory Security/Cost gate is identified."
+      },
+      "next_executable_action": "Resolve exact frozen v0.3 byte ingress into an executable native TradingView route. Verify SHA256 before compile. On exact-byte PASS, compile immediately; compile PASS -> immediate XAUUSD M1 Shadow Fidelity; compiler FAIL -> minimum demonstrated patch only -> recompile."
+    },
+    "p0_status": "ACCEPTED_FROZEN_BY_OWNER"
+  },
+  "track_b": {
+    "objective": "MISSION 001 Champion research",
+    "pipeline": ["Golden Reference","BAR parity","STATE parity","EVENT parity","Events","Trades","Baseline Metrics","Ablation/Candidate Testing","Candidate Elimination","OOS/Robustness","Champion"],
+    "current_gate": "Golden Reference / full BAR-STATE-EVENT parity; canonical_events remains 0",
+    "research_evidence_delta_latest": 0,
+    "retained_evidence": ["GR-001 partial-state evidence retained: visual EA/EB anchored to 20/08 01:30 BUY"],
+    "golden_cases": [{"id":"GR-001","timestamp_local":"2026-08-20 01:30","side":"BUY"},{"id":"GR-002","timestamp_local":"2026-08-17 06:36","side":"BUY"},{"id":"GR-003","timestamp_local":"2026-08-14 06:48","side":"SELL"}],
+    "missing_reference_fields": ["exact event-bar OHLC","Donchian state","W2 lifecycle/state","EA state","required filter vector","exact event identity"],
+    "next_executable_action": "Acquire canonical GR-001/002/003 event-bound TradingView evidence with exact OHLC + Donchian state + W2 lifecycle + EA state + filter vector + event identity; first valid full-parity record makes canonical_events > 0. Do not use GC development records as substitutes.",
+    "development_evidence": {"status":"SEPARATE_FROM_CANONICAL","cases":["GC-BUY-001 2026-08-10 20:58","GC-SELL-001 2026-08-11 08:54"],"note":"Owner-confirmed development topology/W2 evidence only; contributes 0 to canonical_events."},
+    "canonical_route_status": {"canonical_events":0,"latest_execution":"Targeted File Library search for GR-001 20/08 01:30, GR-002 17/08 06:36, GR-003 14/08 06:48 exact OHLC/Donchian/W2/EA/event identity.","result":"No artifact found containing full required canonical parity vector. GR-001 screenshot confirms chart/Entry Buy timestamp but lacks Data Window exact fields. Development W2 packages remain incomplete for source/confirmed/first-touch/source-OHLC and pair-level labels.","killed_route":"Archive exact-BAR reconstruction remains KILLED; not rerun.","switched_route":"Canonical evidence acquisition is switched from archive reconstruction to native-chart evidence capture once an executable source-aware TradingView route is available; no development evidence promotion."}
+  },
+  "owner_decisions_and_authorizations": ["Owner role locked: Owner=Decision/Authorization/Approval; AI=Execution/Verification/Evidence","Browser bridge in original runtime KILLED as not provisionable","Authenticated Browser/Desktop Execution capability concept APPROVED","Route B Browserbase Free APPROVED then FAST-FAILED in current runtime","Route C GitHub Actions + Browserbase rejected after provisioning proof FAIL; route KILLED","Route E third-party TradingView Data API REJECTED as Golden reference source; parked candidate-only","ChatGPT Desktop / Work-Codex browser control + CDP for TradingView Track A APPROVED","2-hour checkpoint reporting REQUIRED for both Track A and Track B; Owner silence never pauses execution","Owner accepted/froze P0; no further P0 proof/expansion capacity unless P1/P2 demonstrates a specific defect","Standing Owner Mandate: autonomous execution to Owner Decision Gates; reporting cannot replace execution","Notification/report-delivery workstream CLOSED/KILLED; scheduler retained","GH1 anonymous TradingView text-label route KILLED by real ROUTE_FAIL evidence","GH2 current Pine side-toolbar route achieved NATIVE_SURFACE_EXECUTABLE evidence; retain as surface PASS"],
+  "killed_or_rejected_routes": [{"route":"Original authenticated browser bridge in current runtime","status":"KILLED","reason":"not provisionable"},{"route":"Browserbase Route B in current runtime","status":"KILLED","reason":"no API key/secure secret ingress/outbound reachability"},{"route":"GitHub Actions + Browserbase Route C","status":"KILLED","reason":"AI lacked secure secret provisioning capability end-to-end"},{"route":"Archive exact-BAR reconstruction Route D","status":"KILLED","reason":"exact OHLC/state not recoverable"},{"route":"Third-party TradingView Data API Route E as Golden oracle","status":"REJECTED","reason":"provider is not TradingView; cannot be canonical parity oracle"},{"route":"PineconeX preflight","status":"KILLED","reason":"access/environment FAIL; no credential + DNS/network isolation; not Pine INVALID"},{"route":"Open-source Pine validator preflight","status":"KILLED","reason":"tool/access failure; precheck loop formally ended"},{"route":"GH1 GitHub Actions TradingView text-label probe","status":"KILLED","reason":"Execution evidence: TradingView HTTP 200 but Pine Editor label not found/clicked; route_verdict=ROUTE_FAIL at 2026-08-23T22:54:49.913Z"},{"route":"GH2 GitHub Actions current Pine side-toolbar probe","status":"SURFACE_PASS_ONLY","reason":"Native Pine button found/clicked, editor detected, Add-to-chart visible, no login gate; exact frozen source ingress still required before compile"}],
+  "artifact_ledger": [{"path":"/mnt/data/Nam Zone06 EA Strategy v0.4 CT-W2 Rebound 20.8.txt","role":"BASELINE-001 source copy","sha256":"937e28d772a917c093bee6fe77712a77c95bc78bfe28ff001514e63eee0e1fd6"},{"path":"/mnt/data/MISSION001_TrackA_BotV1_FullDerivative_v0.3.pine","role":"Track A frozen full derivative","sha256":"9b8eca4c8cf2e151083020f4b3c2812b0ba3f04502c33fb6af892f0371712137"},{"path":"/mnt/data/MISSION001_TrackA_BotV1_v0.3_tests.txt","role":"27/27 deterministic/static test evidence","sha256":"be4f98686680cc073ad1d308a3bfc6a3e9dc63e87fccd0664de0bbfd124669bd"},{"path":"/mnt/data/MISSION001_TrackA_BotV1_v0.3_manifest.json","role":"Track A v0.3 manifest","sha256":"1f4e0122ab4fb3a9a0f4a4932a8953c9f8cc3fd3fd237863001ebb66c6dd2ba1"},{"path":"/mnt/data/MISSION001_TrackA_CompileRoute_20260823.md","role":"compile route evidence/history","sha256":"241e5e86649fd1499c5b514a94e2c37625772f58bdbd7561ceb8d9b478a3df60"},{"path":"/mnt/data/MISSION001_TrackA_PineconeX_Preflight_Attempt_20260823_2044.txt","role":"PineconeX fast-fail evidence","sha256":"59c245cb8b866a6e5dd783cf71b7c4d9cfe42a32a842d325b476c41b982b60ba"},{"path":"/mnt/data/MISSION001_AUDIT_EVIDENCE_REPORT_V1.md","role":"Mission audit evidence"},{"path":"/mnt/data/MISSION001_SETUP_REGISTRY_V1.csv","role":"Setup registry"},{"path":"/mnt/data/MISSION001_VERIFIED_ARTIFACTS_2026-08-21.zip","role":"verified historical artifact package"},{"path":"github://xuannamGithub/xuannamGithub/.github/workflows/mission001-tv-route-probe.yml","role":"Track A native TradingView recovery workflow GH2","commit":"b2a97af722e232b1a50c8e44faa49b1dca297723"},{"path":"github://xuannamGithub/xuannamGithub/mission001/route_probe.json","role":"Track A GH2 native surface execution evidence","git_blob_sha":"6a0c9455875f9f90c6d162e625e2c91a5fe4f8e8","evidence_timestamp_utc":"2026-08-23T23:33:02.756Z","verdict":"NATIVE_SURFACE_EXECUTABLE"}],
+  "evidence_ledger": {"track_a":{"native_compile_pass":false,"shadow_fidelity_pass":false,"runtime_risk_sizing_pass":false,"engineering_tests":"27/27 PASS","deployment_evidence":"NOT YET","p0_status":"SHIPPED_ACCEPTED_FROZEN","native_surface_executable":true,"native_compile_fail_diagnostics":null,"latest_material_delta":"GH2 native Pine surface executable: Pine button found/clicked, editor detected, Add-to-chart visible, no login gate.","exact_source_ingress":"BLOCKED_NOT_YET_EVIDENCED"},"track_b":{"canonical_events":0,"trades_measured":0,"candidates_tested":0,"candidates_eliminated":0,"oos_survivors":0,"champion":null,"development_cases_recovered":2,"development_cases_count_toward_canonical":false,"latest_canonical_search_result":"0 new full-parity GR records found for GR-001/002/003"}},
+  "checkpoint_policy": {"cadence":"every 2 hours","scope":"Track A and Track B","report_fields":["Execution actually performed","Evidence Delta","Current Gate","Next Executable Action"],"anti_deadlock":"2 consecutive zero-material-output checkpoints on same route => mandatory switch/parallelize/kill or genuine Owner Decision Gate","owner_response_required":false,"standing_owner_mandate":"Priority: Track A measurable progress to P1/P2; Track B canonical-only progression. Reporting infrastructure is not a workstream/blocker."},
+  "continuity_protocol": {"before_session_end_or_runtime_change":["update this package","recompute hashes for changed artifacts","persist package to durable file library","record next executable action"],"on_new_session":["retrieve latest Mission State Package from file library","verify artifact hashes/existence","restore Track A/B gates, killed routes, authorizations and deadlines","resume exactly next executable action","do not ask Owner to retell history"],"if_recovery_fails":"Reconstruct from artifacts first; escalate Owner only for an unrecoverable decision, never for memory recap.","durable_state_note":"File Library package discovered stale during 2026-08-24 checkpoint; reconstructed from verified artifacts + GitHub execution evidence. Current runtime lacks File Library mutation surface, so this updated package is persisted locally and mirrored to GitHub; future run must prefer newest timestamp/hash and reconcile back to File Library when mutation capability is available."}
+}
