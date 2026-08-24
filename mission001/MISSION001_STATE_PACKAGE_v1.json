@@ -1,22 +1,33 @@
 {
-  "schema_version": "2.0.2",
+  "schema_version": "2.0.3",
   "mission_id": "MISSION-001",
   "canonical_thread": true,
-  "updated_at_local": "2026-08-24T16:03:00+07:00",
+  "updated_at_local": "2026-08-24T18:47:00+07:00",
   "owner_operating_mandate": {
     "version": "2.0",
     "authority": "OWNER",
     "status": "STANDING_AUTHORITATIVE",
-    "nature": "ADDITIVE_CORRECTIVE",
-    "priority": "Supersedes prior operational instructions only where conflicting",
     "north_star": "Verified Trading Logic -> Reliable Bots -> Economic Evidence -> Portfolio of Edges -> Capital Allocation System",
     "progress_definition": "movement through verified Decision Gates; activity without gate movement is not progress",
     "execution_standard": "Preserve -> Understand -> Instrument -> Verify -> Improve -> Validate",
     "owner_role": "Capital / Risk / Go-Live / Cost / Security / Doctrine / Champion",
-    "ai_role": "authorized technical execution, source tracing, audit, workflow execution, route selection, debugging, evidence collection, research, kill/switch decisions",
-    "reporting": "hourly scheduler remains mandatory; material events reported immediately",
-    "continuity": "Track A/B, State Package, frozen hashes, evidence, route/killed history, canonical counts, scheduler and non-conflicting authorizations preserved; no duplicate scheduler"
+    "ai_role": "authorized technical execution, source tracing, audit, workflow execution, route selection, debugging, evidence collection, research, kill/switch decisions"
   },
+  "reporting_incidents": [
+    {
+      "code": "REPORTING_CONTRACT_FAIL — MISSED_HOURLY_CHECKPOINT_#3",
+      "root_cause": "Existing Mission scheduler was observed DISABLED after its last run at 2026-08-24T08:59:27.322019Z. This was not caused by the later GitHub interactive approval gate.",
+      "remediation": "Restored same existing scheduler 6a86a181691081919afe42eac2a18161 to ENABLED. No duplicate scheduler created. Reporting contract updated so execution authorization cannot suppress checkpoint delivery.",
+      "scheduler_state_after_remediation": "ENABLED"
+    },
+    {
+      "code": "INTERACTIVE_APPROVAL_GATE / REPORTING_PATH_MUST_REMAIN_INDEPENDENT",
+      "scope": "A prior pending GitHub write for GH10 workflow modification displayed an interactive approval prompt.",
+      "reconciled_result": "NOT_EXECUTED",
+      "evidence": "Current repository workflow .github/workflows/mission001-gr001-native-capture.yml still contains GH9 native websocket route with blob SHA 9f3f402c87ffb515c29f02c96a55c4f68bed180c; GH10 content is absent.",
+      "owner_action_required": false
+    }
+  ],
   "execution_model": {
     "type": "B_EVENT_TRIGGERED_NOT_PERSISTENT",
     "orchestrator": "existing Mission 001 scheduler",
@@ -37,12 +48,11 @@
     "challenger": "Claude reconstruction/candidate = CHALLENGER / RESEARCH BRANCH / NOT SOURCE OF TRUTH / NOT AUTHORIZED FOR MERGE",
     "rejected_prototype": "Fast-Lane v0.5-D1 = COMPILE-PASS / EXECUTION-PASS / OWNER PRODUCT FAIL / EVIDENCE ONLY",
     "d1_on_product_critical_path": false,
-    "d2_build_authorized": false,
-    "d1_foundation_for_production_rebuild": false
+    "d2_build_authorized": false
   },
   "track_a": {
-    "current_level": "P0_SHIPPED_FROZEN__P1_IN_PROGRESS",
-    "current_priority_gate": "EXACT P0 ARTIFACT IDENTITY -> NATIVE REPRODUCTION",
+    "current_level": "P0_SHIPPED_FROZEN__A1_IDENTITY_PASS__A2_NATIVE_COMPILE_IN_PROGRESS",
+    "current_priority_gate": "A2 NATIVE TRADINGVIEW COMPILE OF EXACT VERIFIED P0 BYTES",
     "frozen_bot": {
       "file": "MISSION001_TrackA_BotV1_FullDerivative_v0.3.pine",
       "version": "v0.3",
@@ -50,53 +60,36 @@
       "status": "FROZEN_READ_ONLY_IMMUTABLE"
     },
     "artifact_recovery": {
-      "required_sequence": "LOCATE -> MATERIALIZE -> HASH VERIFY -> IDENTITY DECISION -> NATIVE REPRODUCTION",
-      "owner_evidence": "artifact with same lineage/name may exist at Mission/File Library level; this does not prove byte identity",
-      "latest_execution_evidence": "No new P0 bytes materialized in this checkpoint. Claude Challenger remains separate research evidence only.",
-      "classification": "CAPABILITY_BLOCKED — ARTIFACT MAY EXIST BUT CURRENT EXECUTION SURFACE CANNOT MATERIALIZE BYTES",
-      "source_lost_claim_prohibited": true,
-      "hash_pass_label": "P0_FROZEN_SOURCE_RECOVERED = VERIFIED only after exact SHA-256 match",
-      "hash_mismatch_label": "LINEAGE_CANDIDATE / HASH_MISMATCH"
+      "status": "P0_FROZEN_SOURCE_RECOVERED = VERIFIED",
+      "file_library_id": "file_0000000004f4820baee4e855d1ecd1b2",
+      "materialized_size_bytes": 184846,
+      "materialized_line_count": 3411,
+      "verified_sha256": "9b8eca4c8cf2e151083020f4b3c2812b0ba3f04502c33fb6af892f0371712137",
+      "a1_identity_gate": "PASS"
     },
-    "gates": {
-      "A1_identity": "Materialize candidate artifact -> exact SHA-256 verify",
-      "A2_native_compile": "Compile exact verified P0 on native TradingView",
-      "A3_shadow_behavioral_fidelity": "Verify frozen strategy intent/chart behavior; compile alone insufficient",
-      "A4_runtime_position_risk": "entry, mutual exclusion, stop/target, sizing, syminfo.pointvalue on XAUUSD, STOP/GO/SCALE, daily loss, DD kill, force-flat, unintended orders"
+    "a2_execution_evidence": {
+      "local_container_native_browser_attempt": "FAIL_EXECUTION_SURFACE",
+      "error": "TradingView navigation blocked by environment administrator: net::ERR_BLOCKED_BY_ADMINISTRATOR",
+      "meaning": "Not a Pine compile failure. Exact source remains unchanged. This local execution surface cannot perform native TradingView A2.",
+      "existing_github_native_surface": "GH2 route-probe workflow exists and historically demonstrated NATIVE_SURFACE_EXECUTABLE, but exact P0 bytes are not currently available inside the repository runner and no byte-preserving ingress bridge from ChatGPT File Library to GitHub Actions is exposed by the current tools.",
+      "patch_authorized": false
     },
-    "p0_modification_authorized": false,
-    "compiler_fail_policy": "STOP modification; produce exact compiler error -> root cause -> minimum patch proposal -> expected behavioral impact -> rollback plan; Owner approval required before patch",
-    "next_executable_action": "Continue only through genuinely new materialization surface for exact P0 lineage candidate. On bytes: compute exact SHA immediately. Do not reconstruct or normalize."
+    "next_executable_action": "Use the minimum byte-preserving source ingress/native TradingView route that does not modify P0. Do not retype/normalize exact source. If no such bridge is executable, keep A2 blocked on execution-surface ingress rather than misclassifying as compiler failure."
   },
   "strategy_architecture_audit": {
     "hypothesis": "CT Long > W2 Long > W2 Short may be execution arbitration among independent ready setups while flat rather than mandatory sequential trade lifecycle",
-    "status": "CHALLENGER_SUPPORTS_HYPOTHESIS__EXACT_P0_ALIGNMENT_PENDING",
-    "challenger_evidence": "Claude candidate lines 3380-3400 implement flat-position readiness with Boolean arbitration CT > W2L > W2S; independent strategy.entry IDs and no mandatory sequential CT-exit->W2L->W2S chain in the live Zone06 order block.",
-    "rewrite_authorized": false,
-    "must_distinguish": ["SETUP_INTERNAL_LIFECYCLE", "EXECUTION_ARBITRATION"]
+    "status": "CHALLENGER_SUPPORTS_HYPOTHESIS__EXACT_P0_SOURCE_NOW_RECOVERED__MODULE_ALIGNMENT_NEXT_AFTER_A2_PRIORITY",
+    "rewrite_authorized": false
   },
   "challenger": {
-    "name": "Claude reconstruction/candidate",
     "classification": "CHALLENGER_RESEARCH_BRANCH_NOT_SOT_NOT_AUTHORIZED_FOR_MERGE",
-    "artifact_identity_file": "mission001/CLAUDE_CHALLENGER_ARTIFACT_IDENTITY.json",
-    "source_name": "Nam Zone06 EA Strategy v0.4 CT-W2 Rebound [TRACK A CANDIDATE - UNVERIFIED CLau(1).txt",
-    "conversation_file_id": "file_00000000b440822fbfd5e83c3065a8e9",
     "exact_uploaded_sha256": "8a3f3fd02d50d7f475bb686f01774ba227f83455c55b5e3d76eb8405f3d4bf08",
-    "size_bytes": 189992,
-    "line_count": 3424,
-    "read_only": true,
     "promotion_map_file": "mission001/CLAUDE_CHALLENGER_PROMOTION_MAP_v1.md",
-    "promotion_map_commit": "2c022d9944b4e1fe163e5c482df3a14daeaba07b",
-    "audit_status": "AUDIT_V1_COMPLETE__SOURCE_ALIGNMENT_TO_EXACT_P0_PENDING",
-    "implementation_authorized": false,
-    "next_executable_action": "No promotion implementation. Use Promotion Map as evidence input only when exact P0/source lineage becomes available."
+    "audit_status": "AUDIT_V1_COMPLETE__NO_IMPLEMENTATION_AUTHORIZED"
   },
   "fast_lane_d": {
     "version": "v0.5-D1",
-    "source_file": "mission001/MISSION001_FastLaneD_FunctionalDemoBot_v0_5_D1.pine",
-    "pine_sha256": "312516cea231b660580cf1210dddc474f30249a9002abf072e48dec4f9694aae",
     "classification": "COMPILE-PASS / EXECUTION-PASS / OWNER PRODUCT FAIL / EVIDENCE ONLY",
-    "product_critical_path": false,
     "d2_build_authorized": false,
     "next_executable_action": "NONE"
   },
@@ -108,8 +101,6 @@
     "oos_survivors": 0,
     "champion": null,
     "current_gate": "Golden Reference / full BAR-STATE-EVENT parity",
-    "pipeline": "Canonical Evidence -> Events -> Trades -> Metrics -> Ablation -> Candidates -> OOS/Robustness -> Champion OR ROBUST EDGE NOT FOUND",
-    "development_cases_count_toward_canonical": false,
     "routes": {
       "GH3_V2": "KILLED_AS_CANONICAL_ROUTE",
       "GH3_V3": "KILLED_ROUTE_FAIL",
@@ -117,27 +108,30 @@
       "GH5": "KILLED_CANONICAL_AMBIGUITY",
       "GH6_CROSSHAIR_TIMESTAMP_VERIFY": "KILLED_TIMESTAMP_UNVERIFIED",
       "GH7_AX_TIMESTAMP_TOOLTIP_VERIFY": "KILLED_TIMESTAMP_UNVERIFIED",
-      "GH8_DATA_WINDOW_TIMESTAMP_VERIFY": {
-        "status": "KILLED_TIMESTAMP_UNVERIFIED",
-        "evidence_timestamp_utc": "2026-08-24T08:50:41.001Z",
-        "target_time_verified": false,
-        "data_window_opened": true,
-        "extracted_ohlc": {"open":"4,500.485","high":"4,501.140","low":"4,495.375","close":"4,501.040"},
-        "reason_not_promoted": "Data Window opened, but no independent target timestamp was exposed. OHLC remains non-canonical."
-      },
+      "GH8_DATA_WINDOW_TIMESTAMP_VERIFY": "KILLED_TIMESTAMP_UNVERIFIED",
       "GH9_NATIVE_WEBSOCKET_BAR_VERIFY": {
-        "status": "ACTIVE_EVENT_DRIVEN_PENDING_EVIDENCE",
-        "workflow_commit": "ffb14f6e970ee2e04419bb35b0a8a3c327a576f1",
-        "mechanism": "Inspect TradingView's native websocket frames after Go-to navigation and verify target epoch 2026-08-20T01:30:00Z directly in returned bar payload before accepting OHLC.",
-        "pass_gate": "target epoch 1787199000 is observed in a sane native bar tuple with OHLC",
-        "fail_gate": "target epoch not seen, payload parse remains ambiguous, or route errors"
+        "status": "KILLED_PARSE_UNVERIFIED",
+        "evidence_timestamp_utc": "2026-08-24T09:04:18.884Z",
+        "target_epoch_sec": 1787189400,
+        "websocket_matching_frame_count": 2,
+        "target_time_verified": false,
+        "ui_ohlc": {"open":"4,495.825","high":"4,496.630","low":"4,495.825","close":"4,496.265"},
+        "verdict": "TARGET_FRAME_SEEN_BUT_OHLC_PARSE_UNVERIFIED",
+        "canonical_promotion": false
+      },
+      "GH10_WS_PROTOCOL_DECODE": {
+        "status": "NOT_EXECUTED",
+        "authorization_reconciliation": "Prior interactive write did not persist. Current workflow remains GH9.",
+        "duplicate_workflow_created": false,
+        "next_policy": "Do not repeat permission request unless a demonstrably necessary write path is selected after Track A priority and no lower-permission route exists."
       }
     },
-    "next_executable_action": "Fetch GH9 evidence. PASS -> promote exact timestamp+OHLC identity evidence and extend to full BAR-STATE-EVENT parity. FAIL -> KILL/SWITCH."
+    "next_executable_action": "Continue Track B with minimum valid non-duplicative route after Track A A2 priority; no canonical promotion until timestamp/bar provenance + OHLC + full parity pass."
   },
   "anti_deadlock": {
-    "rule": "Optimize gate movement per unit time; do not repeat exhausted route without new execution evidence; two consecutive NO MATERIAL DELTA checkpoints require SWITCH/PARALLELIZE/KILL unless non-bypassable dependency is evidenced",
-    "activity_not_progress": true
+    "track_a_action": "SWITCH succeeded: File Library route materialized exact P0 and A1 passed; current blocker moved to native compile execution surface, not artifact identity.",
+    "track_b_action": "GH9 killed; GH10 not executed; avoid repeated permission prompts and choose minimum valid next route.",
+    "rule": "Two consecutive NO MATERIAL DELTA checkpoints require SWITCH/PARALLELIZE/KILL unless a non-bypassable dependency is evidenced."
   },
   "scheduler": {
     "task_id": "6a86a181691081919afe42eac2a18161",
@@ -145,14 +139,9 @@
     "status": "ENABLED",
     "cadence": "hourly",
     "timezone": "Asia/Ho_Chi_Minh",
-    "duplicate_scheduler_prohibited": true
-  },
-  "owner_reporting_contract": {
-    "checkpoint_title": "MISSION 001 — OWNER CHECKPOINT",
-    "required_sections": ["TRACK A", "TRACK B", "PRODUCT / CHALLENGER", "EXECUTION HEALTH", "OWNER DECISION REQUIRED"],
-    "material_claim_classes": ["VERIFIED FACT", "INFERENCE", "UNVERIFIED", "BLOCKED"],
-    "no_material_delta_label": "NO MATERIAL DELTA",
-    "material_event_immediate_reporting": true
+    "last_run_time_utc": "2026-08-24T08:59:27.322019Z",
+    "duplicate_scheduler_prohibited": true,
+    "reporting_path_independent_from_execution_gate": true
   },
   "owner_decision_required": "NONE"
 }
