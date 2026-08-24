@@ -1,9 +1,22 @@
 {
-  "schema_version": "1.3.3",
+  "schema_version": "2.0.0",
   "mission_id": "MISSION-001",
   "canonical_thread": true,
-  "updated_at_local": "2026-08-24T15:08:00+07:00",
-  "state_rule": "Verified newer execution evidence overrides stale state/report. Cycle: restore -> verify -> reconcile -> execute -> persist evidence -> update state -> report.",
+  "updated_at_local": "2026-08-24T15:44:00+07:00",
+  "owner_operating_mandate": {
+    "version": "2.0",
+    "authority": "OWNER",
+    "status": "STANDING_AUTHORITATIVE",
+    "nature": "ADDITIVE_CORRECTIVE",
+    "priority": "Supersedes prior operational instructions only where conflicting",
+    "north_star": "Verified Trading Logic -> Reliable Bots -> Economic Evidence -> Portfolio of Edges -> Capital Allocation System",
+    "progress_definition": "movement through verified Decision Gates; activity without gate movement is not progress",
+    "execution_standard": "Preserve -> Understand -> Instrument -> Verify -> Improve -> Validate",
+    "owner_role": "Capital / Risk / Go-Live / Cost / Security / Doctrine / Champion",
+    "ai_role": "authorized technical execution, source tracing, audit, workflow execution, route selection, debugging, evidence collection, research, kill/switch decisions",
+    "reporting": "hourly scheduler remains mandatory; material events reported immediately",
+    "continuity": "Track A/B, State Package, frozen hashes, evidence, route/killed history, canonical counts, scheduler and non-conflicting authorizations preserved; no duplicate scheduler"
+  },
   "execution_model": {
     "type": "B_EVENT_TRIGGERED_NOT_PERSISTENT",
     "orchestrator": "existing Mission 001 scheduler",
@@ -13,40 +26,76 @@
     "github_actions": "event-driven workers only",
     "continuous_execution_claim_prohibited": true
   },
-  "owner_role": "Capital / Risk / Go-Live / Cost / Security / Doctrine genuinely unresolved / Champion approval only",
-  "ai_role": "Execution / Research / Verification / Continuity",
-  "anti_deadlock": "PASS->next gate; FAIL->minimum demonstrated patch/retest; BLOCKED->parallel recovery; route FAIL->KILL/switch; two consecutive zero-material checkpoints->mandatory SWITCH/PARALLELIZE/KILL",
   "baseline": {
     "name": "BASELINE-001 — Nam Zone06 EA Strategy v0.4 CT-W2 Rebound 20.8",
     "status": "FROZEN_READ_ONLY",
     "sha256": "937e28d772a917c093bee6fe77712a77c95bc78bfe28ff001514e63eee0e1fd6",
     "reference_source_of_truth": "TradingView / OANDA:XAUUSD / M1 / BASELINE-001"
   },
+  "product_lineage": {
+    "primary_trunk": "P0 frozen v0.3 = IMMUTABLE PRODUCT TRUNK",
+    "challenger": "Claude reconstruction/candidate = CHALLENGER / RESEARCH BRANCH",
+    "rejected_prototype": "Fast-Lane v0.5-D1 = COMPILE-PASS / EXECUTION-PASS / OWNER PRODUCT FAIL / EVIDENCE ONLY",
+    "d1_on_product_critical_path": false,
+    "d2_build_authorized": false,
+    "d1_foundation_for_production_rebuild": false
+  },
   "track_a": {
     "current_level": "P0_SHIPPED_FROZEN__P1_IN_PROGRESS",
-    "p0_status": "ACCEPTED_FROZEN_BY_OWNER",
+    "current_priority_gate": "EXACT P0 ARTIFACT IDENTITY -> NATIVE REPRODUCTION",
     "frozen_bot": {
       "file": "MISSION001_TrackA_BotV1_FullDerivative_v0.3.pine",
       "version": "v0.3",
-      "sha256": "9b8eca4c8cf2e151083020f4b3c2812b0ba3f04502c33fb6af892f0371712137",
-      "status": "FROZEN"
+      "expected_sha256": "9b8eca4c8cf2e151083020f4b3c2812b0ba3f04502c33fb6af892f0371712137",
+      "status": "FROZEN_READ_ONLY_IMMUTABLE"
     },
-    "p1": {
-      "required": ["native TradingView Compile PASS", "XAUUSD M1 Shadow Fidelity PASS"],
-      "native_surface": "PASS_RETAINED",
-      "native_compile": "NOT_YET_EVIDENCED",
-      "shadow_fidelity": "NOT_OPEN",
-      "exact_gate": "EXACT_FROZEN_V0.3_SOURCE_INGRESS -> NATIVE_COMPILE"
+    "artifact_recovery": {
+      "required_sequence": "LOCATE -> MATERIALIZE -> HASH VERIFY -> IDENTITY DECISION -> NATIVE REPRODUCTION",
+      "owner_evidence": "artifact with same lineage/name may exist at Mission/File Library level; this does not prove byte identity",
+      "latest_execution_evidence": "Targeted personal-context/File-Library-context recovery for exact artifact name returned no materializable file id/path/bytes",
+      "classification": "CAPABILITY_BLOCKED — ARTIFACT MAY EXIST BUT CURRENT EXECUTION SURFACE CANNOT MATERIALIZE BYTES",
+      "source_lost_claim_prohibited": true,
+      "hash_pass_label": "P0_FROZEN_SOURCE_RECOVERED = VERIFIED only after exact SHA-256 match",
+      "hash_mismatch_label": "LINEAGE_CANDIDATE / HASH_MISMATCH"
     },
-    "p2": "NOT_OPEN until P1 PASS",
-    "routes": {
-      "GH1": "KILLED",
-      "GH2": "SURFACE_PASS_RETAINED; END_TO_END_COMPILE_KILLED_IN_CURRENT_RUNTIME",
-      "SOURCE_AWARE_NATIVE_ROUTE_RECOVERY": "KILLED",
-      "HISTORICAL_GITHUB_COMMIT_RECOVERY": "KILLED",
-      "active_fallback": "NEW_BYTE_MATERIALIZATION_SURFACE_ONLY"
+    "gates": {
+      "A1_identity": "Materialize candidate artifact -> exact SHA-256 verify",
+      "A2_native_compile": "Compile exact verified P0 on native TradingView",
+      "A3_shadow_behavioral_fidelity": "Verify frozen strategy intent/chart behavior; compile alone insufficient",
+      "A4_runtime_position_risk": "entry, mutual exclusion, stop/target, sizing, syminfo.pointvalue on XAUUSD, STOP/GO/SCALE, daily loss, DD kill, force-flat, unintended orders"
     },
-    "next_executable_action": "Check only for genuinely new exact-byte materialization capability. If present, verify frozen SHA immediately before native TradingView injection and compile. Do not repeat failed source searches."
+    "p0_modification_authorized": false,
+    "compiler_fail_policy": "STOP modification; produce exact compiler error -> root cause -> minimum patch proposal -> expected behavioral impact -> rollback plan; Owner approval required before patch",
+    "next_executable_action": "Continue only through genuinely new materialization surface for the same P0 lineage candidate. On bytes: compute exact SHA immediately. Do not reconstruct or normalize."
+  },
+  "strategy_architecture_audit": {
+    "hypothesis": "CT Long > W2 Long > W2 Short may be execution arbitration among independent ready setups while flat rather than mandatory sequential trade lifecycle",
+    "status": "AUDIT_REQUIRED_AGAINST_EXACT_SOURCE",
+    "rewrite_authorized": false,
+    "must_distinguish": ["SETUP_INTERNAL_LIFECYCLE", "EXECUTION_ARBITRATION"]
+  },
+  "challenger": {
+    "name": "Claude reconstruction/candidate",
+    "classification": "CHALLENGER_RESEARCH_BRANCH",
+    "wholesale_merge_to_p0": "PROHIBITED",
+    "promotion_classes": ["CORE_VERIFIED", "SAFE_ENGINEERING_IMPROVEMENT", "RESEARCH_ONLY", "REJECT"],
+    "promotion_sequence": "SOURCE ALIGNMENT -> NO-LOOKAHEAD/REPAINT AUDIT -> PATCH-LEVEL PROPOSAL -> OWNER/PERMITTED APPROVAL WHERE REQUIRED -> NATIVE TEST -> BEHAVIORAL FIDELITY -> ECONOMIC EVIDENCE where behavior affected",
+    "priority_audit_targets": ["CT predicates", "W2 event lifecycle", "W2 touch/expiry", "W2 memory", "EA-after-touch window", "CT/W2L/W2S arbitration", "structural SL/TP", "W2 funnel touch->EA->main trend->DC->layers/room", "MFE/MAE", "diagnostic instrumentation", "risk overlay", "Elliott/third-party dependencies", "repaint/lookahead", "realtime behavior"]
+  },
+  "fast_lane_d": {
+    "version": "v0.5-D1",
+    "source_file": "mission001/MISSION001_FastLaneD_FunctionalDemoBot_v0_5_D1.pine",
+    "pine_sha256": "312516cea231b660580cf1210dddc474f30249a9002abf072e48dec4f9694aae",
+    "owner_demo_evidence_file": "mission001/fastlane_d1_owner_demo_result.json",
+    "classification": "COMPILE-PASS / EXECUTION-PASS / OWNER PRODUCT FAIL / EVIDENCE ONLY",
+    "status_codes": ["D1_COMPILE_PASS", "D1_EXECUTION_PASS", "D1_OWNER_PRODUCT_FAIL", "D2_NOT_AUTHORIZED"],
+    "behavioral_strategy_fidelity": "NOT_ACCEPTED",
+    "product_critical_path": false,
+    "d2_build_authorized": false,
+    "patch_d1_cosmetically": false,
+    "use_as_production_foundation": false,
+    "preserve_as_negative_evidence": true,
+    "next_executable_action": "NONE — no further build capacity unless Owner explicitly reauthorizes"
   },
   "track_b": {
     "canonical_events": 0,
@@ -56,56 +105,48 @@
     "oos_survivors": 0,
     "champion": null,
     "current_gate": "Golden Reference / full BAR-STATE-EVENT parity",
+    "pipeline": "Canonical Evidence -> Events -> Trades -> Metrics -> Ablation -> Candidates -> OOS/Robustness -> Champion OR ROBUST EDGE NOT FOUND",
     "development_cases_count_toward_canonical": false,
     "routes": {
       "GH3_V2": "KILLED_AS_CANONICAL_ROUTE",
       "GH3_V3": "KILLED_ROUTE_FAIL",
       "GH4": "KILLED_CANONICAL_AMBIGUITY",
-      "GH5_TARGET_ACTION_NATIVE_NAV": "KILLED_CANONICAL_AMBIGUITY",
+      "GH5": "KILLED_CANONICAL_AMBIGUITY",
       "GH6_CROSSHAIR_TIMESTAMP_VERIFY": {
+        "status": "KILLED_TIMESTAMP_UNVERIFIED",
+        "evidence_timestamp_utc": "2026-08-24T08:09:31.630Z",
+        "target_time_verified": false,
+        "extracted_ohlc": {"open":"4,500.485","high":"4,501.140","low":"4,495.375","close":"4,501.040"},
+        "reason_not_promoted": "Crosshair timestamp text remained unavailable; OHLC present but target bar identity unverified"
+      },
+      "GH7_AX_TIMESTAMP_TOOLTIP_VERIFY": {
         "status": "ACTIVE_EVENT_DRIVEN_PENDING_EVIDENCE",
-        "workflow_commit": "3eb75cfb4142f1e38ef196fc175efcfe5c1c1149",
-        "mechanism": "Navigate to requested bar, then use an independent post-navigation chart crosshair/body timestamp surface to verify target time before promoting OHLC.",
-        "pass_gate": "crosshair timestamp independently verifies 2026-08-20 01:30 AND exact OHLC present",
-        "fail_gate": "timestamp still not independently verified or route errors",
-        "next_executable_action": "Fetch GH6 evidence next checkpoint. PASS -> extend to remaining Donchian/W2/EA/filter/event-identity fields; FAIL -> kill/switch."
+        "workflow_commit": "718fd5b34566276a3a4fd59102af3333cf22d29e",
+        "mechanism": "Different accessibility/tooltip/aria timestamp surface after navigation",
+        "pass_gate": "independent accessibility timestamp verifies 2026-08-20 01:30 AND exact OHLC present",
+        "fail_gate": "timestamp remains unverified or route error"
       }
-    }
+    },
+    "next_executable_action": "Fetch GH7 evidence. PASS -> extend canonical parity to Donchian/W2/EA/filter/event identity. FAIL -> KILL/SWITCH under anti-deadlock."
   },
-  "fast_lane_d": {
-    "name": "FUNCTIONAL_DEMO_BOT_DELIVERY",
-    "version": "v0.5-D1",
-    "source_file": "mission001/MISSION001_FastLaneD_FunctionalDemoBot_v0_5_D1.pine",
-    "pine_sha256": "312516cea231b660580cf1210dddc474f30249a9002abf072e48dec4f9694aae",
-    "owner_demo_evidence_file": "mission001/fastlane_d1_owner_demo_result.json",
-    "classification": "COMPILE-PASS / EXECUTION-PASS / RESEARCH PROTOTYPE / OWNER PRODUCT FAIL",
-    "status_codes": [
-      "D1_COMPILE_PASS",
-      "D1_EXECUTION_PASS",
-      "D1_OWNER_PRODUCT_FAIL",
-      "D2_AWAITING_BEHAVIORAL_CONTRACT"
-    ],
-    "native_compile_add_to_chart": "PASS_OWNER_VERIFIED",
-    "pine_execution": "PASS_OWNER_VERIFIED",
-    "automatic_state_logic": "RUNNING_OWNER_VERIFIED",
-    "owner_demo_product_acceptance": "FAIL",
-    "behavioral_strategy_fidelity": "NOT_ACCEPTED",
-    "d2_build_gate": "PAUSED_ONLY_AT_D2_BUILD_GATE",
-    "d2_build_authorized": false,
-    "source_patch_authorized": false,
-    "a1_a5_change_authorized": false,
-    "next_executable_action": "Do not build or patch D2. Await Owner Behavioral Contract. Existing Track A/B continue independently."
+  "anti_deadlock": {
+    "rule": "Optimize gate movement per unit time; do not repeat exhausted route without new execution evidence; two consecutive NO MATERIAL DELTA checkpoints require SWITCH/PARALLELIZE/KILL unless non-bypassable dependency is evidenced",
+    "activity_not_progress": true
   },
   "scheduler": {
     "task_id": "6a86a181691081919afe42eac2a18161",
     "title": "Mission 001 Progress",
     "status": "ENABLED",
     "cadence": "hourly",
-    "timezone": "Asia/Ho_Chi_Minh"
+    "timezone": "Asia/Ho_Chi_Minh",
+    "duplicate_scheduler_prohibited": true
   },
-  "checkpoint_policy": {
-    "reports": ["TRACK A", "TRACK B", "FAST-LANE D"],
-    "activity_is_not_progress": true,
-    "owner_silence_pauses_execution": false
-  }
+  "owner_reporting_contract": {
+    "checkpoint_title": "MISSION 001 — OWNER CHECKPOINT",
+    "required_sections": ["TRACK A", "TRACK B", "PRODUCT / CHALLENGER", "EXECUTION HEALTH", "OWNER DECISION REQUIRED"],
+    "material_claim_classes": ["VERIFIED FACT", "INFERENCE", "UNVERIFIED", "BLOCKED"],
+    "no_material_delta_label": "NO MATERIAL DELTA",
+    "material_event_immediate_reporting": true
+  },
+  "owner_decision_required": "NONE"
 }
