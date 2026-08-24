@@ -1,0 +1,296 @@
+//@version=6
+strategy("MISSION001 Fast-Lane D Demo Bot v0.5-D1", overlay=true, pyramiding=0, initial_capital=100000, process_orders_on_close=true, calc_on_order_fills=true)
+
+// ============================================================================
+// MISSION 001 — FAST-LANE D
+// VERSION: v0.5-D1
+// CLASSIFICATION:
+// CONTROLLED NEW DOCTRINE / NOT RECOVERED ORIGINAL DOCTRINE / DEMO-VALIDATION REQUIRED
+//
+// APPROVED STATE MODEL:
+// SCAN -> CT_LONG -> WAIT_W2_LONG -> W2_LONG -> WAIT_W2_SHORT -> W2_SHORT -> SCAN
+//
+// IMPORTANT:
+// - BASELINE-001 remains READ-ONLY.
+// - This code does NOT claim byte equivalence to frozen v0.3.
+// - This code does NOT claim P1/P2, Edge, Champion, or economic validity.
+// - Rules marked NEW_ASSUMPTION exist only to make the Demo candidate executable.
+// ============================================================================
+
+grpCore = "Core / Execution"
+execMode       = input.string("GO", "Execution mode", options=["STOP", "GO", "SCALE"], group=grpCore)
+scaleFactor    = input.float(0.50, "SCALE factor", minval=0.0, maxval=1.0, step=0.05, group=grpCore)
+forceFlat      = input.bool(false, "Force flat", group=grpCore)
+enableCT       = input.bool(true, "Enable CT Long", group=grpCore)
+enableW2Long   = input.bool(true, "Enable W2 Long", group=grpCore)
+enableW2Short  = input.bool(true, "Enable W2 Short", group=grpCore)
+maxSignalBars  = input.int(9, "EA/trigger window bars", minval=1, maxval=30, group=grpCore)
+
+grpDC = "Donchian"
+showDC = input.bool(true, "Show DC65/129/234/468", group=grpDC)
+
+f_dc(_len) =>
+    _u = ta.highest(high, _len)
+    _l = ta.lowest(low, _len)
+    [_u, _l, (_u + _l) / 2.0]
+
+[dc65u,  dc65l,  dc65m]  = f_dc(65)
+[dc129u, dc129l, dc129m] = f_dc(129)
+[dc234u, dc234l, dc234m] = f_dc(234)
+[dc468u, dc468l, dc468m] = f_dc(468)
+
+plot(showDC ? dc65u  : na, "DC65 Upper")
+plot(showDC ? dc65l  : na, "DC65 Lower")
+plot(showDC ? dc129u : na, "DC129 Upper")
+plot(showDC ? dc129l : na, "DC129 Lower")
+plot(showDC ? dc234u : na, "DC234 Upper")
+plot(showDC ? dc234l : na, "DC234 Lower")
+plot(showDC ? dc468u : na, "DC468 Upper")
+plot(showDC ? dc468l : na, "DC468 Lower")
+
+grpAssume = "NEW_ASSUMPTION / Demo-only Signal Rules"
+ctSweepTicks      = input.int(10, "CT sweep beyond prior DC468 lower (ticks)", minval=0, group=grpAssume)
+ctReclaimTicks    = input.int(2, "CT reclaim above prior DC468 lower (ticks)", minval=0, group=grpAssume)
+ctTriggerLookback = input.int(1, "CT trigger break lookback", minval=1, maxval=5, group=grpAssume)
+
+w2TouchBandPct    = input.float(0.20, "W2 touch band as % of DC234 width", minval=0.0, maxval=1.0, step=0.05, group=grpAssume)
+w2SweepTicks      = input.int(5, "W2 local sweep (ticks)", minval=0, group=grpAssume)
+w2TriggerLookback = input.int(1, "W2 trigger break lookback", minval=1, maxval=5, group=grpAssume)
+
+slBufferTicks     = input.int(10, "Structural SL buffer (ticks)", minval=0, group=grpAssume)
+rewardRisk        = input.float(1.50, "Target R multiple", minval=0.25, maxval=10.0, step=0.25, group=grpAssume)
+
+grpRisk = "Risk Controls"
+accountBalance = input.float(100000.0, "Reference account balance", minval=1.0, group=grpRisk)
+riskPct        = input.float(0.50, "Risk per trade (%)", minval=0.01, maxval=5.0, step=0.05, group=grpRisk)
+maxDailyLossPct= input.float(3.0, "Max daily loss (%)", minval=0.1, maxval=25.0, step=0.1, group=grpRisk)
+maxDrawdownPct = input.float(8.0, "Max drawdown (%)", minval=0.1, maxval=50.0, step=0.1, group=grpRisk)
+maxQty         = input.float(100.0, "Max quantity", minval=0.0, group=grpRisk)
+qtyStep        = input.float(0.01, "Quantity step", minval=0.0001, group=grpRisk)
+
+modeMult = execMode == "GO" ? 1.0 : execMode == "SCALE" ? scaleFactor : 0.0
+modeStop = execMode == "STOP"
+
+equityNow = accountBalance + strategy.netprofit + strategy.openprofit
+var float peakEquity = accountBalance
+peakEquity := math.max(peakEquity, equityNow)
+
+newDay = ta.change(time("D")) != 0
+var float dayStartEquity = accountBalance
+if barstate.isfirst or newDay
+    dayStartEquity := equityNow
+
+dailyLossPct = dayStartEquity > 0 ? math.max(0.0, (dayStartEquity - equityNow) / dayStartEquity * 100.0) : 0.0
+drawdownPct  = peakEquity > 0 ? math.max(0.0, (peakEquity - equityNow) / peakEquity * 100.0) : 0.0
+
+dailyLossTrip = dailyLossPct >= maxDailyLossPct
+maxDdTrip     = drawdownPct >= maxDrawdownPct
+killSwitch    = modeStop or forceFlat or dailyLossTrip or maxDdTrip
+
+int ST_SCAN          = 0
+int ST_CT_ACTIVE     = 1
+int ST_WAIT_W2_LONG  = 2
+int ST_W2L_ACTIVE    = 3
+int ST_WAIT_W2_SHORT = 4
+int ST_W2S_ACTIVE    = 5
+
+var int state = ST_SCAN
+var string activeLeg = "NONE"
+
+var int ctArmBar = na
+var float ctArmLow = na
+var int w2lArmBar = na
+var float w2lArmLow = na
+var int w2sArmBar = na
+var float w2sArmHigh = na
+
+var float activeStop = na
+var float activeTarget = na
+
+confirmed = barstate.isconfirmed
+flat = strategy.position_size == 0
+globalEntryOK = confirmed and flat and not killSwitch and modeMult > 0
+
+tick = syminfo.mintick
+pointValue = math.max(syminfo.pointvalue, 0.0000001)
+
+dc234Width = math.max(dc234u - dc234l, tick)
+upRegime   = dc129m > dc234m and dc234m >= dc468m
+downRegime = dc129m < dc234m and dc234m <= dc468m
+
+// NEW_ASSUMPTION A1 — CT Long automatic detection.
+ctBoundary = dc468l[1]
+ctSweep = enableCT and confirmed and not na(ctBoundary) and low <= ctBoundary - ctSweepTicks * tick and close >= ctBoundary + ctReclaimTicks * tick
+if state == ST_SCAN and ctSweep
+    ctArmBar := bar_index
+    ctArmLow := low
+
+ctArmed = state == ST_SCAN and not na(ctArmBar) and bar_index - ctArmBar <= maxSignalBars
+ctExpired = not na(ctArmBar) and bar_index - ctArmBar > maxSignalBars
+if state == ST_SCAN and ctExpired
+    ctArmBar := na
+    ctArmLow := na
+
+ctTriggerHigh = ta.highest(high[1], ctTriggerLookback)
+ctEnter = enableCT and state == ST_SCAN and globalEntryOK and ctArmed and close > ctTriggerHigh and close > dc65m
+
+// NEW_ASSUMPTION A2 — W2 Long automatic detection.
+w2Band = dc234Width * w2TouchBandPct
+w2lTouch = low <= dc234m + w2Band and low >= dc234l - w2Band
+w2lSweep = low < low[1] - w2SweepTicks * tick and close > low[1]
+w2lArm = enableW2Long and state == ST_WAIT_W2_LONG and confirmed and upRegime and w2lTouch and w2lSweep and close > dc234m
+if w2lArm
+    w2lArmBar := bar_index
+    w2lArmLow := low
+
+w2lArmed = state == ST_WAIT_W2_LONG and not na(w2lArmBar) and bar_index - w2lArmBar <= maxSignalBars
+if state == ST_WAIT_W2_LONG and not na(w2lArmBar) and bar_index - w2lArmBar > maxSignalBars
+    w2lArmBar := na
+    w2lArmLow := na
+
+w2lTriggerHigh = ta.highest(high[1], w2TriggerLookback)
+w2lEnter = enableW2Long and state == ST_WAIT_W2_LONG and globalEntryOK and w2lArmed and upRegime and close > w2lTriggerHigh
+
+// NEW_ASSUMPTION A3 — W2 Short automatic detection.
+w2sTouch = high >= dc234m - w2Band and high <= dc234u + w2Band
+w2sSweep = high > high[1] + w2SweepTicks * tick and close < high[1]
+w2sArm = enableW2Short and state == ST_WAIT_W2_SHORT and confirmed and downRegime and w2sTouch and w2sSweep and close < dc234m
+if w2sArm
+    w2sArmBar := bar_index
+    w2sArmHigh := high
+
+w2sArmed = state == ST_WAIT_W2_SHORT and not na(w2sArmBar) and bar_index - w2sArmBar <= maxSignalBars
+if state == ST_WAIT_W2_SHORT and not na(w2sArmBar) and bar_index - w2sArmBar > maxSignalBars
+    w2sArmBar := na
+    w2sArmHigh := na
+
+w2sTriggerLow = ta.lowest(low[1], w2TriggerLookback)
+w2sEnter = enableW2Short and state == ST_WAIT_W2_SHORT and globalEntryOK and w2sArmed and downRegime and close < w2sTriggerLow
+
+f_qty(_entry, _stop) =>
+    _dist = math.abs(_entry - _stop)
+    _riskCash = accountBalance * (riskPct / 100.0)
+    _raw = _dist > 0 ? _riskCash / (_dist * pointValue) : 0.0
+    _scaled = _raw * modeMult
+    _capped = math.min(_scaled, maxQty)
+    _stepped = math.floor(_capped / qtyStep) * qtyStep
+    math.max(0.0, _stepped)
+
+// NEW_ASSUMPTION A4 — executable Demo-only SL/TP.
+if ctEnter
+    entry = close
+    stop = ctArmLow - slBufferTicks * tick
+    riskDist = math.max(entry - stop, tick)
+    target = entry + rewardRisk * riskDist
+    qty = f_qty(entry, stop)
+    if qty > 0
+        activeStop := stop
+        activeTarget := target
+        activeLeg := "CT_LONG"
+        strategy.entry("CT_LONG", strategy.long, qty=qty, comment="CT_LONG")
+        strategy.exit("CT_LONG_X", from_entry="CT_LONG", stop=activeStop, limit=activeTarget)
+        state := ST_CT_ACTIVE
+        ctArmBar := na
+        ctArmLow := na
+
+if w2lEnter
+    entry = close
+    stop = w2lArmLow - slBufferTicks * tick
+    riskDist = math.max(entry - stop, tick)
+    target = entry + rewardRisk * riskDist
+    qty = f_qty(entry, stop)
+    if qty > 0
+        activeStop := stop
+        activeTarget := target
+        activeLeg := "W2_LONG"
+        strategy.entry("W2_LONG", strategy.long, qty=qty, comment="W2_LONG")
+        strategy.exit("W2_LONG_X", from_entry="W2_LONG", stop=activeStop, limit=activeTarget)
+        state := ST_W2L_ACTIVE
+        w2lArmBar := na
+        w2lArmLow := na
+
+if w2sEnter
+    entry = close
+    stop = w2sArmHigh + slBufferTicks * tick
+    riskDist = math.max(stop - entry, tick)
+    target = entry - rewardRisk * riskDist
+    qty = f_qty(entry, stop)
+    if qty > 0
+        activeStop := stop
+        activeTarget := target
+        activeLeg := "W2_SHORT"
+        strategy.entry("W2_SHORT", strategy.short, qty=qty, comment="W2_SHORT")
+        strategy.exit("W2_SHORT_X", from_entry="W2_SHORT", stop=activeStop, limit=activeTarget)
+        state := ST_W2S_ACTIVE
+        w2sArmBar := na
+        w2sArmHigh := na
+
+if strategy.position_size > 0 and activeLeg == "CT_LONG"
+    strategy.exit("CT_LONG_X", from_entry="CT_LONG", stop=activeStop, limit=activeTarget)
+if strategy.position_size > 0 and activeLeg == "W2_LONG"
+    strategy.exit("W2_LONG_X", from_entry="W2_LONG", stop=activeStop, limit=activeTarget)
+if strategy.position_size < 0 and activeLeg == "W2_SHORT"
+    strategy.exit("W2_SHORT_X", from_entry="W2_SHORT", stop=activeStop, limit=activeTarget)
+
+if killSwitch and strategy.position_size != 0
+    strategy.close_all(comment="MISSION001_KILL")
+
+justClosed = strategy.position_size == 0 and strategy.position_size[1] != 0
+if justClosed
+    if activeLeg == "CT_LONG"
+        state := ST_WAIT_W2_LONG
+    else if activeLeg == "W2_LONG"
+        state := ST_WAIT_W2_SHORT
+    else if activeLeg == "W2_SHORT"
+        state := ST_SCAN
+    activeLeg := "NONE"
+    activeStop := na
+    activeTarget := na
+
+f_state_name(_s) =>
+    _s == ST_SCAN ? "SCAN" :
+     _s == ST_CT_ACTIVE ? "CT_LONG" :
+     _s == ST_WAIT_W2_LONG ? "WAIT_W2_LONG" :
+     _s == ST_W2L_ACTIVE ? "W2_LONG" :
+     _s == ST_WAIT_W2_SHORT ? "WAIT_W2_SHORT" :
+     _s == ST_W2S_ACTIVE ? "W2_SHORT" : "UNKNOWN"
+
+plotshape(ctSweep and state == ST_SCAN, title="CT ARM", style=shape.circle, location=location.belowbar, size=size.tiny, text="CT-A")
+plotshape(ctEnter, title="CT ENTER", style=shape.triangleup, location=location.belowbar, size=size.small, text="CT")
+plotshape(w2lArm, title="W2L ARM", style=shape.circle, location=location.belowbar, size=size.tiny, text="W2L-A")
+plotshape(w2lEnter, title="W2L ENTER", style=shape.triangleup, location=location.belowbar, size=size.small, text="W2L")
+plotshape(w2sArm, title="W2S ARM", style=shape.circle, location=location.abovebar, size=size.tiny, text="W2S-A")
+plotshape(w2sEnter, title="W2S ENTER", style=shape.triangledown, location=location.abovebar, size=size.small, text="W2S")
+
+plot(strategy.position_size != 0 ? activeStop : na, "Active Stop", style=plot.style_linebr)
+plot(strategy.position_size != 0 ? activeTarget : na, "Active Target", style=plot.style_linebr)
+
+var table dash = table.new(position.top_right, 2, 10, border_width=1)
+if barstate.islast
+    table.cell(dash, 0, 0, "MISSION001 D1")
+    table.cell(dash, 1, 0, "DEMO")
+    table.cell(dash, 0, 1, "State")
+    table.cell(dash, 1, 1, f_state_name(state))
+    table.cell(dash, 0, 2, "Leg")
+    table.cell(dash, 1, 2, activeLeg)
+    table.cell(dash, 0, 3, "Mode")
+    table.cell(dash, 1, 3, execMode)
+    table.cell(dash, 0, 4, "Daily loss %")
+    table.cell(dash, 1, 4, str.tostring(dailyLossPct, "#.##"))
+    table.cell(dash, 0, 5, "DD %")
+    table.cell(dash, 1, 5, str.tostring(drawdownPct, "#.##"))
+    table.cell(dash, 0, 6, "Kill")
+    table.cell(dash, 1, 6, str.tostring(killSwitch))
+    table.cell(dash, 0, 7, "Up regime")
+    table.cell(dash, 1, 7, str.tostring(upRegime))
+    table.cell(dash, 0, 8, "Down regime")
+    table.cell(dash, 1, 8, str.tostring(downRegime))
+    table.cell(dash, 0, 9, "Class")
+    table.cell(dash, 1, 9, "NEW DOCTRINE")
+
+alertcondition(ctEnter, "CT Long Entry", "MISSION001 Fast-Lane D: CT Long entry")
+alertcondition(w2lEnter, "W2 Long Entry", "MISSION001 Fast-Lane D: W2 Long entry")
+alertcondition(w2sEnter, "W2 Short Entry", "MISSION001 Fast-Lane D: W2 Short entry")
+alertcondition(killSwitch, "Risk Kill", "MISSION001 Fast-Lane D: risk kill active")
+
+// End v0.5-D1
