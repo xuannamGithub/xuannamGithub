@@ -21,24 +21,47 @@ jobs:
         with:
           node-version: '22'
       - run: npm install playwright-core@1.55.0
-      - name: GH8 data-window timestamp verification
+      - name: GH9 native websocket timestamp verification
         run: |
           node <<'NODE'
           const fs=require('fs'); const {chromium}=require('playwright-core');
-          (async()=>{const r={mission:'MISSION-001',route:'GH8_DATA_WINDOW_TIMESTAMP_VERIFY',golden_id:'GR-001',requested_display_time:'2026-08-20 01:30',timestamp_utc:new Date().toISOString(),target_time_verified:false,data_window_timestamp_text:null,extracted_ohlc:null,verdict:'UNRESOLVED',error:null}; let browser;
-          try{browser=await chromium.launch({channel:'chrome',headless:true}); const c=await browser.newContext({locale:'en-US',viewport:{width:1600,height:1100}}); const p=await c.newPage(); const resp=await p.goto('https://www.tradingview.com/chart/?symbol=OANDA%3AXAUUSD&interval=1',{waitUntil:'domcontentloaded',timeout:60000}); r.page_loaded=!!resp&&resp.status()<500; r.http_status=resp?resp.status():null; await p.waitForTimeout(12000);
-          await p.keyboard.press('Alt+g'); await p.waitForTimeout(1500);
-          const d=p.locator('input[placeholder="YYYY-MM-DD"]:visible').first(); if(await d.count()){await d.fill('2026-08-20');r.date_value=await d.inputValue();}
-          const ins=p.locator('input:visible'); let t=null; for(let i=0;i<await ins.count();i++){const e=ins.nth(i);const v=await e.inputValue().catch(()=> ''); if(/^\d{1,2}:\d{2}$/.test(v)){t=e;break;}} if(t){await t.fill('01:30');r.time_value=await t.inputValue();}
-          const btns=p.getByText('Go to',{exact:true}); for(let i=(await btns.count())-1;i>=0;i--){const b=btns.nth(i);if(await b.isVisible().catch(()=>false)){await b.click({force:true,timeout:10000}).catch(()=>{});r.go_to_clicked=true;break;}}
-          await p.waitForTimeout(7000);
-          const dw=p.locator('[aria-label*="Data Window" i], [aria-label*="Object Tree" i], [title*="Data Window" i], [data-name*="data-window" i]'); r.data_window_candidates=await dw.count(); let opened=false; for(let i=0;i<await dw.count();i++){const e=dw.nth(i); if(await e.isVisible().catch(()=>false)){await e.click({force:true}).catch(()=>{});opened=true;break;}} r.data_window_opened=opened; await p.waitForTimeout(1500);
-          const canvases=p.locator('canvas'); const n=await canvases.count(); let box=null; for(let i=0;i<n;i++){const b=await canvases.nth(i).boundingBox().catch(()=>null);if(b&&b.width>600&&b.height>300){box=b;break;}} if(box){await p.mouse.move(box.x+box.width*0.50,box.y+box.height*0.65);await p.waitForTimeout(1200);}
-          const body=await p.locator('body').innerText().catch(()=> ''); r.body_excerpt=body.slice(0,18000);
-          const pats=[/2026-08-20[^\n]{0,100}01:30/i,/20\/08\/2026[^\n]{0,100}01:30/i,/20\s+Aug(?:ust)?\s+2026[^\n]{0,100}01:30/i,/Aug(?:ust)?\s+20[^\n]{0,50}2026[^\n]{0,100}01:30/i,/20\s+Aug[^\n]{0,100}1:30/i]; for(const re of pats){const mm=body.match(re);if(mm){r.data_window_timestamp_text=mm[0];r.target_time_verified=true;break;}}
-          const m=body.match(/(?:^|\n)O\s*\n?\s*([\d,.]+)\s*\nH\s*\n?\s*([\d,.]+)\s*\nL\s*\n?\s*([\d,.]+)\s*\nC\s*\n?\s*([\d,.]+)/m); if(m)r.extracted_ohlc={open:m[1],high:m[2],low:m[3],close:m[4]};
-          fs.mkdirSync('mission001',{recursive:true}); await p.screenshot({path:'mission001/gr001-native-capture.png'}); r.verdict=r.target_time_verified&&r.extracted_ohlc?'TARGET_DISPLAY_TIMESTAMP_VERIFIED_OHLC':(r.extracted_ohlc?'DATA_WINDOW_TIMESTAMP_UNVERIFIED_OHLC_PRESENT':'ROUTE_FAIL');}
-          catch(e){r.error=String(e);r.verdict='ROUTE_FAIL';} finally{if(browser)await browser.close();fs.mkdirSync('mission001',{recursive:true});fs.writeFileSync('mission001/gr001_native_capture.json',JSON.stringify(r,null,2)+'\n');console.log(JSON.stringify(r));}})();
+          (async()=>{
+            const targetIso='2026-08-20T01:30:00Z';
+            const targetSec=Math.floor(Date.parse(targetIso)/1000);
+            const r={mission:'MISSION-001',route:'GH9_NATIVE_WEBSOCKET_BAR_VERIFY',golden_id:'GR-001',requested_display_time:'2026-08-20 01:30',target_iso_utc:targetIso,target_epoch_sec:targetSec,timestamp_utc:new Date().toISOString(),target_time_verified:false,websocket_target_frame_seen:false,websocket_candidate:null,ui_ohlc:null,verdict:'UNRESOLVED',error:null};
+            let browser; const frames=[];
+            function toText(ev){try{if(typeof ev==='string')return ev;if(Buffer.isBuffer(ev))return ev.toString('utf8');if(ev&&typeof ev.payload==='string')return ev.payload;if(ev&&Buffer.isBuffer(ev.payload))return ev.payload.toString('utf8');return String(ev||'');}catch{return '';}}
+            function nums(s){return s.split(',').map(x=>Number(String(x).replace(/[\[\]\s"]/g,'')));}
+            function sane(v){if(!v||v.length<5)return false;const [ts,o,h,l,c]=v;if(ts!==targetSec)return false;if(![o,h,l,c].every(Number.isFinite))return false;return h>=Math.max(o,c)&&l<=Math.min(o,c)&&h>=l;}
+            function extractCandidate(txt){
+              const escaped=String(targetSec).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+              const patterns=[
+                new RegExp('\\['+escaped+'\\s*,\\s*(-?\\d+(?:\\.\\d+)?)\\s*,\\s*(-?\\d+(?:\\.\\d+)?)\\s*,\\s*(-?\\d+(?:\\.\\d+)?)\\s*,\\s*(-?\\d+(?:\\.\\d+)?)','g'),
+                new RegExp('\\[\\s*-?\\d+\\s*,\\s*'+escaped+'\\s*,\\s*(-?\\d+(?:\\.\\d+)?)\\s*,\\s*(-?\\d+(?:\\.\\d+)?)\\s*,\\s*(-?\\d+(?:\\.\\d+)?)\\s*,\\s*(-?\\d+(?:\\.\\d+)?)','g')
+              ];
+              for(const re of patterns){let m;while((m=re.exec(txt))){const v=[targetSec,Number(m[1]),Number(m[2]),Number(m[3]),Number(m[4])];if(sane(v))return {timestamp:targetSec,open:v[1],high:v[2],low:v[3],close:v[4],match:m[0]};}}
+              return null;
+            }
+            try{
+              browser=await chromium.launch({channel:'chrome',headless:true});
+              const c=await browser.newContext({locale:'en-US',viewport:{width:1600,height:1100}});
+              const p=await c.newPage();
+              p.on('websocket',ws=>{r.websocket_url=ws.url();ws.on('framereceived',ev=>{const txt=toText(ev);if(txt){if(txt.includes(String(targetSec)))frames.push(txt.slice(0,250000));}});});
+              const resp=await p.goto('https://www.tradingview.com/chart/?symbol=OANDA%3AXAUUSD&interval=1',{waitUntil:'domcontentloaded',timeout:60000});
+              r.page_loaded=!!resp&&resp.status()<500;r.http_status=resp?resp.status():null;await p.waitForTimeout(12000);
+              await p.keyboard.press('Alt+g');await p.waitForTimeout(1500);
+              const d=p.locator('input[placeholder="YYYY-MM-DD"]:visible').first();if(await d.count()){await d.fill('2026-08-20');r.date_value=await d.inputValue();}
+              const ins=p.locator('input:visible');let t=null;for(let i=0;i<await ins.count();i++){const e=ins.nth(i);const v=await e.inputValue().catch(()=> '');if(/^\d{1,2}:\d{2}$/.test(v)){t=e;break;}}if(t){await t.fill('01:30');r.time_value=await t.inputValue();}
+              const btns=p.getByText('Go to',{exact:true});for(let i=(await btns.count())-1;i>=0;i--){const b=btns.nth(i);if(await b.isVisible().catch(()=>false)){await b.click({force:true,timeout:10000}).catch(()=>{});r.go_to_clicked=true;break;}}
+              await p.waitForTimeout(10000);
+              r.websocket_matching_frame_count=frames.length;
+              for(const txt of frames){const cand=extractCandidate(txt);if(cand){r.websocket_target_frame_seen=true;r.target_time_verified=true;r.websocket_candidate=cand;const pos=txt.indexOf(String(targetSec));r.websocket_frame_excerpt=txt.slice(Math.max(0,pos-600),Math.min(txt.length,pos+1600));break;}}
+              const body=await p.locator('body').innerText().catch(()=> '');const m=body.match(/(?:^|\n)O\s*\n?\s*([\d,.]+)\s*\nH\s*\n?\s*([\d,.]+)\s*\nL\s*\n?\s*([\d,.]+)\s*\nC\s*\n?\s*([\d,.]+)/m);if(m)r.ui_ohlc={open:m[1],high:m[2],low:m[3],close:m[4]};
+              fs.mkdirSync('mission001',{recursive:true});await p.screenshot({path:'mission001/gr001-native-capture.png'});
+              r.verdict=r.target_time_verified&&r.websocket_candidate?'TARGET_EPOCH_VERIFIED_WEBSOCKET_OHLC':(frames.length?'TARGET_FRAME_SEEN_BUT_OHLC_PARSE_UNVERIFIED':'TARGET_EPOCH_NOT_SEEN_IN_NATIVE_WEBSOCKET');
+            }catch(e){r.error=String(e);r.verdict='ROUTE_FAIL';}
+            finally{if(browser)await browser.close();fs.mkdirSync('mission001',{recursive:true});fs.writeFileSync('mission001/gr001_native_capture.json',JSON.stringify(r,null,2)+'\n');console.log(JSON.stringify(r));}
+          })();
           NODE
       - name: Persist evidence
         if: always()
@@ -51,12 +74,12 @@ jobs:
           mkdir -p mission001
           cp /tmp/gr001_native_capture.json mission001/gr001_native_capture.json
           git add mission001/gr001_native_capture.json
-          git commit -m 'MISSION001: persist GH8 GR-001 evidence' || exit 0
+          git commit -m 'MISSION001: persist GH9 GR-001 evidence' || exit 0
           git push origin "HEAD:$GITHUB_REF_NAME"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: mission001-gr001-native-capture-gh8
+          name: mission001-gr001-native-capture-gh9
           path: |
             mission001/gr001_native_capture.json
             mission001/gr001-native-capture.png
