@@ -1,0 +1,97 @@
+name: M001 GR001 Native Capture
+
+on:
+  push:
+    paths:
+      - '.github/workflows/mission001-gr001-native-capture.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install playwright-core@1.55.0
+      - name: Capture GR-001 native chart evidence
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const { chromium } = require('playwright-core');
+          (async () => {
+            const r = {
+              mission:'MISSION-001', route:'GH3_GR001_NATIVE_CHART_CAPTURE',
+              golden_id:'GR-001', requested_local_time:'2026-08-20 01:30', side:'BUY',
+              target:'https://www.tradingview.com/chart/?symbol=OANDA%3AXAUUSD&interval=1',
+              timestamp_utc:new Date().toISOString(), page_loaded:false, go_to_opened:false,
+              go_to_submitted:false, chart_text_after_go_to:null, ohlc_tokens:[],
+              screenshot_created:false, verdict:'UNRESOLVED', error:null
+            };
+            let browser;
+            try {
+              browser = await chromium.launch({channel:'chrome', headless:true});
+              const ctx = await browser.newContext({locale:'en-US', viewport:{width:1600,height:1100}});
+              const page = await ctx.newPage();
+              const resp = await page.goto(r.target,{waitUntil:'domcontentloaded',timeout:60000});
+              r.page_loaded = !!resp && resp.status() < 500; r.http_status = resp ? resp.status() : null;
+              await page.waitForTimeout(12000);
+              await page.keyboard.press('Alt+g').catch(()=>{});
+              await page.waitForTimeout(1500);
+              let body = await page.locator('body').innerText().catch(()=> '');
+              r.go_to_opened = /Go to|Date|Time/i.test(body);
+              const inputs = page.locator('input');
+              const n = await inputs.count();
+              let typed = false;
+              for (let i=0;i<n;i++) {
+                const el=inputs.nth(i);
+                if (!(await el.isVisible().catch(()=>false))) continue;
+                const ph=(await el.getAttribute('placeholder').catch(()=>''))||'';
+                const aria=(await el.getAttribute('aria-label').catch(()=>''))||'';
+                if (/date|time|go to/i.test(ph+' '+aria) || !typed) {
+                  try { await el.fill('2026-08-20 01:30'); typed=true; break; } catch(e) {}
+                }
+              }
+              if (typed) {
+                await page.keyboard.press('Enter').catch(()=>{}); r.go_to_submitted=true;
+                await page.waitForTimeout(8000);
+              }
+              await page.mouse.move(800,520); await page.waitForTimeout(1500);
+              body = await page.locator('body').innerText().catch(()=> '');
+              r.chart_text_after_go_to = body.slice(0,12000);
+              const matches = body.match(/(?:O|H|L|C|Open|High|Low|Close)\s*[-:]?\s*\d+(?:\.\d+)?/gi) || [];
+              r.ohlc_tokens = matches.slice(0,40);
+              fs.mkdirSync('mission001',{recursive:true});
+              await page.screenshot({path:'mission001/gr001-native-capture.png',fullPage:false});
+              r.screenshot_created=true;
+              if (r.go_to_submitted && r.ohlc_tokens.length>=4) r.verdict='PARTIAL_CANONICAL_OHLC_EVIDENCE';
+              else if (r.go_to_submitted) r.verdict='NAVIGATION_PASS_OHLC_NOT_EXTRACTED';
+              else r.verdict='ROUTE_FAIL';
+            } catch(e) { r.error=String(e); r.verdict='ROUTE_FAIL'; }
+            finally {
+              if(browser) await browser.close();
+              fs.mkdirSync('mission001',{recursive:true});
+              fs.writeFileSync('mission001/gr001_native_capture.json',JSON.stringify(r,null,2)+'\n');
+              console.log(JSON.stringify(r));
+            }
+          })();
+          NODE
+      - name: Persist GR-001 evidence
+        run: |
+          git config user.name 'mission001-bot'
+          git config user.email 'mission001-bot@users.noreply.github.com'
+          git add mission001/gr001_native_capture.json
+          git commit -m 'MISSION001: persist GR-001 native capture evidence' || exit 0
+          git push
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mission001-gr001-native-capture
+          path: |
+            mission001/gr001_native_capture.json
+            mission001/gr001-native-capture.png
+          if-no-files-found: error
