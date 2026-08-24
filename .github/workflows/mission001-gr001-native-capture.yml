@@ -21,20 +21,21 @@ jobs:
         with:
           node-version: '22'
       - run: npm install playwright-core@1.55.0
-      - name: Capture and verify GR-001 native chart evidence
+      - name: GH4 separate date/time native navigation
         run: |
           node <<'NODE'
           const fs = require('fs');
           const { chromium } = require('playwright-core');
           (async () => {
             const r = {
-              mission:'MISSION-001', route:'GH3_GR001_NATIVE_CHART_CAPTURE_V3',
-              golden_id:'GR-001', requested_local_time:'2026-08-20 01:30', side:'BUY',
+              mission:'MISSION-001', route:'GH4_SEPARATE_DATE_TIME_NATIVE_NAV',
+              golden_id:'GR-001', requested_display_time:'2026-08-20 01:30', side:'BUY',
               target:'https://www.tradingview.com/chart/?symbol=OANDA%3AXAUUSD&interval=1',
               timestamp_utc:new Date().toISOString(), page_loaded:false,
-              go_to_opened:false, go_to_submitted:false, target_time_verified:false,
-              visible_inputs:[], chart_text_after_go_to:null, extracted_ohlc:null,
-              screenshot_created:false, verdict:'UNRESOLVED', error:null
+              go_to_opened:false, date_input_found:false, time_input_found:false,
+              date_filled:false, time_filled:false, go_to_button_clicked:false,
+              modal_closed:false, target_display_verified:false, timezone_provenance:null,
+              extracted_ohlc:null, screenshot_created:false, verdict:'UNRESOLVED', error:null
             };
             let browser;
             try {
@@ -42,46 +43,63 @@ jobs:
               const ctx = await browser.newContext({locale:'en-US', viewport:{width:1600,height:1100}});
               const page = await ctx.newPage();
               const resp = await page.goto(r.target,{waitUntil:'domcontentloaded',timeout:60000});
-              r.page_loaded = !!resp && resp.status() < 500; r.http_status = resp ? resp.status() : null;
+              r.page_loaded = !!resp && resp.status() < 500;
+              r.http_status = resp ? resp.status() : null;
               await page.waitForTimeout(12000);
+
               await page.keyboard.press('Alt+g').catch(()=>{});
               await page.waitForTimeout(1500);
               let body = await page.locator('body').innerText().catch(()=> '');
-              r.go_to_opened = /Go to|Date|Time/i.test(body);
-              const inputs = page.locator('input');
-              const n = await inputs.count();
-              let targetInput = null;
+              r.go_to_opened = /Go to/i.test(body);
+
+              const dateInput = page.locator('input[placeholder="YYYY-MM-DD"]:visible').first();
+              if (await dateInput.count()) {
+                r.date_input_found = true;
+                try { await dateInput.fill('2026-08-20'); r.date_filled = (await dateInput.inputValue()) === '2026-08-20'; } catch(e) { r.date_fill_error=String(e); }
+              }
+
+              const visibleInputs = page.locator('input:visible');
+              const n = await visibleInputs.count();
+              let timeInput = null;
               for (let i=0;i<n;i++) {
-                const el=inputs.nth(i);
-                if (!(await el.isVisible().catch(()=>false))) continue;
-                const meta={
-                  placeholder:(await el.getAttribute('placeholder').catch(()=>''))||'',
-                  aria:(await el.getAttribute('aria-label').catch(()=>''))||'',
-                  type:(await el.getAttribute('type').catch(()=>''))||'',
-                  value:(await el.inputValue().catch(()=>''))||''
-                };
-                r.visible_inputs.push(meta);
-                if (!targetInput && /date|time|go to/i.test(meta.placeholder+' '+meta.aria)) targetInput=el;
+                const el = visibleInputs.nth(i);
+                const val = await el.inputValue().catch(()=> '');
+                const ph = (await el.getAttribute('placeholder').catch(()=>'')) || '';
+                if (/^\d{1,2}:\d{2}$/.test(val) || /time|hh:mm/i.test(ph)) { timeInput = el; break; }
               }
-              if (targetInput) {
-                await targetInput.fill('2026-08-20 01:30');
-                await page.keyboard.press('Enter');
-                r.go_to_submitted=true;
-                await page.waitForTimeout(8000);
+              if (timeInput) {
+                r.time_input_found = true;
+                try { await timeInput.fill('01:30'); r.time_filled = (await timeInput.inputValue()) === '01:30'; } catch(e) { r.time_fill_error=String(e); }
               }
-              await page.mouse.move(800,520); await page.waitForTimeout(1500);
+
+              const goButtons = page.getByText('Go to',{exact:true});
+              const gbn = await goButtons.count();
+              for (let i=0;i<gbn;i++) {
+                const b = goButtons.nth(i);
+                if (await b.isVisible().catch(()=>false)) {
+                  try { await b.click({timeout:10000}); r.go_to_button_clicked=true; break; } catch(e) { r.goto_click_error=String(e); }
+                }
+              }
+              if (r.go_to_button_clicked) await page.waitForTimeout(8000);
+
               body = await page.locator('body').innerText().catch(()=> '');
-              r.chart_text_after_go_to = body.slice(0,12000);
-              r.target_time_verified = /20[^\n]{0,8}Aug|Aug[^\n]{0,8}20|2026-08-20|20\/08/i.test(body) && /01:30|1:30/i.test(body);
+              r.modal_closed = !/DateCustom range|Close menu/i.test(body);
+              const tz = body.match(/\b(?:UTC(?:[+-]\d{1,2}(?::\d{2})?)?|GMT(?:[+-]\d{1,2}(?::\d{2})?)?)\b/i);
+              if (tz) r.timezone_provenance = tz[0];
+              r.target_display_verified = /20[^\n]{0,8}Aug|Aug[^\n]{0,8}20|2026-08-20|20\/08/i.test(body) && /01:30|1:30/i.test(body);
+
               const m = body.match(/(?:^|\n)O\s*\n?\s*([\d,.]+)\s*\nH\s*\n?\s*([\d,.]+)\s*\nL\s*\n?\s*([\d,.]+)\s*\nC\s*\n?\s*([\d,.]+)/m);
               if (m) r.extracted_ohlc={open:m[1],high:m[2],low:m[3],close:m[4]};
+              r.chart_text_excerpt = body.slice(0,12000);
+
               fs.mkdirSync('mission001',{recursive:true});
               await page.screenshot({path:'mission001/gr001-native-capture.png',fullPage:false});
               r.screenshot_created=true;
-              if (r.target_time_verified && r.extracted_ohlc) r.verdict='TARGET_VERIFIED_OHLC_EVIDENCE';
-              else if (r.go_to_submitted && r.extracted_ohlc) r.verdict='OHLC_PRESENT_TARGET_NOT_VERIFIED';
-              else if (r.go_to_submitted) r.verdict='NAVIGATION_ATTEMPT_NO_CANONICAL_EVIDENCE';
-              else r.verdict='ROUTE_FAIL';
+
+              if (!r.date_input_found || !r.time_input_found || !r.date_filled || !r.time_filled || !r.go_to_button_clicked) r.verdict='ROUTE_FAIL';
+              else if (r.extracted_ohlc && r.target_display_verified) r.verdict='TARGET_DISPLAY_TIMESTAMP_VERIFIED_OHLC';
+              else if (r.extracted_ohlc) r.verdict='NAVIGATION_SUBMITTED_OHLC_PRESENT_TIMEZONE_OR_DISPLAY_UNRESOLVED';
+              else r.verdict='NAVIGATION_SUBMITTED_NO_OHLC';
             } catch(e) { r.error=String(e); r.verdict='ROUTE_FAIL'; }
             finally {
               if(browser) await browser.close();
@@ -94,7 +112,7 @@ jobs:
       - name: Persist GR-001 evidence
         if: always()
         run: |
-          test -f mission001/gr001_native_capture.json || printf '%s\n' '{"mission":"MISSION-001","route":"GH3_GR001_NATIVE_CHART_CAPTURE_V3","verdict":"WORKFLOW_FAIL_BEFORE_CAPTURE"}' > mission001/gr001_native_capture.json
+          test -f mission001/gr001_native_capture.json || printf '%s\n' '{"mission":"MISSION-001","route":"GH4_SEPARATE_DATE_TIME_NATIVE_NAV","verdict":"WORKFLOW_FAIL_BEFORE_CAPTURE"}' > mission001/gr001_native_capture.json
           cp mission001/gr001_native_capture.json /tmp/gr001_native_capture.json
           git config user.name 'mission001-bot'
           git config user.email 'mission001-bot@users.noreply.github.com'
@@ -103,12 +121,12 @@ jobs:
           mkdir -p mission001
           cp /tmp/gr001_native_capture.json mission001/gr001_native_capture.json
           git add mission001/gr001_native_capture.json
-          git commit -m 'MISSION001: persist GR-001 native capture evidence v3' || exit 0
+          git commit -m 'MISSION001: persist GH4 GR-001 native capture evidence' || exit 0
           git push origin "HEAD:$GITHUB_REF_NAME"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: mission001-gr001-native-capture-v3
+          name: mission001-gr001-native-capture-gh4
           path: |
             mission001/gr001_native_capture.json
             mission001/gr001-native-capture.png
