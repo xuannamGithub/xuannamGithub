@@ -1,9 +1,9 @@
 {
-  "schema_version": "1.2.4",
+  "schema_version": "1.3.0",
   "mission_id": "MISSION-001",
   "canonical_thread": true,
-  "updated_at_local": "2026-08-24T13:13:00+07:00",
-  "state_rule": "Verified newer execution evidence overrides stale state/report. Cycle: restore -> verify -> reconcile -> recover -> persist -> resume.",
+  "updated_at_local": "2026-08-24T14:02:00+07:00",
+  "state_rule": "Verified newer execution evidence overrides stale state/report. Cycle: restore -> verify -> reconcile -> execute -> persist evidence -> update state -> report.",
   "execution_model": {
     "type": "B_EVENT_TRIGGERED_NOT_PERSISTENT",
     "orchestrator": "existing Mission 001 scheduler",
@@ -13,7 +13,7 @@
     "github_actions": "event-driven workers only",
     "continuous_execution_claim_prohibited": true
   },
-  "owner_role": "Capital / Risk / Go-Live / Cost / Security / Doctrine / Champion approval only",
+  "owner_role": "Capital / Risk / Go-Live / Cost / Security / Doctrine genuinely unresolved / Champion approval only",
   "ai_role": "Execution / Research / Verification / Continuity",
   "anti_deadlock": "PASS->next gate; FAIL->minimum demonstrated patch/retest; BLOCKED->parallel recovery; route FAIL->KILL/switch; two consecutive zero-material checkpoints->mandatory SWITCH/PARALLELIZE/KILL",
   "baseline": {
@@ -44,14 +44,9 @@
       "GH2": "SURFACE_PASS_RETAINED; END_TO_END_COMPILE_KILLED_IN_CURRENT_RUNTIME",
       "SOURCE_AWARE_NATIVE_ROUTE_RECOVERY": "KILLED",
       "HISTORICAL_GITHUB_COMMIT_RECOVERY": "KILLED",
-      "active_fallback": {
-        "name": "NEW_BYTE_MATERIALIZATION_SURFACE_ONLY",
-        "status": "WAITING_FOR_NEW_EXECUTABLE_CAPABILITY_NOT_OWNER_ACTION",
-        "pass_gate": "Exact frozen v0.3 bytes become available on an AI-operable surface and SHA256 matches before TradingView injection",
-        "kill_rule": "Do not repeat GitHub/Drive/Gmail/local/history searches already evidenced failed",
-        "next_executable_action": "At each hourly cycle check only for a genuinely new materialization capability. If present, verify hash and compile immediately; otherwise spend Track A capacity on parallel recovery route discovery, not repeated searches."
-      }
-    }
+      "active_fallback": "NEW_BYTE_MATERIALIZATION_SURFACE_ONLY"
+    },
+    "next_executable_action": "Check only for genuinely new exact-byte materialization capability. If present, verify frozen SHA immediately before native TradingView injection and compile. Do not repeat failed source searches."
   },
   "track_b": {
     "canonical_events": 0,
@@ -60,52 +55,75 @@
     "candidates_eliminated": 0,
     "oos_survivors": 0,
     "champion": null,
-    "development_cases_count_toward_canonical": false,
     "current_gate": "Golden Reference / full BAR-STATE-EVENT parity",
-    "gh3_v3_evidence": {
-      "path": "github://xuannamGithub/xuannamGithub/mission001/gr001_native_capture.json",
-      "blob_sha": "b7ab0e212ba2e3d97f6b8687da20416684e280de",
-      "timestamp_utc": "2026-08-24T05:08:06.258Z",
-      "page_loaded": true,
-      "go_to_opened": true,
-      "go_to_submitted": false,
-      "target_time_verified": false,
-      "verdict": "ROUTE_FAIL",
-      "reason": "TradingView Go To dialog exposed separate date and time inputs; v3 attempted one combined value into only the date input, so target navigation was not submitted."
-    },
+    "development_cases_count_toward_canonical": false,
     "routes": {
       "GH3_V2": "KILLED_AS_CANONICAL_ROUTE",
-      "GH3_V3": "KILLED — ROUTE_FAIL demonstrated by separate input structure",
-      "GH4_SEPARATE_DATE_TIME_NATIVE_NAV": {
-        "workflow_commit": "bf9ee500750406006a64349cdc658c636d980c31",
-        "status": "ACTIVE_EVENT_DRIVEN_EXECUTION_PENDING_EVIDENCE_PERSIST",
-        "purpose": "Fill date=2026-08-20 and time=01:30 separately, click Go to, then require target display verification before OHLC can count",
-        "pass_gate": "Date/time inputs filled separately, Go-to clicked, target display timestamp verified, exact OHLC extracted",
-        "fail_gate": "Input fill/click fails, target display cannot be verified, or canonical fields remain ambiguous",
-        "next_executable_action": "Fetch GH4 evidence on next hourly cycle. PASS -> extend only to remaining Donchian/W2/EA/filter/event-identity fields. FAIL -> kill GH4 and switch/parallelize."
+      "GH3_V3": "KILLED_ROUTE_FAIL",
+      "GH4": {
+        "status": "KILLED_CANONICAL_AMBIGUITY",
+        "evidence_timestamp_utc": "2026-08-24T06:13:24.765Z",
+        "date_filled": true,
+        "time_filled": true,
+        "go_to_button_clicked": true,
+        "modal_closed": false,
+        "target_display_verified": false,
+        "timezone_provenance": "UTC",
+        "extracted_ohlc": {"open":"4,647.980","high":"4,651.630","low":"4,647.980","close":"4,650.715"},
+        "reason_not_promoted": "Target display timestamp remained unverified; OHLC therefore not canonical."
+      },
+      "GH5_TARGET_ACTION_NATIVE_NAV": {
+        "status": "ACTIVE_EVENT_DRIVEN_PENDING_EVIDENCE",
+        "workflow_commit": "2147dcf7ee2ac21eede4d36cd227207f2ce05152",
+        "next_executable_action": "Fetch GH5 evidence. PASS only with target timestamp verification + exact OHLC; FAIL/ambiguity -> kill/switch."
       }
     }
+  },
+  "fast_lane_d": {
+    "name": "FUNCTIONAL_DEMO_BOT_DELIVERY",
+    "status": "DOCTRINE_GATE_AFTER_FULL_SOURCE_AUDIT",
+    "objective": "Full Pine v6 automatic Demo candidate implementing CT Long -> W2 Long -> W2 Short with exits, mutual exclusion, risk controls, provenance/deviation ledger, then native compile.",
+    "label_policy": "CONTROLLED REBUILD / DEMO CANDIDATE / NOT BYTE-EQUIVALENT TO v0.3",
+    "manual_trigger_shell_not_acceptable": true,
+    "source_audit": {
+      "github_current_tree": "COMPLETE; only State Package, CR1 shell, route evidence/workflows present; no CT/W2 implementation source",
+      "github_commit_history": "COMPLETE; repository history contains Mission state/workflow/evidence/CR1 only; no historical strategy source",
+      "github_code_search_strategy_entry": "0 results",
+      "github_code_search_ct_long": "0 results",
+      "google_drive_zone06": "0 results",
+      "google_drive_baseline_title": "0 results",
+      "google_drive_strategy_spec": "0 relevant results",
+      "gmail_zone06_ctw2_attachments": "0 results",
+      "prior_context_recovery": "No exact CT/W2 strategy.entry/exit implementation recovered; only high-level doctrine/rules and prior evidence summaries."
+    },
+    "recovered_verified_components": [
+      "Donchian lengths 65/129/234/468",
+      "W2/Zone06 conceptual role and EA <=9-bar relationship",
+      "STOP/GO/SCALE",
+      "risk sizing shell",
+      "daily-loss protection",
+      "max-DD kill",
+      "force-flat/position controls",
+      "no-lookahead requirement"
+    ],
+    "exact_unresolved_rule": "Executable boolean/state-machine definition for CT Long -> W2 Long -> W2 Short: ARM, ENTER, EXIT, INVALIDATE, NEXT-LEG ENABLE and MUTUAL-EXCLUSION PRIORITY. No materialized verified source defines these predicates.",
+    "evidence_a": "Verified high-level project doctrine establishes CT/W2 concepts and execution sequence intent, but not exact executable transition predicates.",
+    "evidence_b": "Full accessible source trace found zero strategy.entry/strategy.exit CT/W2 implementation and zero baseline/spec artifacts capable of proving the predicates.",
+    "consequence_choice_a": "If CT->W2 transitions are based on sweep/EA/W2 lifecycle predicates, Demo bot behavior follows liquidity/Zone06 state and may delay/skip legs.",
+    "consequence_choice_b": "If transitions are based on prior-leg exit/TP/SL or other event sequencing, Demo bot behavior and mutual exclusion differ materially even on the same chart.",
+    "owner_decision_required": "Provide/approve the exact transition doctrine only if no new verified source becomes materialized. AI must not invent it.",
+    "next_executable_action": "At next cycle, first consume any newly materialized verified source; absent that, retain this as a genuine Doctrine Gate while Track A/B continue."
   },
   "scheduler": {
     "task_id": "6a86a181691081919afe42eac2a18161",
     "title": "Mission 001 Progress",
     "status": "ENABLED",
     "cadence": "hourly",
-    "timezone": "Asia/Ho_Chi_Minh",
-    "note": "Same scheduler reused; cadence increased from 2h to 1h after Owner execution-model check. No new scheduler created."
+    "timezone": "Asia/Ho_Chi_Minh"
   },
-  "active_authorizations": [
-    "Owner=Decision/Authorization/Approval; AI=Execution/Verification/Evidence",
-    "Authenticated Browser/Desktop Execution capability APPROVED",
-    "ChatGPT Desktop / Work-Codex browser control + CDP for TradingView Track A APPROVED",
-    "Owner accepted/froze P0",
-    "GH2 native surface PASS may be reused",
-    "Autonomous hourly execution continues to genuine Owner Decision Gates"
-  ],
   "checkpoint_policy": {
-    "cadence": "hourly using existing scheduler only",
+    "reports": ["TRACK A","TRACK B","FAST-LANE D"],
     "activity_is_not_progress": true,
-    "owner_silence_pauses_execution": false,
-    "reporting_language": "Do not describe execution as continuous; describe as hourly orchestrated + event-driven workers."
+    "owner_silence_pauses_execution": false
   }
 }
