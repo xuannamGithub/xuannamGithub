@@ -1,0 +1,300 @@
+XAUUSD
+D
+Indicators
+Alert
+Replay
+Save
+Save
+Trade
+Publish
+X
+Gold Spot / U.S. Dollar
+1D
+OANDA
+O
+4,609.655
+H
+4,681.020
+L
+4,594.515
+C
+4,679.655
++76.665 (+1.67%)
+4,680.150
+SELL
+62.0
+4,680.770
+BUY
+Vol · Ticks
+645.99 K
+1D
+5D
+1M
+3M
+6M
+YTD
+1Y
+5Y
+All
+13:36:04 UTC
+Watchlist
+Symbol
+Last
+Chg
+Chg%
+INDICES
+S
+SPX
+D
+7,674.37
+33.21
+0.43%
+N
+NDQ
+29,056.50
+−252.36
+−0.86%
+D
+DJI
+53,343.32
+61.01
+0.11%
+V
+VIX
+D
+15.84
+0.71
+4.69%
+D
+DXY
+98.935
+0.096
+0.10%
+STOCKS
+A
+AAPL
+310.82
+1.47
+0.48%
+T
+TSLA
+354.75
+−8.11
+−2.24%
+N
+NFLX
+79.74
+0.15
+0.19%
+FUTURES
+U
+USOIL
+85.85
+−0.78
+−0.90%
+G
+GOLD
+4,680.022
+77.362
+1.68%
+S
+SILVER
+69.5962
+0.6462
+0.94%
+FOREX
+E
+EURUSD
+1.16717
+−0.00044
+−0.04%
+G
+GBPUSD
+1.36455
+0.00044
+0.03%
+U
+USDJPY
+159.128
+0.156
+0.10%
+CRYPTO
+B
+BTCUSD
+78,783
+1,066
+1.37%
+B
+BTCUSDT
+78,812.00
+1,078.00
+1.39%
+E
+ETHUSD
+2,496.6
+33.8
+1.37%
+X
+XAUUSD
+Gold Spot / U.S. Dollar
+OANDA
+Commodity
+Cfd
+4,680.140
+USD
++77.150
++1.68%
+Market open
+Sign in to read exclusive news
+Performance
+7.02%
+1W
+15.58%
+1M
+2.37%
+3M
+−8.87%
+6M
+8.17%
+YTD
+40.11%
+1Y
+Seasonals
+	
+	
+	
+	
+2026
+2025
+2024
+More seasonals
+Technicals
+Neutral
+Sell
+Buy
+Strong sell
+Strong buy
+Strong sell
+Sell
+Neutral
+Buy
+Strong buy
+More technicals
+Browse community posts
+Add to chart
+Ctrl
++
+↵
+Pine Editor
+Untitled script
+Add to chart
+Save
+Publish script
+3360
+3361
+3362
+3363
+3364
+3365
+3366
+3367
+3368
+3369
+3370
+3371
+3372
+3373
+3374
+3375
+3376
+3377
+3378
+3379
+3380
+3381
+3382
+3383
+3384
+3385
+3386
+3387
+3388
+3389
+3390
+3391
+3392
+3393
+3394
+3395
+3396
+3397
+3398
+3399
+3400
+3401
+3402
+3403
+3404
+3405
+3406
+3407
+3408
+3409
+3410
+3411
+3412
+    z06OrderTarget := z06SignalTarget
+    strategy.entry("Z06_Long", strategy.long, qty=botV1LongQty, alert_message="ZONE06 BUY {{ticker}} @ {{strategy.order.price}}")
+    botV1TradesToday += 1
+if z06ShortEntryReady
+    z06ShortOrderStop := botV1ShortStopCandidate
+    z06ShortOrderTarget := z06SellSignalTarget
+    strategy.entry("Z06_Short", strategy.short, qty=botV1ShortQty, alert_message="ZONE06 SELL {{ticker}} @ {{strategy.order.price}}")
+    botV1TradesToday += 1
+if strategy.position_size > 0 and not na(z06CtOrderStop) and not na(z06CtOrderTarget)
+    strategy.exit("Z06_CT_TP_SL", from_entry="Z06_CT_Long", stop=z06CtOrderStop, limit=z06CtOrderTarget, alert_message="ZONE06 CT EXIT {{ticker}} @ {{strategy.order.price}}")
+if strategy.position_size > 0 and not na(z06OrderStop) and not na(z06OrderTarget)
+    strategy.exit("Z06_TP_SL", from_entry="Z06_Long", stop=z06OrderStop, limit=z06OrderTarget, alert_message="ZONE06 EXIT {{ticker}} @ {{strategy.order.price}}")
+if strategy.position_size < 0 and not na(z06ShortOrderStop) and not na(z06ShortOrderTarget)
+    strategy.exit("Z06_SHORT_TP_SL", from_entry="Z06_Short", stop=z06ShortOrderStop, limit=z06ShortOrderTarget, alert_message="ZONE06 SHORT EXIT {{ticker}} @ {{strategy.order.price}}")
+if strategy.position_size == 0 and strategy.position_size[1] > 0
+    z06OrderStop := na
+    z06OrderTarget := na
+    z06CtOrderStop := na
+    z06CtOrderTarget := na
+if strategy.position_size == 0 and strategy.position_size[1] < 0
+    z06ShortOrderStop := na
+    z06ShortOrderTarget := na
+var table botV1RiskTable = table.new(position.middle_right, 2, 8, bgcolor= color.new(color.black, 10), border_width=1)
+if barstate.islast
+    table.cell(botV1RiskTable, 0, 0, "BOT V1", text_color= color.white)
+    table.cell(botV1RiskTable, 1, 0, "DEMO/SHADOW", text_color= color.white)
+    table.cell(botV1RiskTable, 0, 1, "State", text_color= color.white)
+    table.cell(botV1RiskTable, 1, 1, botV1State, text_color= color.white)
+    table.cell(botV1RiskTable, 0, 2, "Trades today", text_color= color.white)
+    table.cell(botV1RiskTable, 1, 2, str.tostring(botV1TradesToday), text_color= color.white)
+    table.cell(botV1RiskTable, 0, 3, "Daily loss %", text_color= color.white)
+    table.cell(botV1RiskTable, 1, 3, str.tostring(botV1DailyLossPctNow, "#.00"), text_color= color.white)
+    table.cell(botV1RiskTable, 0, 4, "DD %", text_color= color.white)
+    table.cell(botV1RiskTable, 1, 4, str.tostring(botV1DdPctNow, "#.00"), text_color= color.white)
+    table.cell(botV1RiskTable, 0, 5, "Point value", text_color= color.white)
+    table.cell(botV1RiskTable, 1, 5, str.tostring(syminfo.pointvalue), text_color= color.white)
+    table.cell(botV1RiskTable, 0, 6, "Risk %", text_color= color.white)
+    table.cell(botV1RiskTable, 1, 6, str.tostring(botV1RiskPct, "#.00"), text_color= color.white)
+    table.cell(botV1RiskTable, 0, 7, "Risk scale", text_color= color.white)
+    table.cell(botV1RiskTable, 1, 7, str.tostring(botV1RiskScale, "#.00"), text_color= color.white)
+plot(strategy.position_size > 0 ? z06OrderStop : na, "Z06 Active Stop", color= color.red, linewidth=2, style=plot.style_linebr)
+plot(strategy.position_size > 0 ? z06OrderTarget : na, "Z06 Active TP1", color= color.lime, linewidth=2, style=plot.style_linebr)
+plot(strategy.position_size < 0 ? z06ShortOrderStop : na, "Z06 Short Active Stop", color= color.red, linewidth=2, style=plot.style_linebr)
+plot(strategy.position_size < 0 ? z06ShortOrderTarget : na, "Z06 Short Active TP1", color= color.lime, linewidth=2, style=plot.style_linebr)
+Line 3412, Col 1
+Pine Script® v6
+Close
+
+Sign in
+
+Show more options
+or
+Email
+
+Do not have an account? Sign up
