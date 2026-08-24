@@ -1,4 +1,4 @@
-name: M001 TV Native Route Probe
+name: M001 A2 Exact P0 Native Compile
 
 on:
   push:
@@ -7,15 +7,37 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  probe:
+  a2-native-compile:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
-      - name: Checkout evidence target
+      - name: Checkout A2 ingress package
         uses: actions/checkout@v4
+
+      - name: Materialize exact P0 and enforce SHA gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          EXPECTED='9b8eca4c8cf2e151083020f4b3c2812b0ba3f04502c33fb6af892f0371712137'
+          mkdir -p mission001/a2-evidence /tmp/mission001-a2
+          cat mission001/a2-ingress/p0.xz.b64.part1 \
+              mission001/a2-ingress/p0.xz.b64.part2 \
+              mission001/a2-ingress/p0.xz.b64.part3 > /tmp/mission001-a2/p0.xz.b64
+          base64 -d /tmp/mission001-a2/p0.xz.b64 > /tmp/mission001-a2/p0.xz
+          xz -dc /tmp/mission001-a2/p0.xz > /tmp/mission001-a2/MISSION001_TrackA_BotV1_FullDerivative_v0.3.pine
+          ACTUAL="$(sha256sum /tmp/mission001-a2/MISSION001_TrackA_BotV1_FullDerivative_v0.3.pine | awk '{print $1}')"
+          SIZE="$(wc -c < /tmp/mission001-a2/MISSION001_TrackA_BotV1_FullDerivative_v0.3.pine)"
+          printf '{"expected_sha256":"%s","actual_sha256":"%s","size_bytes":%s,"verdict":"%s"}\n' \
+            "$EXPECTED" "$ACTUAL" "$SIZE" "$([ "$ACTUAL" = "$EXPECTED" ] && echo PASS || echo ABORT_HASH_MISMATCH)" \
+            > mission001/a2-evidence/a2_materialization_hash.json
+          cat mission001/a2-evidence/a2_materialization_hash.json
+          if [ "$ACTUAL" != "$EXPECTED" ]; then
+            echo 'A2 ABORT: SHA mismatch. No browser injection and no compile.' >&2
+            exit 42
+          fi
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -25,129 +47,181 @@ jobs:
       - name: Install Playwright core
         run: npm install playwright-core@1.55.0
 
-      - name: Execute TradingView current Pine-toolbar route
+      - name: Inject exact P0 and execute native TradingView compile
+        shell: bash
         run: |
           node <<'NODE'
           const fs = require('fs');
+          const crypto = require('crypto');
           const { chromium } = require('playwright-core');
+
+          const EXPECTED = '9b8eca4c8cf2e151083020f4b3c2812b0ba3f04502c33fb6af892f0371712137';
+          const SOURCE_PATH = '/tmp/mission001-a2/MISSION001_TrackA_BotV1_FullDerivative_v0.3.pine';
+          const EVIDENCE_DIR = 'mission001/a2-evidence';
+          const source = fs.readFileSync(SOURCE_PATH, 'utf8');
+          const sha = crypto.createHash('sha256').update(Buffer.from(source, 'utf8')).digest('hex');
+          if (sha !== EXPECTED) {
+            console.error(`A2 ABORT node-side SHA mismatch ${sha}`);
+            process.exit(42);
+          }
+
           (async () => {
+            fs.mkdirSync(EVIDENCE_DIR, { recursive: true });
             const result = {
               mission: 'MISSION-001',
-              route: 'GH2_CURRENT_PINE_SIDE_TOOLBAR',
-              gate: 'P1_NATIVE_TRADINGVIEW_SURFACE',
+              gate: 'A2_NATIVE_TRADINGVIEW_COMPILE_EXACT_P0',
+              route: 'A2_INGRESS_001_GH2',
               timestamp_utc: new Date().toISOString(),
+              expected_sha256: EXPECTED,
+              materialized_sha256: sha,
+              source_size_bytes: Buffer.byteLength(source, 'utf8'),
               target: 'https://www.tradingview.com/chart/?symbol=OANDA%3AXAUUSD',
               browser: 'GitHub-hosted Ubuntu / Google Chrome / Playwright',
               page_loaded: false,
-              pine_candidates: [],
               pine_control_found: false,
-              pine_click_attempted: false,
               pine_click_succeeded: false,
               editor_surface_detected: false,
-              add_to_chart_visible: false,
+              source_injection_attempted: false,
+              source_injection_completed: false,
+              editor_readback_sha256: null,
+              editor_readback_verdict: 'NOT_AVAILABLE',
+              add_to_chart_found: false,
+              add_to_chart_clicked: false,
               login_gate_visible: false,
-              final_url: null,
-              title: null,
-              route_verdict: 'UNRESOLVED',
+              compiler_evidence_lines: [],
+              script_title_visible_after_compile: false,
+              compile_verdict: 'UNRESOLVED',
               error: null
             };
+
             let browser;
             try {
               browser = await chromium.launch({ channel: 'chrome', headless: true });
               const context = await browser.newContext({ locale: 'en-US', viewport: { width: 1600, height: 1100 } });
+              await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: 'https://www.tradingview.com' }).catch(() => {});
               const page = await context.newPage();
               const response = await page.goto(result.target, { waitUntil: 'domcontentloaded', timeout: 60000 });
               result.page_loaded = !!response && response.status() < 500;
               result.http_status = response ? response.status() : null;
               result.final_url = page.url();
-              result.title = await page.title();
+              result.page_title = await page.title();
               await page.waitForTimeout(12000);
 
-              const selectors = [
+              const pineSelectors = [
                 '[aria-label*="Pine" i]',
                 '[title*="Pine" i]',
                 'button:has-text("Pine")',
                 '[role="button"]:has-text("Pine")',
                 '[data-name*="pine" i]'
               ];
-              const seen = new Set();
-              for (const sel of selectors) {
-                const loc = page.locator(sel);
-                const n = Math.min(await loc.count(), 20);
-                for (let i = 0; i < n; i++) {
-                  const el = loc.nth(i);
-                  const item = {
-                    selector: sel,
-                    tag: await el.evaluate(e => e.tagName).catch(() => null),
-                    text: (await el.innerText().catch(() => '')).slice(0,120),
-                    aria: await el.getAttribute('aria-label').catch(() => null),
-                    title: await el.getAttribute('title').catch(() => null),
-                    data_name: await el.getAttribute('data-name').catch(() => null),
-                    visible: await el.isVisible().catch(() => false)
-                  };
-                  const key = JSON.stringify(item);
-                  if (!seen.has(key)) { seen.add(key); result.pine_candidates.push(item); }
-                }
-              }
-
               let control = null;
-              for (const sel of selectors) {
+              for (const sel of pineSelectors) {
                 const loc = page.locator(sel);
-                const n = await loc.count();
+                const n = await loc.count().catch(() => 0);
                 for (let i = 0; i < n; i++) {
                   const el = loc.nth(i);
                   if (await el.isVisible().catch(() => false)) { control = el; break; }
                 }
                 if (control) break;
               }
-
               result.pine_control_found = !!control;
-              if (control) {
-                result.pine_click_attempted = true;
-                try {
-                  await control.click({ timeout: 10000 });
-                  result.pine_click_succeeded = true;
-                  await page.waitForTimeout(7000);
-                } catch (e) { result.click_error = String(e); }
+              if (!control) throw new Error('Pine control not found');
+              await control.click({ timeout: 10000 });
+              result.pine_click_succeeded = true;
+              await page.waitForTimeout(7000);
+
+              const body0 = await page.locator('body').innerText().catch(() => '');
+              result.login_gate_visible = /Sign in|Log in/i.test(body0);
+              result.editor_surface_detected = /Pine Editor|Add to chart|Update on chart|Create new/i.test(body0) ||
+                (await page.locator('.monaco-editor,[class*="monaco-editor"]').count().catch(() => 0)) > 0;
+              if (!result.editor_surface_detected) throw new Error('Pine editor surface not detected');
+
+              const textarea = page.locator('.monaco-editor textarea, textarea.inputarea, textarea').first();
+              if (!(await textarea.count())) throw new Error('Editor textarea not found');
+              await textarea.click({ timeout: 10000 });
+              result.source_injection_attempted = true;
+              await page.keyboard.press('Control+A');
+              await page.keyboard.press('Backspace');
+              await page.keyboard.insertText(source);
+              result.source_injection_completed = true;
+              await page.waitForTimeout(5000);
+
+              try {
+                await textarea.click();
+                await page.keyboard.press('Control+A');
+                await page.keyboard.press('Control+C');
+                await page.waitForTimeout(1000);
+                const copied = await page.evaluate(() => navigator.clipboard.readText());
+                if (copied) {
+                  const copiedSha = crypto.createHash('sha256').update(Buffer.from(copied, 'utf8')).digest('hex');
+                  result.editor_readback_sha256 = copiedSha;
+                  result.editor_readback_verdict = copiedSha === EXPECTED ? 'PASS' : 'HASH_MISMATCH';
+                  if (copiedSha !== EXPECTED) {
+                    result.compile_verdict = 'ABORT_EDITOR_HASH_MISMATCH';
+                    throw new Error(`Editor readback SHA mismatch: ${copiedSha}`);
+                  }
+                }
+              } catch (e) {
+                if (result.editor_readback_verdict === 'HASH_MISMATCH') throw e;
+                result.editor_readback_error = String(e);
+                result.editor_readback_verdict = 'NOT_AVAILABLE';
               }
 
-              const bodyText = await page.locator('body').innerText().catch(() => '');
-              result.login_gate_visible = /Sign in|Log in/i.test(bodyText);
-              result.add_to_chart_visible = /Add to chart|Update on chart/i.test(bodyText);
-              result.editor_surface_detected = /Pine Editor|Add to chart|Update on chart|Create new/i.test(bodyText) ||
-                (await page.locator('[class*="monaco-editor"], .monaco-editor').count().catch(() => 0)) > 0;
+              const addSelectors = [
+                'button:has-text("Add to chart")',
+                '[role="button"]:has-text("Add to chart")',
+                'button:has-text("Update on chart")',
+                '[role="button"]:has-text("Update on chart")'
+              ];
+              let add = null;
+              for (const sel of addSelectors) {
+                const loc = page.locator(sel);
+                const n = await loc.count().catch(() => 0);
+                for (let i = 0; i < n; i++) {
+                  const el = loc.nth(i);
+                  if (await el.isVisible().catch(() => false)) { add = el; break; }
+                }
+                if (add) break;
+              }
+              result.add_to_chart_found = !!add;
+              if (!add) throw new Error('Add/Update on chart control not found');
+              await add.click({ timeout: 15000 });
+              result.add_to_chart_clicked = true;
+              await page.waitForTimeout(18000);
 
-              if (result.page_loaded && result.pine_click_succeeded && result.editor_surface_detected) result.route_verdict = 'NATIVE_SURFACE_EXECUTABLE';
-              else if (result.page_loaded && result.login_gate_visible) result.route_verdict = 'AUTH_REQUIRED';
-              else result.route_verdict = 'ROUTE_FAIL';
+              const body = await page.locator('body').innerText().catch(() => '');
+              fs.writeFileSync(`${EVIDENCE_DIR}/a2_tradingview_body.txt`, body);
+              const lines = body.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+              const errorPattern = /(Error at \d+:\d+|Syntax error|Undeclared identifier|Mismatched input|Cannot call|Could not find function|Could not find method|The function .* should be called|Pine cannot|Compilation error|script has too many|too many plots|The script must have)/i;
+              result.compiler_evidence_lines = [...new Set(lines.filter(x => errorPattern.test(x)))].slice(0, 100);
+              result.script_title_visible_after_compile = body.includes('Nam Zone06 EA Strategy v0.4 CT-W2 Rebound [RESEARCH]');
 
-              fs.mkdirSync('mission001', { recursive: true });
-              await page.screenshot({ path: 'mission001/tradingview-route-probe-gh2.png', fullPage: false });
+              await page.screenshot({ path: `${EVIDENCE_DIR}/a2_native_compile.png`, fullPage: false });
+
+              if (result.compiler_evidence_lines.length > 0) {
+                result.compile_verdict = 'NATIVE_COMPILE_FAIL';
+              } else if (result.add_to_chart_clicked && result.script_title_visible_after_compile) {
+                result.compile_verdict = 'NATIVE_COMPILE_PASS';
+              } else if (result.add_to_chart_clicked) {
+                result.compile_verdict = 'COMPILE_ACTION_COMPLETED_NO_VISIBLE_COMPILER_ERROR_TITLE_UNVERIFIED';
+              } else {
+                result.compile_verdict = 'UNRESOLVED';
+              }
             } catch (e) {
               result.error = String(e);
-              result.route_verdict = 'ROUTE_FAIL';
+              if (result.compile_verdict === 'UNRESOLVED') result.compile_verdict = 'EXECUTION_FAIL';
             } finally {
               if (browser) await browser.close();
-              fs.mkdirSync('mission001', { recursive: true });
-              fs.writeFileSync('mission001/route_probe.json', JSON.stringify(result, null, 2) + '\n');
+              fs.writeFileSync(`${EVIDENCE_DIR}/a2_native_compile_result.json`, JSON.stringify(result, null, 2) + '\n');
               console.log(JSON.stringify(result));
             }
           })();
           NODE
 
-      - name: Persist JSON execution evidence to repository
-        run: |
-          git config user.name 'mission001-bot'
-          git config user.email 'mission001-bot@users.noreply.github.com'
-          git add mission001/route_probe.json
-          git commit -m 'MISSION001: persist GH2 TradingView route evidence' || exit 0
-          git push
-
-      - name: Upload screenshot evidence
+      - name: Upload immutable A2 execution evidence
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: mission001-tv-route-probe-gh2
-          path: |
-            mission001/route_probe.json
-            mission001/tradingview-route-probe-gh2.png
-          if-no-files-found: error
+          name: mission001-a2-native-compile-evidence
+          path: mission001/a2-evidence/
+          if-no-files-found: warn
