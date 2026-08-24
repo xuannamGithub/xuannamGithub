@@ -107,3 +107,5 @@ if (sha !== EXPECTED) process.exit(42);
     console.log(JSON.stringify(result));
   }
 })();
+
+// A2 deterministic trigger touch: 2026-08-24T13:34Z
