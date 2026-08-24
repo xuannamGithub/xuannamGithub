@@ -1,0 +1,13 @@
+{
+  "mission": "MISSION-001",
+  "track": "FAST-LANE D",
+  "version": "v0.5-D1",
+  "classification": "CONTROLLED NEW DOCTRINE / NOT RECOVERED ORIGINAL DOCTRINE / DEMO-VALIDATION REQUIRED",
+  "pine_file": "MISSION001_FastLaneD_FunctionalDemoBot_v0_5_D1.pine",
+  "pine_sha256": "312516cea231b660580cf1210dddc474f30249a9002abf072e48dec4f9694aae",
+  "ledger_file": "MISSION001_FastLaneD_v0_5_D1_Provenance_Assumption_Ledger.md",
+  "ledger_sha256": "b3d03452a28607e11a0a0a0b4d89cb15ef6df5de3534d676e55ef7d50312c474",
+  "native_compile_status": "NOT_YET_EVIDENCED",
+  "edge_claim": false,
+  "champion_claim": false
+}
