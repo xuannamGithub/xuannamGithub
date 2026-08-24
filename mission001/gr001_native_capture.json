@@ -1,38 +1,30 @@
 {
   "mission": "MISSION-001",
-  "route": "GH3_GR001_NATIVE_CHART_CAPTURE_V3",
+  "route": "GH4_SEPARATE_DATE_TIME_NATIVE_NAV",
   "golden_id": "GR-001",
-  "requested_local_time": "2026-08-20 01:30",
+  "requested_display_time": "2026-08-20 01:30",
   "side": "BUY",
   "target": "https://www.tradingview.com/chart/?symbol=OANDA%3AXAUUSD&interval=1",
-  "timestamp_utc": "2026-08-24T05:08:06.258Z",
+  "timestamp_utc": "2026-08-24T06:13:24.765Z",
   "page_loaded": true,
   "go_to_opened": true,
-  "go_to_submitted": false,
-  "target_time_verified": false,
-  "visible_inputs": [
-    {
-      "placeholder": "YYYY-MM-DD",
-      "aria": "",
-      "type": "",
-      "value": "2026-08-24"
-    },
-    {
-      "placeholder": "",
-      "aria": "",
-      "type": "",
-      "value": "00:00"
-    }
-  ],
-  "chart_text_after_go_to": "XAUUSD\n1m\nIndicators\nAlert\nReplay\nSave\nSave\nTrade\nPublish\nX\nGold Spot / U.S. Dollar\n1\nOANDA\nO\n4,641.535\nH\n4,642.215\nL\n4,641.120\nC\n4,641.120\n−0.440 (−0.01%)\n4,640.820\nSELL\n59.0\n4,641.410\nBUY\nVol · Ticks\n226\n1D\n5D\n1M\n3M\n6M\nYTD\n1Y\n5Y\nAll\n05:08:28 UTC\nWatchlist\nSymbol\nLast\nChg\nChg%\nINDICES\nS\nSPX\nD\n7,674.37\n33.21\n0.43%\nN\nNDQ\n29,308.86\n95.69\n0.33%\nD\nDJI\n53,282.32\n518.05\n0.98%\nV\nVIX\nD\n15.13\n−0.88\n−5.50%\nD\nDXY\n98.829\n−0.010\n−0.01%\nSTOCKS\nA\nAAPL\n309.35\n−1.95\n−0.63%\nT\nTSLA\n362.86\n17.73\n5.14%\nN\nNFLX\n79.59\n−0.55\n−0.69%\nFUTURES\nU\nUSOIL\n85.63\n−1.00\n−1.15%\nG\nGOLD\n4,641.092\n38.432\n0.83%\nS\nSILVER\n68.9356\n−0.0144\n−0.02%\nFOREX\nE\nEURUSD\n1.16806\n0.00045\n0.04%\nG\nGBPUSD\n1.36447\n0.00036\n0.03%\nU\nUSDJPY\n158.908\n−0.064\n−0.04%\nCRYPTO\nB\nBTCUSD\n76,948\n−768\n−0.99%\nB\nBTCUSDT\n76,942.00\n−792.00\n−1.02%\nE\nETHUSD\n2,437.4\n−25.4\n−1.03%\nX\nXAUUSD\nGold Spot / U.S. Dollar\nOANDA\nCommodity\nCfd\n4,641.105\nUSD\n+38.115\n+0.83%\nMarket open\nNews\nGold hits over 3-month high ahead of US inflation data, Fed chair speech\nMore events\nPerformance\n6.13%\n1W\n14.62%\n1M\n1.52%\n3M\n−9.63%\n6M\n7.27%\nYTD\n38.94%\n1Y\nSeasonals\n\t\n\t\n\t\n\t\n2026\n2025\n2024\nMore seasonals\nTechnicals\nNeutral\nSell\nBuy\nStrong sell\nStrong buy\nStrong sell\nSell\nNeutral\nBuy\nStrong buy\nMore technicals\nBrowse community posts\nGo to\nClose menu\nDateCustom range\nAugust 2026\nMo\nTu\nWe\nTh\nFr\nSa\nSu\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n26\n27\n28\n29\n30\n31\nCancel\nGo to",
+  "date_input_found": true,
+  "time_input_found": true,
+  "date_filled": true,
+  "time_filled": true,
+  "go_to_button_clicked": true,
+  "modal_closed": false,
+  "target_display_verified": false,
+  "timezone_provenance": "UTC",
   "extracted_ohlc": {
-    "open": "4,641.535",
-    "high": "4,642.215",
-    "low": "4,641.120",
-    "close": "4,641.120"
+    "open": "4,647.980",
+    "high": "4,651.630",
+    "low": "4,647.980",
+    "close": "4,650.715"
   },
   "screenshot_created": true,
-  "verdict": "ROUTE_FAIL",
+  "verdict": "NAVIGATION_SUBMITTED_OHLC_PRESENT_TIMEZONE_OR_DISPLAY_UNRESOLVED",
   "error": null,
-  "http_status": 200
+  "http_status": 200,
+  "chart_text_excerpt": "XAUUSD\n1m\nIndicators\nAlert\nReplay\nSave\nSave\nTrade\nPublish\nX\nGold Spot / U.S. Dollar\n1\nOANDA\nO\n4,647.980\nH\n4,651.630\nL\n4,647.980\nC\n4,650.715\n+2.755 (+0.06%)\n4,650.510\nSELL\n63.0\n4,651.140\nBUY\nVol · Ticks\n814\n1D\n5D\n1M\n3M\n6M\nYTD\n1Y\n5Y\nAll\n06:13:53 UTC\nWatchlist\nSymbol\nLast\nChg\nChg%\nINDICES\nS\nSPX\nD\n7,674.37\n33.21\n0.43%\nN\nNDQ\n29,308.86\n95.69\n0.33%\nD\nDJI\n53,282.32\n518.05\n0.98%\nV\nVIX\nD\n15.13\n−0.88\n−5.50%\nD\nDXY\n98.858\n0.019\n0.02%\nSTOCKS\nA\nAAPL\n309.35\n−1.95\n−0.63%\nT\nTSLA\n362.86\n17.73\n5.14%\nN\nNFLX\n79.59\n−0.55\n−0.69%\nFUTURES\nU\nUSOIL\n85.33\n−1.30\n−1.50%\nG\nGOLD\n4,650.500\n47.840\n1.04%\nS\nSILVER\n69.1916\n0.2416\n0.35%\nFOREX\nE\nEURUSD\n1.16773\n0.00012\n0.01%\nG\nGBPUSD\n1.36417\n0.00006\n0.00%\nU\nUSDJPY\n158.906\n−0.066\n−0.04%\nCRYPTO\nB\nBTCUSD\n77,335\n−382\n−0.49%\nB\nBTCUSDT\n77,361.99\n−372.01\n−0.48%\nE\nETHUSD\n2,454.7\n−8.0\n−0.33%\nX\nXAUUSD\nGold Spot / U.S. Dollar\nOANDA\nCommodity\nCfd\n4,650.855\nUSD\n+47.865\n+1.04%\nMarket open\nNews\nGold hits over 3-month high ahead of US inflation data, Fed chair speech\nMore events\nPerformance\n6.33%\n1W\n14.83%\n1M\n1.71%\n3M\n−9.46%\n6M\n7.47%\nYTD\n39.20%\n1Y\nSeasonals\n\t\n\t\n\t\n\t\n2026\n2025\n2024\nMore seasonals\nTechnicals\nNeutral\nSell\nBuy\nStrong sell\nStrong buy\nStrong sell\nSell\nNeutral\nBuy\nStrong buy\nMore technicals\nBrowse community posts\nGo to\nClose menu\nDateCustom range\nAugust 2026\nMo\nTu\nWe\nTh\nFr\nSa\nSu\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n26\n27\n28\n29\n30\n31\nCancel\nGo to"
 }
