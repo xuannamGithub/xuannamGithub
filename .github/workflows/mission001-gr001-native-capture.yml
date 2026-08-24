@@ -15,6 +15,8 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -26,7 +28,7 @@ jobs:
           const { chromium } = require('playwright-core');
           (async () => {
             const r = {
-              mission:'MISSION-001', route:'GH3_GR001_NATIVE_CHART_CAPTURE',
+              mission:'MISSION-001', route:'GH3_GR001_NATIVE_CHART_CAPTURE_V2',
               golden_id:'GR-001', requested_local_time:'2026-08-20 01:30', side:'BUY',
               target:'https://www.tradingview.com/chart/?symbol=OANDA%3AXAUUSD&interval=1',
               timestamp_utc:new Date().toISOString(), page_loaded:false, go_to_opened:false,
@@ -81,17 +83,25 @@ jobs:
             }
           })();
           NODE
-      - name: Persist GR-001 evidence
+      - name: Persist GR-001 evidence without stale-head failure
+        if: always()
         run: |
+          test -f mission001/gr001_native_capture.json || printf '%s\n' '{"mission":"MISSION-001","route":"GH3_GR001_NATIVE_CHART_CAPTURE_V2","verdict":"WORKFLOW_FAIL_BEFORE_CAPTURE"}' > mission001/gr001_native_capture.json
+          cp mission001/gr001_native_capture.json /tmp/gr001_native_capture.json
           git config user.name 'mission001-bot'
           git config user.email 'mission001-bot@users.noreply.github.com'
+          git fetch origin "$GITHUB_REF_NAME"
+          git reset --hard "origin/$GITHUB_REF_NAME"
+          mkdir -p mission001
+          cp /tmp/gr001_native_capture.json mission001/gr001_native_capture.json
           git add mission001/gr001_native_capture.json
           git commit -m 'MISSION001: persist GR-001 native capture evidence' || exit 0
-          git push
+          git push origin "HEAD:$GITHUB_REF_NAME"
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: mission001-gr001-native-capture
+          name: mission001-gr001-native-capture-v2
           path: |
             mission001/gr001_native_capture.json
             mission001/gr001-native-capture.png
-          if-no-files-found: error
+          if-no-files-found: warn
