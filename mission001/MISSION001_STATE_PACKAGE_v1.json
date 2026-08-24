@@ -1,8 +1,8 @@
 {
-  "schema_version": "1.3.0",
+  "schema_version": "1.3.1",
   "mission_id": "MISSION-001",
   "canonical_thread": true,
-  "updated_at_local": "2026-08-24T14:02:00+07:00",
+  "updated_at_local": "2026-08-24T14:25:00+07:00",
   "state_rule": "Verified newer execution evidence overrides stale state/report. Cycle: restore -> verify -> reconcile -> execute -> persist evidence -> update state -> report.",
   "execution_model": {
     "type": "B_EVENT_TRIGGERED_NOT_PERSISTENT",
@@ -32,7 +32,7 @@
       "status": "FROZEN"
     },
     "p1": {
-      "required": ["native TradingView Compile PASS","XAUUSD M1 Shadow Fidelity PASS"],
+      "required": ["native TradingView Compile PASS", "XAUUSD M1 Shadow Fidelity PASS"],
       "native_surface": "PASS_RETAINED",
       "native_compile": "NOT_YET_EVIDENCED",
       "shadow_fidelity": "NOT_OPEN",
@@ -60,59 +60,40 @@
     "routes": {
       "GH3_V2": "KILLED_AS_CANONICAL_ROUTE",
       "GH3_V3": "KILLED_ROUTE_FAIL",
-      "GH4": {
-        "status": "KILLED_CANONICAL_AMBIGUITY",
-        "evidence_timestamp_utc": "2026-08-24T06:13:24.765Z",
-        "date_filled": true,
-        "time_filled": true,
-        "go_to_button_clicked": true,
-        "modal_closed": false,
-        "target_display_verified": false,
-        "timezone_provenance": "UTC",
-        "extracted_ohlc": {"open":"4,647.980","high":"4,651.630","low":"4,647.980","close":"4,650.715"},
-        "reason_not_promoted": "Target display timestamp remained unverified; OHLC therefore not canonical."
-      },
+      "GH4": "KILLED_CANONICAL_AMBIGUITY",
       "GH5_TARGET_ACTION_NATIVE_NAV": {
-        "status": "ACTIVE_EVENT_DRIVEN_PENDING_EVIDENCE",
-        "workflow_commit": "2147dcf7ee2ac21eede4d36cd227207f2ce05152",
-        "next_executable_action": "Fetch GH5 evidence. PASS only with target timestamp verification + exact OHLC; FAIL/ambiguity -> kill/switch."
-      }
+        "status": "KILLED_CANONICAL_AMBIGUITY",
+        "evidence_timestamp_utc": "2026-08-24T07:03:12.007Z",
+        "date_value": "2026-08-20",
+        "time_value": "01:30",
+        "go_to_clicked": true,
+        "modal_still_open": false,
+        "timezone_provenance": "UTC",
+        "target_time_verified": false,
+        "extracted_ohlc": {"open":"4,495.825","high":"4,496.630","low":"4,495.825","close":"4,496.265"},
+        "reason_not_promoted": "Navigation visibly changed chart OHLC and modal closed, but exact target timestamp was not independently visible/verified in captured native evidence. Canonical promotion prohibited."
+      },
+      "active_next": "GH6_REQUIRED_DIFFERENT_NATIVE_TIMESTAMP_VERIFICATION_MECHANISM"
     }
   },
   "fast_lane_d": {
     "name": "FUNCTIONAL_DEMO_BOT_DELIVERY",
-    "status": "DOCTRINE_GATE_AFTER_FULL_SOURCE_AUDIT",
+    "status": "DOCTRINE_DECISION_PACK_DELIVERED_AWAITING_OWNER_APPROVAL",
     "objective": "Full Pine v6 automatic Demo candidate implementing CT Long -> W2 Long -> W2 Short with exits, mutual exclusion, risk controls, provenance/deviation ledger, then native compile.",
     "label_policy": "CONTROLLED REBUILD / DEMO CANDIDATE / NOT BYTE-EQUIVALENT TO v0.3",
     "manual_trigger_shell_not_acceptable": true,
-    "source_audit": {
-      "github_current_tree": "COMPLETE; only State Package, CR1 shell, route evidence/workflows present; no CT/W2 implementation source",
-      "github_commit_history": "COMPLETE; repository history contains Mission state/workflow/evidence/CR1 only; no historical strategy source",
-      "github_code_search_strategy_entry": "0 results",
-      "github_code_search_ct_long": "0 results",
-      "google_drive_zone06": "0 results",
-      "google_drive_baseline_title": "0 results",
-      "google_drive_strategy_spec": "0 relevant results",
-      "gmail_zone06_ctw2_attachments": "0 results",
-      "prior_context_recovery": "No exact CT/W2 strategy.entry/exit implementation recovered; only high-level doctrine/rules and prior evidence summaries."
-    },
-    "recovered_verified_components": [
-      "Donchian lengths 65/129/234/468",
-      "W2/Zone06 conceptual role and EA <=9-bar relationship",
-      "STOP/GO/SCALE",
-      "risk sizing shell",
-      "daily-loss protection",
-      "max-DD kill",
-      "force-flat/position controls",
-      "no-lookahead requirement"
+    "source_audit": "COMPLETE across current GitHub tree/history/code search, Drive, Gmail attachment search and prior-context recovery; exact original CT/W2 executable state machine not recovered.",
+    "original_doctrine_status": "ORIGINAL_DOCTRINE_UNRECOVERABLE",
+    "decision_pack_path": "mission001/FAST_LANE_D_DOCTRINE_DECISION_PACK_v1.md",
+    "decision_pack_blob_sha": "d500e1044cd2aa139c0373a0d76e8b8018ce8a48",
+    "candidate_models": [
+      "MODEL_1_STRUCTURE_GATED_SEQUENTIAL_RECOMMENDED",
+      "MODEL_2_STRUCTURE_GATED_PRIORITY_INDEPENDENT_SETUPS",
+      "MODEL_3_LIQUIDITY_LIFECYCLE_HANDOFF"
     ],
-    "exact_unresolved_rule": "Executable boolean/state-machine definition for CT Long -> W2 Long -> W2 Short: ARM, ENTER, EXIT, INVALIDATE, NEXT-LEG ENABLE and MUTUAL-EXCLUSION PRIORITY. No materialized verified source defines these predicates.",
-    "evidence_a": "Verified high-level project doctrine establishes CT/W2 concepts and execution sequence intent, but not exact executable transition predicates.",
-    "evidence_b": "Full accessible source trace found zero strategy.entry/strategy.exit CT/W2 implementation and zero baseline/spec artifacts capable of proving the predicates.",
-    "consequence_choice_a": "If CT->W2 transitions are based on sweep/EA/W2 lifecycle predicates, Demo bot behavior follows liquidity/Zone06 state and may delay/skip legs.",
-    "consequence_choice_b": "If transitions are based on prior-leg exit/TP/SL or other event sequencing, Demo bot behavior and mutual exclusion differ materially even on the same chart.",
-    "owner_decision_required": "Provide/approve the exact transition doctrine only if no new verified source becomes materialized. AI must not invent it.",
-    "next_executable_action": "At next cycle, first consume any newly materialized verified source; absent that, retain this as a genuine Doctrine Gate while Track A/B continue."
+    "recommended_doctrine": "MODEL_1_STRUCTURE_GATED_SEQUENTIAL as CONTROLLED NEW DOCTRINE, not recovered original doctrine",
+    "owner_decision_required": "APPROVE / REJECT / REQUEST DIFFERENT DOCTRINE",
+    "next_after_approval": "Implement Functional Demo Bot Candidate immediately -> native TradingView Compile -> Demo Observation. No additional planning cycle."
   },
   "scheduler": {
     "task_id": "6a86a181691081919afe42eac2a18161",
@@ -122,7 +103,7 @@
     "timezone": "Asia/Ho_Chi_Minh"
   },
   "checkpoint_policy": {
-    "reports": ["TRACK A","TRACK B","FAST-LANE D"],
+    "reports": ["TRACK A", "TRACK B", "FAST-LANE D"],
     "activity_is_not_progress": true,
     "owner_silence_pauses_execution": false
   }
