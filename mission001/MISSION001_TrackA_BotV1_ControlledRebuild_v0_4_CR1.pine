@@ -1,0 +1,113 @@
+//@version=6
+strategy("MISSION001 Track A Bot V1 - Controlled Rebuild v0.4-CR1", overlay=true, pyramiding=4, initial_capital=100000, process_orders_on_close=true, calc_on_order_fills=true)
+
+// =============================================================================
+// MISSION 001 - CONTROLLED REBUILD
+// Version: v0.4-CR1
+// Provenance:
+// - ORIGINAL frozen v0.3 could not be materialized byte-identically in the
+//   current runtime. Therefore this file is NOT v0.3 and makes no claim of
+//   byte/source equivalence with frozen artifact SHA256
+//   9b8eca4c8cf2e151083020f4b3c2812b0ba3f04502c33fb6af892f0371712137.
+// - Rebuilt only from verified Mission 001 engineering/risk requirements and
+//   verified historical execution-layer facts. BASELINE-001 remains READ-ONLY.
+// - No reconstruction of unavailable baseline signal logic is attempted.
+// - Signal generation below is intentionally MANUAL DEMO ONLY so Owner can
+//   compile and observe the execution/risk shell without inventing strategy logic.
+// =============================================================================
+
+grpDc = "Observation - Donchian"
+showDc = input.bool(true, "Show Donchian 65/129/234/468", group=grpDc)
+
+f_dc(_len) =>
+    _u = ta.highest(high, _len)
+    _l = ta.lowest(low, _len)
+    [_u, _l, (_u + _l) / 2.0]
+
+[dc65u, dc65l, dc65m] = f_dc(65)
+[dc129u, dc129l, dc129m] = f_dc(129)
+[dc234u, dc234l, dc234m] = f_dc(234)
+[dc468u, dc468l, dc468m] = f_dc(468)
+
+plot(showDc ? dc65u : na, "DC65 Upper")
+plot(showDc ? dc65l : na, "DC65 Lower")
+plot(showDc ? dc129u : na, "DC129 Upper")
+plot(showDc ? dc129l : na, "DC129 Lower")
+plot(showDc ? dc234u : na, "DC234 Upper")
+plot(showDc ? dc234l : na, "DC234 Lower")
+plot(showDc ? dc468u : na, "DC468 Upper")
+plot(showDc ? dc468l : na, "DC468 Lower")
+
+grpExec = "Execution Gate"
+execMode = input.string("GO", "Mode", options=["STOP", "GO", "SCALE"], group=grpExec)
+scaleFactor = input.float(0.50, "SCALE factor", minval=0.0, maxval=1.0, step=0.05, group=grpExec)
+forceFlat = input.bool(false, "Force flat", group=grpExec)
+
+modeStop = execMode == "STOP"
+modeGo = execMode == "GO"
+modeScale = execMode == "SCALE"
+modeMultiplier = modeGo ? 1.0 : modeScale ? scaleFactor : 0.0
+
+grpRisk = "Risk Engine"
+accountBalance = input.float(100000.0, "Reference account balance", minval=1.0, group=grpRisk)
+riskPct = input.float(0.50, "Risk per trade (%)", minval=0.01, maxval=10.0, step=0.05, group=grpRisk)
+maxDailyLossPct = input.float(3.0, "Max daily loss (%)", minval=0.1, maxval=100.0, step=0.1, group=grpRisk)
+maxDrawdownPct = input.float(8.0, "Max total drawdown (%)", minval=0.1, maxval=100.0, step=0.1, group=grpRisk)
+maxQty = input.float(100.0, "Absolute max quantity", minval=0.0, step=0.01, group=grpRisk)
+
+riskAmount = accountBalance * (riskPct / 100.0)
+pointValue = math.max(syminfo.pointvalue, 0.0000001)
+
+var float dayStartNet = na
+newDay = ta.change(time("D")) != 0
+if barstate.isfirst or newDay
+    dayStartNet := strategy.netprofit
+
+dailyPnL = strategy.netprofit - nz(dayStartNet, strategy.netprofit)
+dailyLossLimit = accountBalance * (maxDailyLossPct / 100.0)
+dailyLossTripped = dailyPnL <= -dailyLossLimit
+
+equityRef = accountBalance + strategy.netprofit + strategy.openprofit
+runningDd = math.max(0.0, accountBalance - equityRef)
+ddLimit = accountBalance * (maxDrawdownPct / 100.0)
+drawdownTripped = runningDd >= ddLimit
+
+killSwitch = modeStop or forceFlat or dailyLossTripped or drawdownTripped
+
+if killSwitch and strategy.position_size != 0
+    strategy.close_all(comment="MISSION001 KILL")
+
+grpDemo = "Manual Demo Trigger - NOT strategy logic"
+demoEnable = input.bool(false, "Enable manual demo trigger", group=grpDemo)
+demoSide = input.string("BUY", "Demo side", options=["BUY", "SELL"], group=grpDemo)
+demoStopDistance = input.float(5.0, "Demo stop distance (price units)", minval=0.0001, step=0.1, group=grpDemo)
+demoRewardRisk = input.float(1.0, "Demo reward/risk", minval=0.1, step=0.1, group=grpDemo)
+
+riskPerUnit = demoStopDistance * pointValue
+rawQty = riskPerUnit > 0 ? riskAmount / riskPerUnit : 0.0
+scaledQty = rawQty * modeMultiplier
+effectiveQty = math.max(0.0, math.min(scaledQty, maxQty))
+
+manualDemoBar = demoEnable and barstate.islastconfirmedhistory and not killSwitch and effectiveQty > 0
+
+if manualDemoBar and demoSide == "BUY" and strategy.position_size == 0
+    entryPx = close
+    stopPx = entryPx - demoStopDistance
+    limitPx = entryPx + demoStopDistance * demoRewardRisk
+    strategy.entry("CR1-DEMO-BUY", strategy.long, qty=effectiveQty, comment="MANUAL DEMO ONLY")
+    strategy.exit("CR1-DEMO-BUY-X", from_entry="CR1-DEMO-BUY", stop=stopPx, limit=limitPx)
+
+if manualDemoBar and demoSide == "SELL" and strategy.position_size == 0
+    entryPx = close
+    stopPx = entryPx + demoStopDistance
+    limitPx = entryPx - demoStopDistance * demoRewardRisk
+    strategy.entry("CR1-DEMO-SELL", strategy.short, qty=effectiveQty, comment="MANUAL DEMO ONLY")
+    strategy.exit("CR1-DEMO-SELL-X", from_entry="CR1-DEMO-SELL", stop=stopPx, limit=limitPx)
+
+plotchar(killSwitch, "Kill switch active", "K", location=location.top)
+plotchar(dailyLossTripped, "Daily loss latch", "D", location=location.top)
+plotchar(drawdownTripped, "Drawdown latch", "X", location=location.top)
+
+alertcondition(killSwitch, "MISSION001 Kill Switch", "MISSION001 controlled rebuild kill switch active")
+
+// End of controlled rebuild v0.4-CR1
