@@ -21,17 +21,25 @@ jobs:
         with:
           node-version: '22'
       - run: npm install playwright-core@1.55.0
-      - name: GH5 target-action native navigation
+      - name: GH6 crosshair timestamp verification
         run: |
           node <<'NODE'
           const fs=require('fs'); const {chromium}=require('playwright-core');
-          (async()=>{const r={mission:'MISSION-001',route:'GH5_TARGET_ACTION_NATIVE_NAV',golden_id:'GR-001',requested_display_time:'2026-08-20 01:30',timestamp_utc:new Date().toISOString(),target_time_verified:false,extracted_ohlc:null,verdict:'UNRESOLVED',error:null}; let browser;
-          try{browser=await chromium.launch({channel:'chrome',headless:true}); const c=await browser.newContext({locale:'en-US',viewport:{width:1600,height:1100}}); const p=await c.newPage(); const resp=await p.goto('https://www.tradingview.com/chart/?symbol=OANDA%3AXAUUSD&interval=1',{waitUntil:'domcontentloaded',timeout:60000}); r.page_loaded=!!resp&&resp.status()<500; r.http_status=resp?resp.status():null; await p.waitForTimeout(12000); await p.keyboard.press('Alt+g'); await p.waitForTimeout(1500);
-          const d=p.locator('input[placeholder="YYYY-MM-DD"]:visible').first(); r.date_found=await d.count()>0; if(r.date_found){await d.fill('2026-08-20');r.date_value=await d.inputValue();}
-          const ins=p.locator('input:visible'); let t=null; for(let i=0;i<await ins.count();i++){const e=ins.nth(i);const v=await e.inputValue().catch(()=> ''); if(/^\d{1,2}:\d{2}$/.test(v)){t=e;break;}} r.time_found=!!t; if(t){await t.fill('01:30');r.time_value=await t.inputValue();}
-          const btns=p.getByText('Go to',{exact:true}); r.goto_candidates=await btns.count(); let clicked=false; for(let i=(await btns.count())-1;i>=0;i--){const b=btns.nth(i); if(await b.isVisible().catch(()=>false)){await b.click({force:true,timeout:10000}).catch(()=>{}); clicked=true; break;}} r.go_to_clicked=clicked; await p.waitForTimeout(8000);
-          const body=await p.locator('body').innerText().catch(()=> ''); r.modal_still_open=/DateCustom range|Close menu/i.test(body); r.timezone_provenance=(body.match(/\bUTC\b/i)||[])[0]||null; r.target_time_verified=!r.modal_still_open && (/2026-08-20|20\/08|Aug[^\n]{0,8}20|20[^\n]{0,8}Aug/i.test(body)) && /01:30|1:30/i.test(body);
-          const m=body.match(/(?:^|\n)O\s*\n?\s*([\d,.]+)\s*\nH\s*\n?\s*([\d,.]+)\s*\nL\s*\n?\s*([\d,.]+)\s*\nC\s*\n?\s*([\d,.]+)/m); if(m)r.extracted_ohlc={open:m[1],high:m[2],low:m[3],close:m[4]}; r.chart_text_excerpt=body.slice(0,12000); fs.mkdirSync('mission001',{recursive:true}); await p.screenshot({path:'mission001/gr001-native-capture.png'}); r.verdict=r.target_time_verified&&r.extracted_ohlc?'TARGET_DISPLAY_TIMESTAMP_VERIFIED_OHLC':(!r.modal_still_open&&r.extracted_ohlc?'NAVIGATION_CLOSED_OHLC_TARGET_UNVERIFIED':'ROUTE_FAIL');}
+          (async()=>{const r={mission:'MISSION-001',route:'GH6_CROSSHAIR_TIMESTAMP_VERIFY',golden_id:'GR-001',requested_display_time:'2026-08-20 01:30',timestamp_utc:new Date().toISOString(),target_time_verified:false,crosshair_timestamp_text:null,extracted_ohlc:null,verdict:'UNRESOLVED',error:null}; let browser;
+          try{browser=await chromium.launch({channel:'chrome',headless:true}); const c=await browser.newContext({locale:'en-US',viewport:{width:1600,height:1100}}); const p=await c.newPage(); const resp=await p.goto('https://www.tradingview.com/chart/?symbol=OANDA%3AXAUUSD&interval=1',{waitUntil:'domcontentloaded',timeout:60000}); r.page_loaded=!!resp&&resp.status()<500; r.http_status=resp?resp.status():null; await p.waitForTimeout(12000);
+          await p.keyboard.press('Alt+g'); await p.waitForTimeout(1500);
+          const d=p.locator('input[placeholder="YYYY-MM-DD"]:visible').first(); if(await d.count()){await d.fill('2026-08-20');r.date_value=await d.inputValue();}
+          const ins=p.locator('input:visible'); let t=null; for(let i=0;i<await ins.count();i++){const e=ins.nth(i);const v=await e.inputValue().catch(()=> ''); if(/^\d{1,2}:\d{2}$/.test(v)){t=e;break;}} if(t){await t.fill('01:30');r.time_value=await t.inputValue();}
+          const btns=p.getByText('Go to',{exact:true}); for(let i=(await btns.count())-1;i>=0;i--){const b=btns.nth(i);if(await b.isVisible().catch(()=>false)){await b.click({force:true,timeout:10000}).catch(()=>{});r.go_to_clicked=true;break;}}
+          await p.waitForTimeout(8000);
+          let body=await p.locator('body').innerText().catch(()=> ''); r.modal_still_open=/DateCustom range|Close menu/i.test(body);
+          const pane=p.locator('canvas').first(); const box=await pane.boundingBox().catch(()=>null); if(box){await p.mouse.move(box.x+box.width*0.50,box.y+box.height*0.50); await p.waitForTimeout(1200);} 
+          body=await p.locator('body').innerText().catch(()=> ''); r.body_after_crosshair=body.slice(0,16000);
+          const timePatterns=[/20\s+Aug(?:ust)?\s+2026[^\n]{0,40}01:30/i,/Aug(?:ust)?\s+20[^\n]{0,20}2026[^\n]{0,40}01:30/i,/2026-08-20[^\n]{0,40}01:30/i,/20\/08\/2026[^\n]{0,40}01:30/i,/20\s+Aug[^\n]{0,40}1:30/i];
+          for(const re of timePatterns){const mm=body.match(re);if(mm){r.crosshair_timestamp_text=mm[0];r.target_time_verified=true;break;}}
+          const m=body.match(/(?:^|\n)O\s*\n?\s*([\d,.]+)\s*\nH\s*\n?\s*([\d,.]+)\s*\nL\s*\n?\s*([\d,.]+)\s*\nC\s*\n?\s*([\d,.]+)/m); if(m)r.extracted_ohlc={open:m[1],high:m[2],low:m[3],close:m[4]};
+          fs.mkdirSync('mission001',{recursive:true}); await p.screenshot({path:'mission001/gr001-native-capture.png'});
+          r.verdict=r.target_time_verified&&r.extracted_ohlc?'TARGET_DISPLAY_TIMESTAMP_VERIFIED_OHLC':(r.extracted_ohlc?'CROSSHAIR_TIMESTAMP_UNVERIFIED_OHLC_PRESENT':'ROUTE_FAIL');}
           catch(e){r.error=String(e);r.verdict='ROUTE_FAIL';} finally{if(browser)await browser.close();fs.mkdirSync('mission001',{recursive:true});fs.writeFileSync('mission001/gr001_native_capture.json',JSON.stringify(r,null,2)+'\n');console.log(JSON.stringify(r));}})();
           NODE
       - name: Persist evidence
@@ -45,12 +53,12 @@ jobs:
           mkdir -p mission001
           cp /tmp/gr001_native_capture.json mission001/gr001_native_capture.json
           git add mission001/gr001_native_capture.json
-          git commit -m 'MISSION001: persist GH5 GR-001 evidence' || exit 0
+          git commit -m 'MISSION001: persist GH6 GR-001 evidence' || exit 0
           git push origin "HEAD:$GITHUB_REF_NAME"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: mission001-gr001-native-capture-gh5
+          name: mission001-gr001-native-capture-gh6
           path: |
             mission001/gr001_native_capture.json
             mission001/gr001-native-capture.png
