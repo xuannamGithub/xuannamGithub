@@ -13,7 +13,7 @@ if (sha !== EXPECTED) process.exit(42);
 (async () => {
   fs.mkdirSync(EVIDENCE_DIR, { recursive: true });
   const result = {
-    mission: 'MISSION-001', gate: 'A2_NATIVE_TRADINGVIEW_COMPILE_EXACT_P0', route: 'A2_INGRESS_001_GH2_FOCUS_V2',
+    mission: 'MISSION-001', gate: 'A2_NATIVE_TRADINGVIEW_COMPILE_EXACT_P0', route: 'A2_INGRESS_001_GH2_CLIPBOARD_V3',
     timestamp_utc: new Date().toISOString(), expected_sha256: EXPECTED, materialized_sha256: sha,
     source_size_bytes: sourceBytes.length, target: 'https://www.tradingview.com/chart/?symbol=OANDA%3AXAUUSD',
     browser: 'GitHub-hosted Ubuntu / Google Chrome / Playwright', page_loaded: false,
@@ -28,7 +28,7 @@ if (sha !== EXPECTED) process.exit(42);
   try {
     browser = await chromium.launch({ channel: 'chrome', headless: true });
     const context = await browser.newContext({ locale: 'en-US', viewport: { width: 1600, height: 1100 } });
-    await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: 'https://www.tradingview.com' }).catch(() => {});
+    await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: 'https://www.tradingview.com' });
     const page = await context.newPage();
     const response = await page.goto(result.target, { waitUntil: 'domcontentloaded', timeout: 60000 });
     result.page_loaded = !!response && response.status() < 500;
@@ -55,27 +55,25 @@ if (sha !== EXPECTED) process.exit(42);
 
     const textarea = page.locator('.monaco-editor textarea, textarea.inputarea, textarea[aria-roledescription="editor"]').first();
     if (!(await textarea.count())) throw new Error('Editor textarea not found');
-    await textarea.evaluate(el => el.focus());
     result.source_injection_attempted = true;
+    await page.evaluate(async text => { await navigator.clipboard.writeText(text); }, source);
+    await textarea.evaluate(el => el.focus());
     await page.keyboard.press('Control+A');
-    await page.keyboard.press('Backspace');
-    await page.keyboard.insertText(source);
+    await page.keyboard.press('Control+V');
     result.source_injection_completed = true;
     await page.waitForTimeout(5000);
 
-    try {
-      await textarea.evaluate(el => el.focus());
-      await page.keyboard.press('Control+A'); await page.keyboard.press('Control+C'); await page.waitForTimeout(1000);
-      const copied = await page.evaluate(() => navigator.clipboard.readText());
-      if (copied) {
-        const copiedSha = crypto.createHash('sha256').update(Buffer.from(copied,'utf8')).digest('hex');
-        result.editor_readback_sha256 = copiedSha;
-        result.editor_readback_verdict = copiedSha === EXPECTED ? 'PASS' : 'HASH_MISMATCH';
-        if (copiedSha !== EXPECTED) { result.compile_verdict='ABORT_EDITOR_HASH_MISMATCH'; throw new Error(`Editor readback SHA mismatch: ${copiedSha}`); }
-      }
-    } catch (e) {
-      if (result.editor_readback_verdict === 'HASH_MISMATCH') throw e;
-      result.editor_readback_error=String(e); result.editor_readback_verdict='NOT_AVAILABLE';
+    await textarea.evaluate(el => el.focus());
+    await page.keyboard.press('Control+A');
+    await page.keyboard.press('Control+C');
+    await page.waitForTimeout(1000);
+    const copied = await page.evaluate(() => navigator.clipboard.readText());
+    const copiedSha = crypto.createHash('sha256').update(Buffer.from(copied,'utf8')).digest('hex');
+    result.editor_readback_sha256 = copiedSha;
+    result.editor_readback_verdict = copiedSha === EXPECTED ? 'PASS' : 'HASH_MISMATCH';
+    if (copiedSha !== EXPECTED) {
+      result.compile_verdict='ABORT_EDITOR_HASH_MISMATCH';
+      throw new Error(`Editor readback SHA mismatch: ${copiedSha}`);
     }
 
     const addSelectors=['button:has-text("Add to chart")','[role="button"]:has-text("Add to chart")','button:has-text("Update on chart")','[role="button"]:has-text("Update on chart")'];
@@ -107,5 +105,3 @@ if (sha !== EXPECTED) process.exit(42);
     console.log(JSON.stringify(result));
   }
 })();
-
-// A2 deterministic trigger touch: 2026-08-24T13:34Z
