@@ -21,18 +21,19 @@ jobs:
         with:
           node-version: '22'
       - run: npm install playwright-core@1.55.0
-      - name: Capture GR-001 native chart evidence
+      - name: Capture and verify GR-001 native chart evidence
         run: |
           node <<'NODE'
           const fs = require('fs');
           const { chromium } = require('playwright-core');
           (async () => {
             const r = {
-              mission:'MISSION-001', route:'GH3_GR001_NATIVE_CHART_CAPTURE_V2',
+              mission:'MISSION-001', route:'GH3_GR001_NATIVE_CHART_CAPTURE_V3',
               golden_id:'GR-001', requested_local_time:'2026-08-20 01:30', side:'BUY',
               target:'https://www.tradingview.com/chart/?symbol=OANDA%3AXAUUSD&interval=1',
-              timestamp_utc:new Date().toISOString(), page_loaded:false, go_to_opened:false,
-              go_to_submitted:false, chart_text_after_go_to:null, ohlc_tokens:[],
+              timestamp_utc:new Date().toISOString(), page_loaded:false,
+              go_to_opened:false, go_to_submitted:false, target_time_verified:false,
+              visible_inputs:[], chart_text_after_go_to:null, extracted_ohlc:null,
               screenshot_created:false, verdict:'UNRESOLVED', error:null
             };
             let browser;
@@ -49,30 +50,37 @@ jobs:
               r.go_to_opened = /Go to|Date|Time/i.test(body);
               const inputs = page.locator('input');
               const n = await inputs.count();
-              let typed = false;
+              let targetInput = null;
               for (let i=0;i<n;i++) {
                 const el=inputs.nth(i);
                 if (!(await el.isVisible().catch(()=>false))) continue;
-                const ph=(await el.getAttribute('placeholder').catch(()=>''))||'';
-                const aria=(await el.getAttribute('aria-label').catch(()=>''))||'';
-                if (/date|time|go to/i.test(ph+' '+aria) || !typed) {
-                  try { await el.fill('2026-08-20 01:30'); typed=true; break; } catch(e) {}
-                }
+                const meta={
+                  placeholder:(await el.getAttribute('placeholder').catch(()=>''))||'',
+                  aria:(await el.getAttribute('aria-label').catch(()=>''))||'',
+                  type:(await el.getAttribute('type').catch(()=>''))||'',
+                  value:(await el.inputValue().catch(()=>''))||''
+                };
+                r.visible_inputs.push(meta);
+                if (!targetInput && /date|time|go to/i.test(meta.placeholder+' '+meta.aria)) targetInput=el;
               }
-              if (typed) {
-                await page.keyboard.press('Enter').catch(()=>{}); r.go_to_submitted=true;
+              if (targetInput) {
+                await targetInput.fill('2026-08-20 01:30');
+                await page.keyboard.press('Enter');
+                r.go_to_submitted=true;
                 await page.waitForTimeout(8000);
               }
               await page.mouse.move(800,520); await page.waitForTimeout(1500);
               body = await page.locator('body').innerText().catch(()=> '');
               r.chart_text_after_go_to = body.slice(0,12000);
-              const matches = body.match(/(?:O|H|L|C|Open|High|Low|Close)\s*[-:]?\s*\d+(?:\.\d+)?/gi) || [];
-              r.ohlc_tokens = matches.slice(0,40);
+              r.target_time_verified = /20[^\n]{0,8}Aug|Aug[^\n]{0,8}20|2026-08-20|20\/08/i.test(body) && /01:30|1:30/i.test(body);
+              const m = body.match(/(?:^|\n)O\s*\n?\s*([\d,.]+)\s*\nH\s*\n?\s*([\d,.]+)\s*\nL\s*\n?\s*([\d,.]+)\s*\nC\s*\n?\s*([\d,.]+)/m);
+              if (m) r.extracted_ohlc={open:m[1],high:m[2],low:m[3],close:m[4]};
               fs.mkdirSync('mission001',{recursive:true});
               await page.screenshot({path:'mission001/gr001-native-capture.png',fullPage:false});
               r.screenshot_created=true;
-              if (r.go_to_submitted && r.ohlc_tokens.length>=4) r.verdict='PARTIAL_CANONICAL_OHLC_EVIDENCE';
-              else if (r.go_to_submitted) r.verdict='NAVIGATION_PASS_OHLC_NOT_EXTRACTED';
+              if (r.target_time_verified && r.extracted_ohlc) r.verdict='TARGET_VERIFIED_OHLC_EVIDENCE';
+              else if (r.go_to_submitted && r.extracted_ohlc) r.verdict='OHLC_PRESENT_TARGET_NOT_VERIFIED';
+              else if (r.go_to_submitted) r.verdict='NAVIGATION_ATTEMPT_NO_CANONICAL_EVIDENCE';
               else r.verdict='ROUTE_FAIL';
             } catch(e) { r.error=String(e); r.verdict='ROUTE_FAIL'; }
             finally {
@@ -83,10 +91,10 @@ jobs:
             }
           })();
           NODE
-      - name: Persist GR-001 evidence without stale-head failure
+      - name: Persist GR-001 evidence
         if: always()
         run: |
-          test -f mission001/gr001_native_capture.json || printf '%s\n' '{"mission":"MISSION-001","route":"GH3_GR001_NATIVE_CHART_CAPTURE_V2","verdict":"WORKFLOW_FAIL_BEFORE_CAPTURE"}' > mission001/gr001_native_capture.json
+          test -f mission001/gr001_native_capture.json || printf '%s\n' '{"mission":"MISSION-001","route":"GH3_GR001_NATIVE_CHART_CAPTURE_V3","verdict":"WORKFLOW_FAIL_BEFORE_CAPTURE"}' > mission001/gr001_native_capture.json
           cp mission001/gr001_native_capture.json /tmp/gr001_native_capture.json
           git config user.name 'mission001-bot'
           git config user.email 'mission001-bot@users.noreply.github.com'
@@ -95,12 +103,12 @@ jobs:
           mkdir -p mission001
           cp /tmp/gr001_native_capture.json mission001/gr001_native_capture.json
           git add mission001/gr001_native_capture.json
-          git commit -m 'MISSION001: persist GR-001 native capture evidence' || exit 0
+          git commit -m 'MISSION001: persist GR-001 native capture evidence v3' || exit 0
           git push origin "HEAD:$GITHUB_REF_NAME"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: mission001-gr001-native-capture-v2
+          name: mission001-gr001-native-capture-v3
           path: |
             mission001/gr001_native_capture.json
             mission001/gr001-native-capture.png
