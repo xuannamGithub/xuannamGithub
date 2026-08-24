@@ -1,8 +1,8 @@
 {
-  "schema_version": "2.0.1",
+  "schema_version": "2.0.2",
   "mission_id": "MISSION-001",
   "canonical_thread": true,
-  "updated_at_local": "2026-08-24T15:49:00+07:00",
+  "updated_at_local": "2026-08-24T16:03:00+07:00",
   "owner_operating_mandate": {
     "version": "2.0",
     "authority": "OWNER",
@@ -52,7 +52,7 @@
     "artifact_recovery": {
       "required_sequence": "LOCATE -> MATERIALIZE -> HASH VERIFY -> IDENTITY DECISION -> NATIVE REPRODUCTION",
       "owner_evidence": "artifact with same lineage/name may exist at Mission/File Library level; this does not prove byte identity",
-      "latest_execution_evidence": "No new P0 bytes materialized in this checkpoint. Claude Challenger upload is a separate research-branch artifact and cannot satisfy P0 identity gate.",
+      "latest_execution_evidence": "No new P0 bytes materialized in this checkpoint. Claude Challenger remains separate research evidence only.",
       "classification": "CAPABILITY_BLOCKED — ARTIFACT MAY EXIST BUT CURRENT EXECUTION SURFACE CANNOT MATERIALIZE BYTES",
       "source_lost_claim_prohibited": true,
       "hash_pass_label": "P0_FROZEN_SOURCE_RECOVERED = VERIFIED only after exact SHA-256 match",
@@ -85,54 +85,20 @@
     "size_bytes": 189992,
     "line_count": 3424,
     "read_only": true,
-    "internal_banner_base_sha_claim": "937e28d772a917c093bee6fe77712a77c95bc78bfe28ff001514e63eee0e1fd6",
-    "banner_claim_is_identity_proof": false,
     "promotion_map_file": "mission001/CLAUDE_CHALLENGER_PROMOTION_MAP_v1.md",
     "promotion_map_commit": "2c022d9944b4e1fe163e5c482df3a14daeaba07b",
     "audit_status": "AUDIT_V1_COMPLETE__SOURCE_ALIGNMENT_TO_EXACT_P0_PENDING",
-    "wholesale_merge_to_p0": "PROHIBITED",
-    "promotion_classes": ["CORE_VERIFIED", "SAFE_ENGINEERING_IMPROVEMENT", "RESEARCH_ONLY", "REJECT"],
-    "promotion_map_summary": {
-      "CT_predicates": "RESEARCH_ONLY",
-      "W2_event_lifecycle": "RESEARCH_ONLY",
-      "W2_touch_expiry_memory": "RESEARCH_ONLY",
-      "EA_after_touch": "RESEARCH_ONLY",
-      "CT_W2L_W2S_arbitration": "RESEARCH_ONLY_HIGH_VALUE_SOURCE_HYPOTHESIS",
-      "structural_SL_TP": "RESEARCH_ONLY_HIGH_VALUE_SOURCE_HYPOTHESIS",
-      "research_funnel_counters": "SAFE_ENGINEERING_IMPROVEMENT_INSTRUMENTATION_ONLY",
-      "MFE_MAE": "SAFE_ENGINEERING_IMPROVEMENT",
-      "risk_kill_status_instrumentation": "SAFE_ENGINEERING_IMPROVEMENT",
-      "risk_sizing_defaults_gating": "RESEARCH_ONLY",
-      "chart_observability_permanent_history": "SAFE_ENGINEERING_IMPROVEMENT_SUBJECT_TO_RESOURCE_AUDIT",
-      "repaint_no_lookahead_claim": "RESEARCH_ONLY_NOT_YET_PROVEN",
-      "LuxAlgo_Elliott_module": "REJECT_DIRECT_PRODUCT_PROMOTION"
-    },
-    "critical_findings": [
-      "CT signal is an internal event sequence, not a one-bar proxy",
-      "W2 events are operationally armed at Wave-5 confirmation and persist until first later touch/expiry",
-      "W2 BUY/SELL use touch memory + main trend + Donchian + EA + layers/room",
-      "execution arbitration is independent readiness with flat-position priority CT > W2L > W2S",
-      "structural stops/targets use sequence/W2 structure rather than arbitrary fixed R",
-      "funnel and MFE/MAE are observational research instrumentation",
-      "LuxAlgo Elliott code is third-party CC BY-NC-SA 4.0 and rejected for direct production promotion"
-    ],
     "implementation_authorized": false,
-    "next_executable_action": "No promotion implementation. Use Promotion Map as evidence input when exact P0 bytes/source lineage becomes available; Challenger audit remains subordinate to Track A/B."
+    "next_executable_action": "No promotion implementation. Use Promotion Map as evidence input only when exact P0/source lineage becomes available."
   },
   "fast_lane_d": {
     "version": "v0.5-D1",
     "source_file": "mission001/MISSION001_FastLaneD_FunctionalDemoBot_v0_5_D1.pine",
     "pine_sha256": "312516cea231b660580cf1210dddc474f30249a9002abf072e48dec4f9694aae",
-    "owner_demo_evidence_file": "mission001/fastlane_d1_owner_demo_result.json",
     "classification": "COMPILE-PASS / EXECUTION-PASS / OWNER PRODUCT FAIL / EVIDENCE ONLY",
-    "status_codes": ["D1_COMPILE_PASS", "D1_EXECUTION_PASS", "D1_OWNER_PRODUCT_FAIL", "D2_NOT_AUTHORIZED"],
-    "behavioral_strategy_fidelity": "NOT_ACCEPTED",
     "product_critical_path": false,
     "d2_build_authorized": false,
-    "patch_d1_cosmetically": false,
-    "use_as_production_foundation": false,
-    "preserve_as_negative_evidence": true,
-    "next_executable_action": "NONE — no further build capacity unless Owner explicitly reauthorizes"
+    "next_executable_action": "NONE"
   },
   "track_b": {
     "canonical_events": 0,
@@ -150,22 +116,24 @@
       "GH4": "KILLED_CANONICAL_AMBIGUITY",
       "GH5": "KILLED_CANONICAL_AMBIGUITY",
       "GH6_CROSSHAIR_TIMESTAMP_VERIFY": "KILLED_TIMESTAMP_UNVERIFIED",
-      "GH7_AX_TIMESTAMP_TOOLTIP_VERIFY": {
-        "status": "KILLED_TIMESTAMP_UNVERIFIED",
-        "evidence_timestamp_utc": "2026-08-24T08:43:01.520Z",
-        "target_time_verified": false,
-        "extracted_ohlc": {"open":"4,500.485","high":"4,501.140","low":"4,495.375","close":"4,501.040"},
-        "reason_not_promoted": "Accessibility/tooltip candidates exposed controls but no independently verified target timestamp. OHLC therefore remains non-canonical."
-      },
+      "GH7_AX_TIMESTAMP_TOOLTIP_VERIFY": "KILLED_TIMESTAMP_UNVERIFIED",
       "GH8_DATA_WINDOW_TIMESTAMP_VERIFY": {
+        "status": "KILLED_TIMESTAMP_UNVERIFIED",
+        "evidence_timestamp_utc": "2026-08-24T08:50:41.001Z",
+        "target_time_verified": false,
+        "data_window_opened": true,
+        "extracted_ohlc": {"open":"4,500.485","high":"4,501.140","low":"4,495.375","close":"4,501.040"},
+        "reason_not_promoted": "Data Window opened, but no independent target timestamp was exposed. OHLC remains non-canonical."
+      },
+      "GH9_NATIVE_WEBSOCKET_BAR_VERIFY": {
         "status": "ACTIVE_EVENT_DRIVEN_PENDING_EVIDENCE",
-        "workflow_commit": "fdc4e2f6ef0e453c0b7c2d93248cc7b5e4bfb0bc",
-        "mechanism": "Different post-navigation Data Window/Object Tree timestamp surface",
-        "pass_gate": "independent Data Window timestamp verifies 2026-08-20 01:30 AND exact OHLC present",
-        "fail_gate": "timestamp remains unverified or route error"
+        "workflow_commit": "ffb14f6e970ee2e04419bb35b0a8a3c327a576f1",
+        "mechanism": "Inspect TradingView's native websocket frames after Go-to navigation and verify target epoch 2026-08-20T01:30:00Z directly in returned bar payload before accepting OHLC.",
+        "pass_gate": "target epoch 1787199000 is observed in a sane native bar tuple with OHLC",
+        "fail_gate": "target epoch not seen, payload parse remains ambiguous, or route errors"
       }
     },
-    "next_executable_action": "Fetch GH8 evidence. PASS -> extend canonical parity to Donchian/W2/EA/filter/event identity. FAIL -> KILL/SWITCH under anti-deadlock."
+    "next_executable_action": "Fetch GH9 evidence. PASS -> promote exact timestamp+OHLC identity evidence and extend to full BAR-STATE-EVENT parity. FAIL -> KILL/SWITCH."
   },
   "anti_deadlock": {
     "rule": "Optimize gate movement per unit time; do not repeat exhausted route without new execution evidence; two consecutive NO MATERIAL DELTA checkpoints require SWITCH/PARALLELIZE/KILL unless non-bypassable dependency is evidenced",
