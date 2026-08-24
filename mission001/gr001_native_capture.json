@@ -1,27 +1,24 @@
 {
   "mission": "MISSION-001",
-  "route": "GH5_TARGET_ACTION_NATIVE_NAV",
+  "route": "GH6_CROSSHAIR_TIMESTAMP_VERIFY",
   "golden_id": "GR-001",
   "requested_display_time": "2026-08-20 01:30",
-  "timestamp_utc": "2026-08-24T07:03:12.007Z",
+  "timestamp_utc": "2026-08-24T08:09:31.630Z",
   "target_time_verified": false,
+  "crosshair_timestamp_text": null,
   "extracted_ohlc": {
-    "open": "4,495.825",
-    "high": "4,496.630",
-    "low": "4,495.825",
-    "close": "4,496.265"
+    "open": "4,500.485",
+    "high": "4,501.140",
+    "low": "4,495.375",
+    "close": "4,501.040"
   },
-  "verdict": "NAVIGATION_CLOSED_OHLC_TARGET_UNVERIFIED",
+  "verdict": "CROSSHAIR_TIMESTAMP_UNVERIFIED_OHLC_PRESENT",
   "error": null,
   "page_loaded": true,
   "http_status": 200,
-  "date_found": true,
   "date_value": "2026-08-20",
-  "time_found": true,
   "time_value": "01:30",
-  "goto_candidates": 2,
   "go_to_clicked": true,
   "modal_still_open": false,
-  "timezone_provenance": "UTC",
-  "chart_text_excerpt": "XAUUSD\n1m\nIndicators\nAlert\nReplay\nSave\nSave\nTrade\nPublish\nX\nGold Spot / U.S. Dollar\n1\nOANDA\nO\n4,495.825\nH\n4,496.630\nL\n4,495.825\nC\n4,496.265\n+0.445 (+0.01%)\n4,649.800\nSELL\n39.0\n4,650.190\nBUY\nVol · Ticks\n371\n1D\n5D\n1M\n3M\n6M\nYTD\n1Y\n5Y\nAll\n07:03:42 UTC\nWatchlist\nSymbol\nLast\nChg\nChg%\nINDICES\nS\nSPX\nD\n7,674.37\n33.21\n0.43%\nN\nNDQ\n29,308.86\n95.69\n0.33%\nD\nDJI\n53,282.32\n518.05\n0.98%\nV\nVIX\nD\n15.13\n−0.88\n−5.50%\nD\nDXY\n98.858\n0.019\n0.02%\nSTOCKS\nA\nAAPL\n309.35\n−1.95\n−0.63%\nT\nTSLA\n362.86\n17.73\n5.14%\nN\nNFLX\n79.59\n−0.55\n−0.69%\nFUTURES\nU\nUSOIL\n85.22\n−1.41\n−1.63%\nG\nGOLD\n4,650.003\n47.343\n1.03%\nS\nSILVER\n69.1300\n0.1800\n0.26%\nFOREX\nE\nEURUSD\n1.16796\n0.00035\n0.03%\nG\nGBPUSD\n1.36474\n0.00063\n0.05%\nU\nUSDJPY\n158.997\n0.025\n0.02%\nCRYPTO\nB\nBTCUSD\n77,466\n−250\n−0.32%\nB\nBTCUSDT\n77,474.01\n−259.99\n−0.33%\nE\nETHUSD\n2,457.0\n−5.8\n−0.24%\nX\nXAUUSD\nGold Spot / U.S. Dollar\nOANDA\nCommodity\nCfd\n4,649.895\nUSD\n+46.905\n+1.02%\nMarket open\nNews\nGold hits over 3-month high ahead of US inflation data, Fed chair speech\nMore events\nPerformance\n6.32%\n1W\n14.82%\n1M\n1.70%\n3M\n−9.47%\n6M\n7.46%\nYTD\n39.18%\n1Y\nSeasonals\n\t\n\t\n\t\n\t\n2026\n2025\n2024\nMore seasonals\nTechnicals\nNeutral\nSell\nBuy\nStrong sell\nStrong buy\nStrong sell\nSell\nNeutral\nBuy\nStrong buy\nMore technicals\nBrowse community posts"
+  "body_after_crosshair": "XAUUSD\n1m\nIndicators\nAlert\nReplay\nSave\nSave\nTrade\nPublish\nX\nGold Spot / U.S. Dollar\n1\nOANDA\nO\n4,500.485\nH\n4,501.140\nL\n4,495.375\nC\n4,501.040\n+0.565 (+0.01%)\n4,638.120\nSELL\n76.0\n4,638.880\nBUY\nVol · Ticks\n1.61 K\n1D\n5D\n1M\n3M\n6M\nYTD\n1Y\n5Y\nAll\n08:10:02 UTC\nWatchlist\nSymbol\nLast\nChg\nChg%\nINDICES\nS\nSPX\nD\n7,674.37\n33.21\n0.43%\nN\nNDQ\n29,308.86\n95.69\n0.33%\nD\nDJI\n53,282.32\n518.05\n0.98%\nV\nVIX\nD\n15.94\n0.81\n5.35%\nD\nDXY\n98.976\n0.137\n0.14%\nSTOCKS\nA\nAAPL\n309.35\n−1.95\n−0.63%\nT\nTSLA\n362.86\n17.73\n5.14%\nN\nNFLX\n79.59\n−0.55\n−0.69%\nFUTURES\nU\nUSOIL\n85.66\n−0.97\n−1.12%\nG\nGOLD\n4,638.180\n35.520\n0.77%\nS\nSILVER\n68.8932\n−0.0568\n−0.08%\nFOREX\nE\nEURUSD\n1.16651\n−0.00110\n−0.09%\nG\nGBPUSD\n1.36354\n−0.00057\n−0.04%\nU\nUSDJPY\n159.202\n0.230\n0.14%\nCRYPTO\nB\nBTCUSD\n77,332\n−385\n−0.50%\nB\nBTCUSDT\n77,345.02\n−388.98\n−0.50%\nE\nETHUSD\n2,454.6\n−8.1\n−0.33%\nX\nXAUUSD\nGold Spot / U.S. Dollar\nOANDA\nCommodity\nCfd\n4,638.545\nUSD\n+35.555\n+0.77%\nMarket open\nSign in to read exclusive news\nPerformance\n6.06%\n1W\n14.54%\n1M\n1.45%\n3M\n−9.69%\n6M\n7.19%\nYTD\n38.85%\n1Y\nSeasonals\n\t\n\t\n\t\n\t\n2026\n2025\n2024\nMore seasonals\nTechnicals\nNeutral\nSell\nBuy\nStrong sell\nStrong buy\nStrong sell\nSell\nNeutral\nBuy\nStrong buy\nMore technicals\nBrowse community posts"
 }
