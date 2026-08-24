@@ -1,20 +1,21 @@
 {
-  "schema_version": "1.2.3",
+  "schema_version": "1.2.4",
   "mission_id": "MISSION-001",
   "canonical_thread": true,
-  "updated_at_local": "2026-08-24T12:07:00+07:00",
+  "updated_at_local": "2026-08-24T13:13:00+07:00",
   "state_rule": "Verified newer execution evidence overrides stale state/report. Cycle: restore -> verify -> reconcile -> recover -> persist -> resume.",
+  "execution_model": {
+    "type": "B_EVENT_TRIGGERED_NOT_PERSISTENT",
+    "orchestrator": "existing Mission 001 scheduler",
+    "cadence": "hourly",
+    "timezone": "Asia/Ho_Chi_Minh",
+    "persistent_worker_between_checkpoints": false,
+    "github_actions": "event-driven workers only",
+    "continuous_execution_claim_prohibited": true
+  },
   "owner_role": "Capital / Risk / Go-Live / Cost / Security / Doctrine / Champion approval only",
   "ai_role": "Execution / Research / Verification / Continuity",
   "anti_deadlock": "PASS->next gate; FAIL->minimum demonstrated patch/retest; BLOCKED->parallel recovery; route FAIL->KILL/switch; two consecutive zero-material checkpoints->mandatory SWITCH/PARALLELIZE/KILL",
-  "scheduler": {
-    "task_id": "6a86a181691081919afe42eac2a18161",
-    "title": "Mission 001 Progress",
-    "cadence": "every 2 hours",
-    "timezone": "Asia/Ho_Chi_Minh",
-    "status": "RESTORED_ENABLED",
-    "enforcement_note": "Task was found disabled at checkpoint enforcement and was re-enabled without creating a new scheduler."
-  },
   "baseline": {
     "name": "BASELINE-001 — Nam Zone06 EA Strategy v0.4 CT-W2 Rebound 20.8",
     "status": "FROZEN_READ_ONLY",
@@ -28,31 +29,29 @@
       "file": "MISSION001_TrackA_BotV1_FullDerivative_v0.3.pine",
       "version": "v0.3",
       "sha256": "9b8eca4c8cf2e151083020f4b3c2812b0ba3f04502c33fb6af892f0371712137",
-      "status": "FROZEN; reopen only for a concrete P1/P2 defect"
+      "status": "FROZEN"
     },
     "p1": {
       "required": ["native TradingView Compile PASS","XAUUSD M1 Shadow Fidelity PASS"],
-      "native_surface": "PASS",
+      "native_surface": "PASS_RETAINED",
       "native_compile": "NOT_YET_EVIDENCED",
       "shadow_fidelity": "NOT_OPEN",
       "exact_gate": "EXACT_FROZEN_V0.3_SOURCE_INGRESS -> NATIVE_COMPILE"
     },
     "p2": "NOT_OPEN until P1 PASS",
     "routes": {
-      "GH1": "KILLED — ROUTE_FAIL",
+      "GH1": "KILLED",
       "GH2": "SURFACE_PASS_RETAINED; END_TO_END_COMPILE_KILLED_IN_CURRENT_RUNTIME",
-      "SOURCE_AWARE_NATIVE_ROUTE_RECOVERY": "KILLED_THIS_CHECKPOINT — same blocker persisted across checkpoint; no exact-byte source materialization capability found",
-      "HISTORICAL_GITHUB_COMMIT_RECOVERY": "KILLED_THIS_CHECKPOINT — commit search for frozen derivative name returned zero results",
+      "SOURCE_AWARE_NATIVE_ROUTE_RECOVERY": "KILLED",
+      "HISTORICAL_GITHUB_COMMIT_RECOVERY": "KILLED",
       "active_fallback": {
-        "name": "SOURCE_MATERIALIZATION_CAPABILITY_FALLBACK",
-        "status": "ACTIVE_PARALLEL_FALLBACK",
-        "dependency": "Any AI-operable source that can expose byte-identical frozen v0.3 to a native TradingView route",
-        "pass_gate": "SHA256 equals frozen bot hash immediately before injection",
-        "fail_gate": "No exact bytes available from executable source",
-        "next_executable_action": "Continue only with a newly available byte-materialization surface; do not repeat failed GitHub/Drive/Gmail/local/history searches. Native surface PASS evidence is retained and reusable."
+        "name": "NEW_BYTE_MATERIALIZATION_SURFACE_ONLY",
+        "status": "WAITING_FOR_NEW_EXECUTABLE_CAPABILITY_NOT_OWNER_ACTION",
+        "pass_gate": "Exact frozen v0.3 bytes become available on an AI-operable surface and SHA256 matches before TradingView injection",
+        "kill_rule": "Do not repeat GitHub/Drive/Gmail/local/history searches already evidenced failed",
+        "next_executable_action": "At each hourly cycle check only for a genuinely new materialization capability. If present, verify hash and compile immediately; otherwise spend Track A capacity on parallel recovery route discovery, not repeated searches."
       }
-    },
-    "material_delta_this_checkpoint": "No compile evidence. Anti-deadlock enforced: same source-ingress route killed; GitHub historical-commit fallback tested and killed after zero matching commits."
+    }
   },
   "track_b": {
     "canonical_events": 0,
@@ -63,42 +62,50 @@
     "champion": null,
     "development_cases_count_toward_canonical": false,
     "current_gate": "Golden Reference / full BAR-STATE-EVENT parity",
-    "gh3_v2_evidence": {
+    "gh3_v3_evidence": {
       "path": "github://xuannamGithub/xuannamGithub/mission001/gr001_native_capture.json",
-      "blob_sha": "b2ce1fe7e835896e11353fa641e104b99b033fcb",
-      "timestamp_utc": "2026-08-24T03:06:46.019Z",
+      "blob_sha": "b7ab0e212ba2e3d97f6b8687da20416684e280de",
+      "timestamp_utc": "2026-08-24T05:08:06.258Z",
       "page_loaded": true,
       "go_to_opened": true,
-      "go_to_submitted": true,
-      "reported_ohlc": {"open":"4605.080","high":"4606.730","low":"4603.215","close":"4604.840"},
-      "verdict": "PARTIAL_CANONICAL_OHLC_EVIDENCE_NOT_PROMOTED",
-      "reason_not_promoted": "Target timestamp 2026-08-20 01:30 was not independently verified in captured chart text; current chart clock showed 03:07 UTC. Canonical promotion prohibited."
+      "go_to_submitted": false,
+      "target_time_verified": false,
+      "verdict": "ROUTE_FAIL",
+      "reason": "TradingView Go To dialog exposed separate date and time inputs; v3 attempted one combined value into only the date input, so target navigation was not submitted."
     },
     "routes": {
-      "GH3_V2": "KILLED_AS_CANONICAL_ROUTE — produced evidence but failed target-time verification requirement",
-      "GH3_V3": {
-        "workflow_commit": "451f5441d14913e027fc089acf4e00ddd789bf17",
-        "status": "ACTIVE",
-        "purpose": "Verify target timestamp before OHLC evidence can count toward canonical parity",
-        "pass_gate": "Target time 2026-08-20 01:30 verified in native chart context plus exact OHLC extraction",
-        "fail_gate": "Navigation occurs but target time cannot be verified, or route fails",
-        "next_executable_action": "Fetch v3 persisted evidence; if target_time_verified=false or ROUTE_FAIL, kill GH3 and switch/parallelize to a different native capture mechanism."
+      "GH3_V2": "KILLED_AS_CANONICAL_ROUTE",
+      "GH3_V3": "KILLED — ROUTE_FAIL demonstrated by separate input structure",
+      "GH4_SEPARATE_DATE_TIME_NATIVE_NAV": {
+        "workflow_commit": "bf9ee500750406006a64349cdc658c636d980c31",
+        "status": "ACTIVE_EVENT_DRIVEN_EXECUTION_PENDING_EVIDENCE_PERSIST",
+        "purpose": "Fill date=2026-08-20 and time=01:30 separately, click Go to, then require target display verification before OHLC can count",
+        "pass_gate": "Date/time inputs filled separately, Go-to clicked, target display timestamp verified, exact OHLC extracted",
+        "fail_gate": "Input fill/click fails, target display cannot be verified, or canonical fields remain ambiguous",
+        "next_executable_action": "Fetch GH4 evidence on next hourly cycle. PASS -> extend only to remaining Donchian/W2/EA/filter/event-identity fields. FAIL -> kill GH4 and switch/parallelize."
       }
-    },
-    "canonical_evidence_delta_this_checkpoint": 0
+    }
+  },
+  "scheduler": {
+    "task_id": "6a86a181691081919afe42eac2a18161",
+    "title": "Mission 001 Progress",
+    "status": "ENABLED",
+    "cadence": "hourly",
+    "timezone": "Asia/Ho_Chi_Minh",
+    "note": "Same scheduler reused; cadence increased from 2h to 1h after Owner execution-model check. No new scheduler created."
   },
   "active_authorizations": [
     "Owner=Decision/Authorization/Approval; AI=Execution/Verification/Evidence",
     "Authenticated Browser/Desktop Execution capability APPROVED",
     "ChatGPT Desktop / Work-Codex browser control + CDP for TradingView Track A APPROVED",
-    "Existing 2-hour checkpoint scheduler retained; no new scheduler",
     "Owner accepted/froze P0",
-    "Autonomous execution continues to genuine Owner Decision Gates",
-    "GH2 native surface PASS may be reused; do not reacquire unless later evidence proves defect"
+    "GH2 native surface PASS may be reused",
+    "Autonomous hourly execution continues to genuine Owner Decision Gates"
   ],
   "checkpoint_policy": {
-    "cadence": "every 2 hours using existing scheduler only",
+    "cadence": "hourly using existing scheduler only",
     "activity_is_not_progress": true,
-    "owner_silence_pauses_execution": false
+    "owner_silence_pauses_execution": false,
+    "reporting_language": "Do not describe execution as continuous; describe as hourly orchestrated + event-driven workers."
   }
 }
