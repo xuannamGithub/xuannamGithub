@@ -1,0 +1,22 @@
+{
+  "mission": "MISSION-001",
+  "track": "FAST-LANE D",
+  "version": "v0.5-D1",
+  "classification": "COMPILE-PASS / EXECUTION-PASS / RESEARCH PROTOTYPE / OWNER PRODUCT FAIL",
+  "owner_verified": true,
+  "native_compile_add_to_chart": "PASS",
+  "pine_execution": "PASS",
+  "automatic_state_logic": "RUNNING",
+  "owner_demo_product_acceptance": "FAIL",
+  "behavioral_strategy_fidelity": "NOT_ACCEPTED",
+  "status_codes": [
+    "D1_COMPILE_PASS",
+    "D1_EXECUTION_PASS",
+    "D1_OWNER_PRODUCT_FAIL",
+    "D2_AWAITING_BEHAVIORAL_CONTRACT"
+  ],
+  "d2_build_gate": "PAUSED_ONLY_AT_D2_BUILD_GATE",
+  "d2_build_authorized": false,
+  "source_patch_authorized": false,
+  "notes": "Status correction only. Do not build or patch D2. Do not infer additional visual logic or modify NEW_ASSUMPTION A1-A5 until Owner locks Behavioral Contract. Existing Track A, Track B, State Package, gates, killed-route history and hourly scheduler continue unchanged."
+}
