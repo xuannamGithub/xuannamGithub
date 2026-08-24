@@ -1,0 +1,51 @@
+name: M001 FastLane D Hash Manifest
+
+on:
+  push:
+    paths:
+      - '.github/workflows/mission001-fastlane-d-hash.yml'
+      - 'mission001/MISSION001_FastLaneD_FunctionalDemoBot_v0_5_D1.pine'
+      - 'mission001/MISSION001_FastLaneD_v0_5_D1_Provenance_Assumption_Ledger.md'
+
+permissions:
+  contents: write
+
+jobs:
+  hash:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Generate SHA-256 manifest
+        run: |
+          BOT='mission001/MISSION001_FastLaneD_FunctionalDemoBot_v0_5_D1.pine'
+          LEDGER='mission001/MISSION001_FastLaneD_v0_5_D1_Provenance_Assumption_Ledger.md'
+          BOT_SHA=$(sha256sum "$BOT" | awk '{print $1}')
+          LEDGER_SHA=$(sha256sum "$LEDGER" | awk '{print $1}')
+          cat > mission001/MISSION001_FastLaneD_v0_5_D1_manifest.json <<EOF
+          {
+            "mission": "MISSION-001",
+            "track": "FAST-LANE D",
+            "version": "v0.5-D1",
+            "classification": "CONTROLLED NEW DOCTRINE / NOT RECOVERED ORIGINAL DOCTRINE / DEMO-VALIDATION REQUIRED",
+            "pine_file": "MISSION001_FastLaneD_FunctionalDemoBot_v0_5_D1.pine",
+            "pine_sha256": "$BOT_SHA",
+            "ledger_file": "MISSION001_FastLaneD_v0_5_D1_Provenance_Assumption_Ledger.md",
+            "ledger_sha256": "$LEDGER_SHA",
+            "native_compile_status": "NOT_YET_EVIDENCED",
+            "edge_claim": false,
+            "champion_claim": false
+          }
+          EOF
+      - name: Persist manifest
+        run: |
+          cp mission001/MISSION001_FastLaneD_v0_5_D1_manifest.json /tmp/manifest.json
+          git config user.name 'mission001-bot'
+          git config user.email 'mission001-bot@users.noreply.github.com'
+          git fetch origin "$GITHUB_REF_NAME"
+          git reset --hard "origin/$GITHUB_REF_NAME"
+          cp /tmp/manifest.json mission001/MISSION001_FastLaneD_v0_5_D1_manifest.json
+          git add mission001/MISSION001_FastLaneD_v0_5_D1_manifest.json
+          git commit -m 'MISSION001: persist Fast-Lane D v0.5-D1 SHA256 manifest' || exit 0
+          git push origin "HEAD:$GITHUB_REF_NAME"
