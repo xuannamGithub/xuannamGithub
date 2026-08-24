@@ -1,0 +1,18 @@
+{
+  "mission": "MISSION-001",
+  "classification": "CLAUDE CANDIDATE = CHALLENGER / RESEARCH BRANCH / NOT SOURCE OF TRUTH / NOT AUTHORIZED FOR MERGE",
+  "source_name": "Nam Zone06 EA Strategy v0.4 CT-W2 Rebound [TRACK A CANDIDATE - UNVERIFIED CLau(1).txt",
+  "conversation_file_id": "file_00000000b440822fbfd5e83c3065a8e9",
+  "exact_uploaded_sha256": "8a3f3fd02d50d7f475bb686f01774ba227f83455c55b5e3d76eb8405f3d4bf08",
+  "size_bytes": 189992,
+  "line_count": 3424,
+  "line_ending_observed": "CRLF",
+  "read_only": true,
+  "source_of_truth": false,
+  "merge_authorized": false,
+  "p0_modification_authorized": false,
+  "d2_authorized": false,
+  "internal_banner_base_sha_claim": "937e28d772a917c093bee6fe77712a77c95bc78bfe28ff001514e63eee0e1fd6",
+  "identity_note": "The internal banner base-file SHA claim is provenance metadata inside the Challenger; it is not independent proof of P0 or BASELINE byte identity. Exact uploaded Challenger artifact identity is the SHA-256 above.",
+  "preservation_note": "Original attached source is retained read-only as conversation artifact evidence; audit outputs record identity only and do not modify source bytes."
+}
