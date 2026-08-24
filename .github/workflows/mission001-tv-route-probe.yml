@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - '.github/workflows/mission001-tv-route-probe.yml'
+      - 'mission001/a2-ingress/a2_native_compile.js'
   workflow_dispatch:
 
 permissions:
