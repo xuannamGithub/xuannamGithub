@@ -1,25 +1,27 @@
 {
   "mission": "MISSION-001",
-  "route": "GH8_DATA_WINDOW_TIMESTAMP_VERIFY",
+  "route": "GH9_NATIVE_WEBSOCKET_BAR_VERIFY",
   "golden_id": "GR-001",
   "requested_display_time": "2026-08-20 01:30",
-  "timestamp_utc": "2026-08-24T08:50:41.001Z",
+  "target_iso_utc": "2026-08-20T01:30:00Z",
+  "target_epoch_sec": 1787189400,
+  "timestamp_utc": "2026-08-24T09:04:18.884Z",
   "target_time_verified": false,
-  "data_window_timestamp_text": null,
-  "extracted_ohlc": {
-    "open": "4,500.485",
-    "high": "4,501.140",
-    "low": "4,495.375",
-    "close": "4,501.040"
+  "websocket_target_frame_seen": false,
+  "websocket_candidate": null,
+  "ui_ohlc": {
+    "open": "4,495.825",
+    "high": "4,496.630",
+    "low": "4,495.825",
+    "close": "4,496.265"
   },
-  "verdict": "DATA_WINDOW_TIMESTAMP_UNVERIFIED_OHLC_PRESENT",
+  "verdict": "TARGET_FRAME_SEEN_BUT_OHLC_PARSE_UNVERIFIED",
   "error": null,
   "page_loaded": true,
   "http_status": 200,
+  "websocket_url": "wss://pushstream.tradingview.com/message-pipe-ws/public",
   "date_value": "2026-08-20",
   "time_value": "01:30",
   "go_to_clicked": true,
-  "data_window_candidates": 1,
-  "data_window_opened": true,
-  "body_excerpt": "XAUUSD\n1m\nIndicators\nAlert\nReplay\nSave\nSave\nTrade\nPublish\nX\nGold Spot / U.S. Dollar\n1\nOANDA\nO\n4,500.485\nH\n4,501.140\nL\n4,495.375\nC\n4,501.040\n+0.565 (+0.01%)\n4,643.810\nSELL\n62.0\n4,644.430\nBUY\nVol · Ticks\n1.61 K\n1D\n5D\n1M\n3M\n6M\nYTD\n1Y\n5Y\nAll\n08:51:13 UTC\nObject tree\nData window\nXAUUSD · OANDA, 1\nVol · Ticks\nObject tree and data window"
+  "websocket_matching_frame_count": 2
 }
