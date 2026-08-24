@@ -20,51 +20,199 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: npm install playwright-core@1.55.0
-      - name: GH9 native websocket timestamp verification
+      - run: npm install ws@8.18.0
+      - name: GH10 direct TradingView websocket protocol decode
+        shell: bash
         run: |
           node <<'NODE'
-          const fs=require('fs'); const {chromium}=require('playwright-core');
-          (async()=>{
-            const targetIso='2026-08-20T01:30:00Z';
-            const targetSec=Math.floor(Date.parse(targetIso)/1000);
-            const r={mission:'MISSION-001',route:'GH9_NATIVE_WEBSOCKET_BAR_VERIFY',golden_id:'GR-001',requested_display_time:'2026-08-20 01:30',target_iso_utc:targetIso,target_epoch_sec:targetSec,timestamp_utc:new Date().toISOString(),target_time_verified:false,websocket_target_frame_seen:false,websocket_candidate:null,ui_ohlc:null,verdict:'UNRESOLVED',error:null};
-            let browser; const frames=[];
-            function toText(ev){try{if(typeof ev==='string')return ev;if(Buffer.isBuffer(ev))return ev.toString('utf8');if(ev&&typeof ev.payload==='string')return ev.payload;if(ev&&Buffer.isBuffer(ev.payload))return ev.payload.toString('utf8');return String(ev||'');}catch{return '';}}
-            function nums(s){return s.split(',').map(x=>Number(String(x).replace(/[\[\]\s"]/g,'')));}
-            function sane(v){if(!v||v.length<5)return false;const [ts,o,h,l,c]=v;if(ts!==targetSec)return false;if(![o,h,l,c].every(Number.isFinite))return false;return h>=Math.max(o,c)&&l<=Math.min(o,c)&&h>=l;}
-            function extractCandidate(txt){
-              const escaped=String(targetSec).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-              const patterns=[
-                new RegExp('\\['+escaped+'\\s*,\\s*(-?\\d+(?:\\.\\d+)?)\\s*,\\s*(-?\\d+(?:\\.\\d+)?)\\s*,\\s*(-?\\d+(?:\\.\\d+)?)\\s*,\\s*(-?\\d+(?:\\.\\d+)?)','g'),
-                new RegExp('\\[\\s*-?\\d+\\s*,\\s*'+escaped+'\\s*,\\s*(-?\\d+(?:\\.\\d+)?)\\s*,\\s*(-?\\d+(?:\\.\\d+)?)\\s*,\\s*(-?\\d+(?:\\.\\d+)?)\\s*,\\s*(-?\\d+(?:\\.\\d+)?)','g')
-              ];
-              for(const re of patterns){let m;while((m=re.exec(txt))){const v=[targetSec,Number(m[1]),Number(m[2]),Number(m[3]),Number(m[4])];if(sane(v))return {timestamp:targetSec,open:v[1],high:v[2],low:v[3],close:v[4],match:m[0]};}}
-              return null;
+          const fs = require('fs');
+          const WebSocket = require('ws');
+          const targetIso = '2026-08-20T01:30:00Z';
+          const targetSec = Math.floor(Date.parse(targetIso) / 1000);
+          const symbol = 'OANDA:XAUUSD';
+          const interval = '1';
+          const cs = 'cs_' + Math.random().toString(36).slice(2, 14);
+          const endpoint = 'wss://data.tradingview.com/socket.io/websocket?from=chart%2F&date=2026_08_24-00_00';
+          const r = {
+            mission: 'MISSION-001',
+            route: 'GH10_WS_PROTOCOL_DECODE',
+            golden_id: 'GR-001',
+            requested_display_time: '2026-08-20 01:30',
+            target_iso_utc: targetIso,
+            target_epoch_sec: targetSec,
+            requested_symbol: symbol,
+            interval,
+            timestamp_utc: new Date().toISOString(),
+            endpoint,
+            auth_mode: 'UNAUTHORIZED_GUEST_MARKET_DATA_ONLY',
+            target_time_verified: false,
+            symbol_identity_verified: false,
+            resolved_symbol: null,
+            exact_bar: null,
+            adjacent_bars: [],
+            matching_message_type: null,
+            matching_series_key: null,
+            protocol_frame_excerpt: null,
+            decoded_bar_count: 0,
+            request_more_data_count: 0,
+            canonical_eligible: false,
+            verdict: 'UNRESOLVED',
+            error: null
+          };
+          function frame(payload) {
+            const s = typeof payload === 'string' ? payload : JSON.stringify(payload);
+            return `~m~${Buffer.byteLength(s, 'utf8')}~m~${s}`;
+          }
+          function send(ws, m, p) { ws.send(frame({m, p})); }
+          function packets(txt) {
+            return String(txt).split(/~m~\d+~m~/).filter(Boolean);
+          }
+          function normalizeTs(v) {
+            const n = Number(v);
+            if (!Number.isFinite(n)) return null;
+            return n > 1e12 ? Math.floor(n / 1000) : Math.floor(n);
+          }
+          function validBar(v) {
+            if (!Array.isArray(v) || v.length < 5) return false;
+            const ts = normalizeTs(v[0]);
+            const o = Number(v[1]), h = Number(v[2]), l = Number(v[3]), c = Number(v[4]);
+            return ts !== null && [o,h,l,c].every(Number.isFinite) && h >= Math.max(o,c) && l <= Math.min(o,c) && h >= l;
+          }
+          function barObj(v) {
+            return {
+              timestamp: normalizeTs(v[0]),
+              iso_utc: new Date(normalizeTs(v[0]) * 1000).toISOString(),
+              open: Number(v[1]), high: Number(v[2]), low: Number(v[3]), close: Number(v[4]),
+              volume: v.length > 5 && Number.isFinite(Number(v[5])) ? Number(v[5]) : null
+            };
+          }
+          function symbolMatch(meta) {
+            if (!meta || typeof meta !== 'object') return false;
+            const text = JSON.stringify(meta).toUpperCase();
+            return text.includes('OANDA') && text.includes('XAUUSD');
+          }
+          function scanSeries(container, msgType, rawPayload) {
+            if (!container || typeof container !== 'object') return;
+            for (const [key, series] of Object.entries(container)) {
+              if (!series || !Array.isArray(series.s)) continue;
+              const parsed = series.s.filter(x => x && validBar(x.v)).map(x => barObj(x.v));
+              r.decoded_bar_count += parsed.length;
+              const exact = parsed.find(b => b.timestamp === targetSec);
+              if (exact && !r.exact_bar) {
+                r.exact_bar = exact;
+                r.target_time_verified = true;
+                r.matching_message_type = msgType;
+                r.matching_series_key = key;
+                const idx = parsed.findIndex(b => b.timestamp === targetSec);
+                r.adjacent_bars = parsed.slice(Math.max(0, idx - 2), Math.min(parsed.length, idx + 3));
+                const pos = rawPayload.indexOf(String(targetSec));
+                r.protocol_frame_excerpt = pos >= 0 ? rawPayload.slice(Math.max(0, pos - 300), Math.min(rawPayload.length, pos + 900)) : rawPayload.slice(0, 1200);
+              }
             }
-            try{
-              browser=await chromium.launch({channel:'chrome',headless:true});
-              const c=await browser.newContext({locale:'en-US',viewport:{width:1600,height:1100}});
-              const p=await c.newPage();
-              p.on('websocket',ws=>{r.websocket_url=ws.url();ws.on('framereceived',ev=>{const txt=toText(ev);if(txt){if(txt.includes(String(targetSec)))frames.push(txt.slice(0,250000));}});});
-              const resp=await p.goto('https://www.tradingview.com/chart/?symbol=OANDA%3AXAUUSD&interval=1',{waitUntil:'domcontentloaded',timeout:60000});
-              r.page_loaded=!!resp&&resp.status()<500;r.http_status=resp?resp.status():null;await p.waitForTimeout(12000);
-              await p.keyboard.press('Alt+g');await p.waitForTimeout(1500);
-              const d=p.locator('input[placeholder="YYYY-MM-DD"]:visible').first();if(await d.count()){await d.fill('2026-08-20');r.date_value=await d.inputValue();}
-              const ins=p.locator('input:visible');let t=null;for(let i=0;i<await ins.count();i++){const e=ins.nth(i);const v=await e.inputValue().catch(()=> '');if(/^\d{1,2}:\d{2}$/.test(v)){t=e;break;}}if(t){await t.fill('01:30');r.time_value=await t.inputValue();}
-              const btns=p.getByText('Go to',{exact:true});for(let i=(await btns.count())-1;i>=0;i--){const b=btns.nth(i);if(await b.isVisible().catch(()=>false)){await b.click({force:true,timeout:10000}).catch(()=>{});r.go_to_clicked=true;break;}}
-              await p.waitForTimeout(10000);
-              r.websocket_matching_frame_count=frames.length;
-              for(const txt of frames){const cand=extractCandidate(txt);if(cand){r.websocket_target_frame_seen=true;r.target_time_verified=true;r.websocket_candidate=cand;const pos=txt.indexOf(String(targetSec));r.websocket_frame_excerpt=txt.slice(Math.max(0,pos-600),Math.min(txt.length,pos+1600));break;}}
-              const body=await p.locator('body').innerText().catch(()=> '');const m=body.match(/(?:^|\n)O\s*\n?\s*([\d,.]+)\s*\nH\s*\n?\s*([\d,.]+)\s*\nL\s*\n?\s*([\d,.]+)\s*\nC\s*\n?\s*([\d,.]+)/m);if(m)r.ui_ohlc={open:m[1],high:m[2],low:m[3],close:m[4]};
-              fs.mkdirSync('mission001',{recursive:true});await p.screenshot({path:'mission001/gr001-native-capture.png'});
-              r.verdict=r.target_time_verified&&r.websocket_candidate?'TARGET_EPOCH_VERIFIED_WEBSOCKET_OHLC':(frames.length?'TARGET_FRAME_SEEN_BUT_OHLC_PARSE_UNVERIFIED':'TARGET_EPOCH_NOT_SEEN_IN_NATIVE_WEBSOCKET');
-            }catch(e){r.error=String(e);r.verdict='ROUTE_FAIL';}
-            finally{if(browser)await browser.close();fs.mkdirSync('mission001',{recursive:true});fs.writeFileSync('mission001/gr001_native_capture.json',JSON.stringify(r,null,2)+'\n');console.log(JSON.stringify(r));}
-          })();
+          }
+          function finish(ws) {
+            if (r.exact_bar && r.symbol_identity_verified) {
+              r.canonical_eligible = true;
+              r.verdict = 'CANONICAL_TIMESTAMP_OHLC_VERIFIED';
+            } else if (r.exact_bar) {
+              r.verdict = 'TIMESTAMP_OHLC_FOUND_SYMBOL_ACK_UNVERIFIED';
+            } else if (!r.error) {
+              r.verdict = 'TARGET_EPOCH_NOT_FOUND_IN_DECODED_SERIES';
+            }
+            try { ws.close(); } catch {}
+            fs.mkdirSync('mission001', {recursive:true});
+            fs.writeFileSync('mission001/gr001_native_capture.json', JSON.stringify(r, null, 2) + '\n');
+            console.log(JSON.stringify(r));
+          }
+          const ws = new WebSocket(endpoint, {
+            headers: {
+              Origin: 'https://www.tradingview.com',
+              'User-Agent': 'Mozilla/5.0'
+            }
+          });
+          let finished = false;
+          const timeout = setTimeout(() => {
+            if (finished) return;
+            finished = true;
+            r.error = 'TIMEOUT_WAITING_FOR_SERIES_COMPLETION';
+            r.verdict = r.exact_bar ? 'TIMESTAMP_OHLC_FOUND_BEFORE_TIMEOUT' : 'ROUTE_TIMEOUT';
+            finish(ws);
+          }, 80000);
+          ws.on('open', () => {
+            send(ws, 'set_auth_token', ['unauthorized_user_token']);
+            send(ws, 'set_locale', ['en', 'US']);
+            send(ws, 'chart_create_session', [cs, '']);
+            send(ws, 'switch_timezone', [cs, 'Etc/UTC']);
+            send(ws, 'resolve_symbol', [cs, 'symbol_1', '={"symbol":"OANDA:XAUUSD","adjustment":"splits","session":"regular"}']);
+            send(ws, 'create_series', [cs, 'sds_1', 's1', 'symbol_1', interval, 5000, '']);
+          });
+          ws.on('message', data => {
+            const txt = Buffer.isBuffer(data) ? data.toString('utf8') : String(data);
+            for (const payload of packets(txt)) {
+              if (payload.startsWith('~h~')) { try { ws.send(frame(payload)); } catch {} continue; }
+              let msg;
+              try { msg = JSON.parse(payload); } catch { continue; }
+              if (!msg || typeof msg !== 'object') continue;
+              if (msg.m === 'symbol_resolved') {
+                let meta = Array.isArray(msg.p) ? msg.p[2] : null;
+                if (typeof meta === 'string') { try { meta = JSON.parse(meta); } catch {} }
+                if (meta && typeof meta === 'object') {
+                  r.resolved_symbol = {
+                    pro_name: meta.pro_name ?? null,
+                    ticker: meta.ticker ?? null,
+                    short_name: meta.short_name ?? null,
+                    exchange: meta.exchange ?? null,
+                    listed_exchange: meta.listed_exchange ?? null,
+                    timezone: meta.timezone ?? null,
+                    session: meta.session ?? null,
+                    pricescale: meta.pricescale ?? null,
+                    currency_code: meta.currency_code ?? null
+                  };
+                  r.symbol_identity_verified = symbolMatch(meta);
+                }
+              }
+              if ((msg.m === 'timescale_update' || msg.m === 'du') && Array.isArray(msg.p) && msg.p[1]) {
+                scanSeries(msg.p[1], msg.m, payload);
+              }
+              if (msg.m === 'series_completed') {
+                if (r.exact_bar) {
+                  if (!finished) {
+                    finished = true;
+                    clearTimeout(timeout);
+                    finish(ws);
+                  }
+                } else if (r.request_more_data_count < 2) {
+                  r.request_more_data_count += 1;
+                  send(ws, 'request_more_data', [cs, 'sds_1', 5000]);
+                } else if (!finished) {
+                  finished = true;
+                  clearTimeout(timeout);
+                  finish(ws);
+                }
+              }
+              if (msg.m === 'symbol_error' || msg.m === 'series_error' || msg.m === 'critical_error') {
+                r.error = JSON.stringify(msg).slice(0, 1200);
+              }
+            }
+          });
+          ws.on('error', e => {
+            if (finished) return;
+            finished = true;
+            clearTimeout(timeout);
+            r.error = String(e);
+            r.verdict = 'ROUTE_FAIL';
+            finish(ws);
+          });
+          ws.on('close', () => {
+            if (finished) return;
+            finished = true;
+            clearTimeout(timeout);
+            finish(ws);
+          });
           NODE
       - name: Persist evidence
         if: always()
+        shell: bash
         run: |
           cp mission001/gr001_native_capture.json /tmp/gr001_native_capture.json
           git config user.name 'mission001-bot'
@@ -74,13 +222,11 @@ jobs:
           mkdir -p mission001
           cp /tmp/gr001_native_capture.json mission001/gr001_native_capture.json
           git add mission001/gr001_native_capture.json
-          git commit -m 'MISSION001: persist GH9 GR-001 evidence' || exit 0
+          git commit -m 'MISSION001: persist GH10 GR-001 evidence' || exit 0
           git push origin "HEAD:$GITHUB_REF_NAME"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: mission001-gr001-native-capture-gh9
-          path: |
-            mission001/gr001_native_capture.json
-            mission001/gr001-native-capture.png
+          name: mission001-gr001-native-capture-gh10
+          path: mission001/gr001_native_capture.json
           if-no-files-found: warn
