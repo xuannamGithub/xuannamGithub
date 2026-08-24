@@ -1,8 +1,8 @@
 {
-  "schema_version": "1.3.2",
+  "schema_version": "1.3.3",
   "mission_id": "MISSION-001",
   "canonical_thread": true,
-  "updated_at_local": "2026-08-24T14:38:00+07:00",
+  "updated_at_local": "2026-08-24T15:08:00+07:00",
   "state_rule": "Verified newer execution evidence overrides stale state/report. Cycle: restore -> verify -> reconcile -> execute -> persist evidence -> update state -> report.",
   "execution_model": {
     "type": "B_EVENT_TRIGGERED_NOT_PERSISTENT",
@@ -61,41 +61,40 @@
       "GH3_V2": "KILLED_AS_CANONICAL_ROUTE",
       "GH3_V3": "KILLED_ROUTE_FAIL",
       "GH4": "KILLED_CANONICAL_AMBIGUITY",
-      "GH5_TARGET_ACTION_NATIVE_NAV": {
-        "status": "KILLED_CANONICAL_AMBIGUITY",
-        "evidence_timestamp_utc": "2026-08-24T07:03:12.007Z",
-        "date_value": "2026-08-20",
-        "time_value": "01:30",
-        "go_to_clicked": true,
-        "modal_still_open": false,
-        "timezone_provenance": "UTC",
-        "target_time_verified": false,
-        "extracted_ohlc": {"open":"4,495.825","high":"4,496.630","low":"4,495.825","close":"4,496.265"},
-        "reason_not_promoted": "Navigation visibly changed chart OHLC and modal closed, but exact target timestamp was not independently visible/verified in captured native evidence. Canonical promotion prohibited."
-      },
-      "active_next": "GH6_REQUIRED_DIFFERENT_NATIVE_TIMESTAMP_VERIFICATION_MECHANISM"
+      "GH5_TARGET_ACTION_NATIVE_NAV": "KILLED_CANONICAL_AMBIGUITY",
+      "GH6_CROSSHAIR_TIMESTAMP_VERIFY": {
+        "status": "ACTIVE_EVENT_DRIVEN_PENDING_EVIDENCE",
+        "workflow_commit": "3eb75cfb4142f1e38ef196fc175efcfe5c1c1149",
+        "mechanism": "Navigate to requested bar, then use an independent post-navigation chart crosshair/body timestamp surface to verify target time before promoting OHLC.",
+        "pass_gate": "crosshair timestamp independently verifies 2026-08-20 01:30 AND exact OHLC present",
+        "fail_gate": "timestamp still not independently verified or route errors",
+        "next_executable_action": "Fetch GH6 evidence next checkpoint. PASS -> extend to remaining Donchian/W2/EA/filter/event-identity fields; FAIL -> kill/switch."
+      }
     }
   },
   "fast_lane_d": {
     "name": "FUNCTIONAL_DEMO_BOT_DELIVERY",
-    "status": "FUNCTIONAL_CANDIDATE_SHIPPED__NATIVE_COMPILE_NEXT",
-    "classification": "CONTROLLED NEW DOCTRINE / NOT RECOVERED ORIGINAL DOCTRINE / DEMO-VALIDATION REQUIRED",
-    "approved_doctrine": "MODEL_1_STRUCTURE_GATED_SEQUENTIAL",
-    "state_machine": "SCAN -> CT_LONG -> WAIT_W2_LONG -> W2_LONG -> WAIT_W2_SHORT -> W2_SHORT -> SCAN",
-    "source_file": "mission001/MISSION001_FastLaneD_FunctionalDemoBot_v0_5_D1.pine",
     "version": "v0.5-D1",
+    "source_file": "mission001/MISSION001_FastLaneD_FunctionalDemoBot_v0_5_D1.pine",
     "pine_sha256": "312516cea231b660580cf1210dddc474f30249a9002abf072e48dec4f9694aae",
-    "ledger_file": "mission001/MISSION001_FastLaneD_v0_5_D1_Provenance_Assumption_Ledger.md",
-    "ledger_sha256": "b3d03452a28607e11a0a0a0b4d89cb15ef6df5de3534d676e55ef7d50312c474",
-    "manifest_file": "mission001/MISSION001_FastLaneD_v0_5_D1_manifest.json",
-    "automatic_entries": ["CT_LONG", "W2_LONG", "W2_SHORT"],
-    "risk_controls": ["STOP_GO_SCALE", "risk_sizing", "daily_loss", "max_drawdown_kill", "force_flat", "one_position_mutual_exclusion"],
-    "new_assumptions": ["A1_CT_detection", "A2_W2_long_detection", "A3_W2_short_detection", "A4_structural_SL_R_target", "A5_W2_regime_filter"],
-    "native_compile": "NOT_YET_EVIDENCED",
-    "demo_shadow_observation": "NOT_OPEN until native compile",
-    "edge_claim": false,
-    "champion_claim": false,
-    "next_executable_action": "Native TradingView Compile of exact v0.5-D1 source. Compiler FAIL -> minimum patch to demonstrated compiler cause only -> recompute SHA/manifest -> recompile. PASS -> Demo/Shadow Observation."
+    "owner_demo_evidence_file": "mission001/fastlane_d1_owner_demo_result.json",
+    "classification": "COMPILE-PASS / EXECUTION-PASS / RESEARCH PROTOTYPE / OWNER PRODUCT FAIL",
+    "status_codes": [
+      "D1_COMPILE_PASS",
+      "D1_EXECUTION_PASS",
+      "D1_OWNER_PRODUCT_FAIL",
+      "D2_AWAITING_BEHAVIORAL_CONTRACT"
+    ],
+    "native_compile_add_to_chart": "PASS_OWNER_VERIFIED",
+    "pine_execution": "PASS_OWNER_VERIFIED",
+    "automatic_state_logic": "RUNNING_OWNER_VERIFIED",
+    "owner_demo_product_acceptance": "FAIL",
+    "behavioral_strategy_fidelity": "NOT_ACCEPTED",
+    "d2_build_gate": "PAUSED_ONLY_AT_D2_BUILD_GATE",
+    "d2_build_authorized": false,
+    "source_patch_authorized": false,
+    "a1_a5_change_authorized": false,
+    "next_executable_action": "Do not build or patch D2. Await Owner Behavioral Contract. Existing Track A/B continue independently."
   },
   "scheduler": {
     "task_id": "6a86a181691081919afe42eac2a18161",
