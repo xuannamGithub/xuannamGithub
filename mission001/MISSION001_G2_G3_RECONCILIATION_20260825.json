@@ -1,0 +1,75 @@
+{
+  "mission_id": "MISSION-001",
+  "record_type": "AUTHORITATIVE_STATE_RECONCILIATION_DELTA",
+  "created_at_local": "2026-08-25T16:35:00+07:00",
+  "base_state_package": {
+    "path": "mission001/MISSION001_STATE_PACKAGE_v1.json",
+    "blob_sha": "215da465774662bb26af88516f17d124262a4d74",
+    "schema_version": "2.0.5"
+  },
+  "owner_verified_evidence_package": {
+    "ceremony": "B2_OWNER_EXECUTED_AI_AUDITED_NATIVE_TRADINGVIEW_COMPILE",
+    "immutable_p0_sha256": "9b8eca4c8cf2e151083020f4b3c2812b0ba3f04502c33fb6af892f0371712137",
+    "bytes": 184846,
+    "historical_line_count_record": 3411,
+    "ceremony_verifier_line_count": 3412,
+    "line_count_reconciliation": "NO_SOURCE_IDENTITY_CONFLICT; SHA256_AND_BYTE_COUNT_CONTROL; PRESERVE_BOTH_HISTORICAL_COUNTS",
+    "pre_compile_editor_identity": "VERIFIED_SHA_MATCH",
+    "native_action": "TRADINGVIEW_ADD_TO_CHART",
+    "native_render_observed": true,
+    "native_compiler_error_observed": false,
+    "post_compile_editor_identity": "VERIFIED_SHA_MATCH",
+    "pine_patch_used": false,
+    "credential_or_session_artifact_transferred_to_ai": false
+  },
+  "gate_transition": {
+    "gate": "G2_NATIVE_COMPILE",
+    "before": "OPEN",
+    "after": "PASS",
+    "terminal_verdict": "A2_NATIVE_COMPILE_PASS",
+    "classification": "VERIFIED_PRODUCT_GATE_MOVEMENT"
+  },
+  "supersession": [
+    {
+      "prior_condition": "A2_NATIVE_COMPILE_IN_PROGRESS_OR_UNVERIFIED",
+      "new_condition": "G2_NATIVE_COMPILE_PASS",
+      "disposition": "SUPERSEDED_BY_VERIFIED_G2_EVIDENCE"
+    },
+    {
+      "prior_condition": "A2_AUTHENTICATION_OR_SHARED_SESSION_HANDOFF_BLOCKER_FOR_G2",
+      "new_condition": "B2_OWNER_EXECUTED_NATIVE_COMPILE_CLOSED_G2_WITHOUT_CREDENTIAL_TRANSFER",
+      "disposition": "SUPERSEDED_BY_VERIFIED_G2_EVIDENCE"
+    },
+    {
+      "prior_condition": "GH10_WS_PROTOCOL_DECODE_NOT_EXECUTED",
+      "new_condition": "GH10_CANONICAL_TIMESTAMP_OHLC_VERIFIED",
+      "disposition": "SUPERSEDED_BY_NEWER_DIRECT_EXECUTION_EVIDENCE; DOES_NOT_PROMOTE_CANONICAL_EVENTS"
+    }
+  ],
+  "track_b_guardrail": {
+    "canonical_events": 0,
+    "bar_provenance": "GH10_CANONICAL_TIMESTAMP_OHLC_VERIFIED",
+    "full_bar_state_event_parity": "NOT_VERIFIED"
+  },
+  "g3_activation": {
+    "status": "ACTIVE",
+    "first_required_action": "G3_ACCEPTANCE_MATRIX_FREEZE",
+    "p0_modification_authorized": false,
+    "patch_on_discovery_authorized": false,
+    "scenario_level_evidence_required": true
+  },
+  "prosecutorial_limit": {
+    "g2_pass_does_not_prove": [
+      "semantic_strategy_correctness",
+      "all_branch_execution_correctness",
+      "signal_doctrine_parity",
+      "canonical_event_parity",
+      "backtest_validity",
+      "economic_edge",
+      "risk_robustness",
+      "production_readiness",
+      "live_trading_readiness"
+    ]
+  },
+  "owner_decision_required": "NONE"
+}
